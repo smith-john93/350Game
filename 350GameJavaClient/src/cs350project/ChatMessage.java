@@ -21,17 +21,19 @@ public class ChatMessage {
     private final int fontSize,x,arcw,arch,padding;
     private int y;
     private double opacity;
+    private int height;
     
     public ChatMessage(String message) {
         this.message = message;
         fontFamily = "Arial";
-        fontSize = 24;
+        fontSize = 16;
         x = 20;
         y = 800;
-        arcw = 50;
-        arch = 50;
+        arcw = 32;
+        arch = 32;
         padding = 10;
         opacity = 1;
+        height = 0;
     }
     
     public void setY(int y) {
@@ -40,6 +42,10 @@ public class ChatMessage {
     
     public void setOpacity(double opacity) {
         this.opacity = opacity;
+    }
+    
+    public double getHeight() {
+        return height;
     }
     
     public void draw(Graphics2D g2d) {
@@ -63,5 +69,6 @@ public class ChatMessage {
         rgba = Color.WHITE.getRGB() & alphaMask;
         g2d.setColor(new Color(rgba,true));
         g2d.drawString(message, x + padding, y + padding + fontSize);
+        height = padding + (int)r2D.getHeight() + padding;
     }
 }

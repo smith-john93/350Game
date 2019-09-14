@@ -5,6 +5,10 @@
  */
 package cs350project;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Insets;
+import java.awt.Dimension;
 
 /**
  *
@@ -19,12 +23,13 @@ public class CS350Project {
         JFrame gameFrame = new JFrame();
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setTitle("CS350 Project");
-        gameFrame.setSize(1600, 900);
+        
         GamePanel gamePanel = new GamePanel();
-        KeyboardInput ki = new KeyboardInput();
-        ki.addKeyboardInputListener(gamePanel);
+        KeyboardAdapter ki = new KeyboardAdapter();
+        ki.addKeyboardListener(gamePanel);
         gameFrame.addKeyListener(ki);
         gameFrame.add(gamePanel);
+        gameFrame.setSize(1600, 900);
         gameFrame.setVisible(true);
     }
     

@@ -3,12 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/cs350Project/src/cs350project/ChatMessage.java</file>
-            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/cs350Project/src/cs350project/KeyboardInput.java</file>
-            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/cs350Project/src/cs350project/CS350Project.java</file>
-            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/cs350Project/src/cs350project/ChatMessageQueue.java</file>
-            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/cs350Project/src/cs350project/KeyboardInputListener.java</file>
-            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/cs350Project/src/cs350project/GamePanel.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/ChatMessageQueue.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/ChatMessageField.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/KeyboardListener.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/ChatMessageFieldKeyListener.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/ChatMessage.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/GamePanel.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/CS350Project.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/KeyboardAdapter.java</file>
+            <file>file:/C:/Users/Mark%20Masone/OneDrive%20-%20WCSU/cs350/350Game/350GameJavaClient/src/cs350project/ChatMessageFieldKeyAdapter.java</file>
         </group>
     </open-files>
 </project-private>

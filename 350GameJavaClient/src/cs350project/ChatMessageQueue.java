@@ -14,25 +14,36 @@ import java.awt.Graphics2D;
 public class ChatMessageQueue {
     
     private final LinkedList<ChatMessage> chatMessages;
+    private final int maxMessagesOnScreen;
+    private final double maxOpacity;
+    private final int startingYPosition;
+    private final int spacing;
     
     public ChatMessageQueue() {
         chatMessages = new LinkedList<>();
+        maxMessagesOnScreen = 6;
+        maxOpacity = 1;
+        startingYPosition = 800;
+        spacing = 10;
     }
     
     public void addMessage(ChatMessage chatMessage) {
         chatMessages.addFirst(chatMessage);
-        if(chatMessages.size() > 6) {
+        if(chatMessages.size() > maxMessagesOnScreen) {
             chatMessages.removeLast();
         }
     }
     
     public void draw(Graphics2D g2d) {
-        int y = 854;
-        double opacity = 1.15;
+        int y = startingYPosition;
+        double opacity = maxOpacity;
+        double opacityDecrement = opacity / maxMessagesOnScreen;
         for(ChatMessage chatMessage : chatMessages) {
-            chatMessage.setY(y -= 54);
-            chatMessage.setOpacity(opacity -= 0.15);
+            chatMessage.setY(y);
+            chatMessage.setOpacity(opacity);
             chatMessage.draw(g2d);
+            y -= chatMessage.getHeight() + spacing;
+            opacity -= opacityDecrement;
         }
     }
 }

@@ -9,8 +9,6 @@ package cs350project;
  *
  * @author Mark Masone
  */
-public interface KeyboardInputListener {
-    public void messageKeyPressed();
-    public void messageCommit();
-    public void keyTyped(char value);
+public interface KeyboardListener {
+    public void messageStart();
 }
