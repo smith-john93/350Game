@@ -11,9 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 /**
  *
@@ -21,14 +18,14 @@ import java.awt.Dimension;
  */
 public class ChatMessageField extends JComponent {
     
-    private int x = 0;
-    private int y = 0;
-    private int arcw = 25;
-    private int arch = 25;
-    private int padding = 10;
-    private int h = 24;
-    private int w = 500;
-    private JTextField jtf;
+    private final int x = 0;
+    private final int y = 0;
+    private final int arcw = 25;
+    private final int arch = 25;
+    private final int padding = 10;
+    private final int h = 24;
+    private final int w = 500;
+    private final JTextField jtf;
     
     public ChatMessageField() {
         setBounds(0,0,padding + w + padding,padding + h + padding);
@@ -36,7 +33,6 @@ public class ChatMessageField extends JComponent {
         jtf.setBounds(padding,padding,w,h);
         jtf.setColumns(40);
         add(jtf);
-        setVisible(false);
     }
     @Override
     public void paintComponent(Graphics g) {

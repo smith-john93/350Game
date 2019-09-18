@@ -15,13 +15,14 @@ import java.awt.Graphics2D;
 public class GamePanel extends JPanel implements KeyboardListener, ChatMessageFieldKeyListener {
     
     private final ChatMessageQueue chatMessageQueue;
-    private ChatMessageField chatMessageField;
+    private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
     
     public GamePanel() {
         chatMessageQueue = new ChatMessageQueue();
         setLayout(null);
         chatMessageField = new ChatMessageField();
+        chatMessageField.setVisible(false);
         add(chatMessageField);
     }
     

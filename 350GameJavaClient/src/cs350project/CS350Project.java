@@ -5,10 +5,6 @@
  */
 package cs350project;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.Insets;
-import java.awt.Dimension;
 import javax.swing.Timer;
 
 /**

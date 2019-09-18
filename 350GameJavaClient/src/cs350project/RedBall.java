@@ -1,12 +1,10 @@
 package cs350project;
 
-import cs350project.Platform;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
-import java.lang.Math;
 
 
 public class RedBall extends JComponent implements ActionListener, MouseMotionListener, KeyListener {
@@ -23,9 +21,9 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
     private boolean movingLeft = false;
     private boolean movingRight = false;
 
-    private Platform[] platArray = new Platform[7];
-    private int width = 30;
-    private int height = 30;
+    private final Platform[] platArray = new Platform[7];
+    private final int width = 30;
+    private final int height = 30;
     private Fighter type;
 
     public enum Fighter
@@ -46,7 +44,7 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
         type = f;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         JFrame wind = new JFrame("RedBall/GamePinfo");
 
@@ -64,7 +62,7 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
         Timer tt = new Timer(17, g);
         tt.start();
 
-    }
+    }*/
 
 
     @Override
