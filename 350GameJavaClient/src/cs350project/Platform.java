@@ -1,4 +1,4 @@
-package redball;
+package cs350project;
 
 import java.awt.*;
 

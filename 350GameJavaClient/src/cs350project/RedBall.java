@@ -1,5 +1,6 @@
-package redball;
+package cs350project;
 
+import cs350project.Platform;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -27,12 +28,12 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
     private int height = 30;
     private Fighter type;
 
-    enum Fighter
+    public enum Fighter
     {
         normal,ninja,mage
     }
 
-    private RedBall(Fighter f)
+    public RedBall(Fighter f)
     {
         platArray[0] = new Platform(50,300,150,200);
         platArray[1] = new Platform(150,450,450,50);
@@ -75,7 +76,6 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
     @Override
     protected void paintComponent(Graphics g) {
 
-
         //draw the sky
         g.setColor(Color.cyan);
         g.fillRect(0, 0, 800, 600);
@@ -116,6 +116,7 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.out.println("action performed");
 
         boolean jumpPressed = (jumping && !jumpingLastTick);
 

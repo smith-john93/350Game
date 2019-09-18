@@ -55,6 +55,7 @@ public class ChatMessageField extends JComponent {
         g2d.fill(bubble);
     }
 
+    @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if(visible)
