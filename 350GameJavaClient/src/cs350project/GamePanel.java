@@ -17,8 +17,11 @@ public class GamePanel extends JPanel implements KeyboardListener, ChatMessageFi
     private final ChatMessageQueue chatMessageQueue;
     private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
+    private final Communication comm;
     
     public GamePanel() {
+        comm = new Communication();
+        comm.connect();
         chatMessageQueue = new ChatMessageQueue();
         setLayout(null);
         chatMessageField = new ChatMessageField();
@@ -47,6 +50,7 @@ public class GamePanel extends JPanel implements KeyboardListener, ChatMessageFi
     public void messageCommit() {
         String message = chatMessageField.getText();
         if(!message.equals("")) {
+            comm.sendMessage(message);
             chatMessageQueue.addMessage(new ChatMessage(message));
             repaint();
         }

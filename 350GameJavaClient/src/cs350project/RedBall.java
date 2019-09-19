@@ -114,7 +114,6 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("action performed");
 
         boolean jumpPressed = (jumping && !jumpingLastTick);
 

@@ -20,7 +20,6 @@ public class CS350Project {
         JFrame gameFrame = new JFrame();
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setTitle("CS350 Project");
-        
         GamePanel gamePanel = new GamePanel();
         RedBall redBall = new RedBall(RedBall.Fighter.normal);
         redBall.setBounds(0,0,1600,900);
