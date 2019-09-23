@@ -2,28 +2,41 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f04a6c72-9ba4-4b02-ae3e-9b0a186b4fa5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/build/built-jar.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/.netbeans_automatic_build" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/.netbeans_update_resources" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/CS350Project.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/CS350Project.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/ChatMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/ChatMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/ChatMessageField.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/ChatMessageField.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/ChatMessageFieldKeyAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/ChatMessageFieldKeyAdapter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/cs350project/ChatMessageQueue.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/ChatMessageQueue.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/Communication.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/Communication.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/cs350project/GamePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/GamePanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/KeyboardInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/KeyboardInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/KeyboardInputListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/KeyboardInputListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/README.TXT" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/cs350Project.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/KeyboardAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/KeyboardAdapter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/RedBall$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/RedBall$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/RedBall$Fighter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/RedBall$Fighter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/cs350project/RedBall.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/cs350project/RedBall.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/redball/RedBall$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/redball/RedBall$Fighter.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/build-impl.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/build-impl.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/genfiles.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/genfiles.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cs350project/CS350Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/CS350Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/ChatMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessageQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/ChatMessageQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/CS350Project.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/CS350Project.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/ChatMessage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/ChatMessageField.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/ChatMessageFieldKeyAdapter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/ChatMessageFieldKeyListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/ChatMessageQueue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/GamePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/GamePanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/KeyboardInput.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/350GameJavaClient/cs350project/KeyboardInputListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/chat/ChatMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessageField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/chat/ChatMessageField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/ChatMessageQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/chat/ChatMessageQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/Communication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/Communication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/cs350project/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/GamePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cs350project/KeyboardInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/KeyboardInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cs350project/KeyboardInputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/KeyboardInputListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cs350project/RedBall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cs350project/RedBall.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,24 +51,30 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageField.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageField.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="78" column="22" selection-start-line="78" selection-start-column="22" selection-end-line="78" selection-end-column="22" />
+            <state relative-caret-position="136">
+              <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/characters/PlayerCharacter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="269">
+              <caret line="55" column="21" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
               <folding>
-                <element signature="e#1719#1720#0" expanded="true" />
-                <element signature="e#1757#1758#0" expanded="true" />
-                <element signature="e#1875#1876#0" expanded="true" />
-                <element signature="e#1893#1894#0" expanded="true" />
-                <element signature="e#1982#1983#0" expanded="true" />
-                <element signature="e#2000#2001#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1048#1049#0" expanded="true" />
+                <element signature="e#1090#1091#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessage.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessage.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
               <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
@@ -64,10 +83,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardInput.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/characters/LegoMan.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="27" column="41" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
+            <state relative-caret-position="306">
+              <caret line="22" column="5" selection-start-line="12" selection-start-column="4" selection-end-line="22" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyListener.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -76,58 +113,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/CS350Project.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/characters/CharacterState.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="26" column="44" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
+            <state relative-caret-position="119">
+              <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/GamePanel.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/RedBall.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="60" column="28" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="32" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="32" />
+            <state relative-caret-position="357">
+              <caret line="26" column="32" selection-start-line="26" selection-start-column="32" selection-end-line="26" selection-end-column="32" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardInputListener.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageQueue.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
-              <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageQueue.java">
+        <entry file="file://$PROJECT_DIR$/src/cs350project/characters/ElPresidente.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+            <state relative-caret-position="102">
+              <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -141,6 +157,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>enu</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -152,17 +173,17 @@
         <option value="$PROJECT_DIR$/src/cs350project/KeyboardInputListener.java" />
         <option value="$PROJECT_DIR$/src/cs350project/CS350Project.java" />
         <option value="$PROJECT_DIR$/src/cs350project/ChatMessageField.java" />
-        <option value="$PROJECT_DIR$/src/cs350project/GamePanel.java" />
         <option value="$PROJECT_DIR$/src/cs350project/KeyboardInput.java" />
         <option value="$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyAdapter.java" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+        <option value="$PROJECT_DIR$/src/cs350project/Communication.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/GamePanel.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/characters/CharacterResources.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/characters/LegoMan.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/characters/Chev.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/characters/ElPresidente.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/characters/PlayerCharacter.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/RedBall.java" />
+        <option value="$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyAdapter.java" />
       </list>
     </option>
   </component>
@@ -205,6 +226,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -229,7 +251,7 @@
       <module name="350GameJavaClient" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="cs350project.*" />
+          <option name="PATTERN" value="cs350project.chat.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -255,16 +277,19 @@
       <updated>1568391193669</updated>
       <workItem from="1568391197740" duration="2003000" />
       <workItem from="1568394449234" duration="2335000" />
+      <workItem from="1569240009639" duration="764000" />
+      <workItem from="1569241245913" duration="4401000" />
+      <workItem from="1569260995119" duration="5028000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4338000" />
+    <option name="totallyTimeSpent" value="14531000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25266525" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26066098" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -299,80 +324,132 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessage.java">
+    <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardInputListener.java" />
+    <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardInput.java" />
+    <entry file="file://$PROJECT_DIR$/src/cs350project/Communication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="34" column="83" selection-start-line="34" selection-start-column="83" selection-end-line="34" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/CS350Project.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="20" column="65" selection-start-line="20" selection-start-column="65" selection-end-line="20" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/GamePanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1020">
+          <caret line="68" selection-start-line="68" selection-end-line="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/characters/CharacterResources.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="26" column="41" selection-start-line="26" selection-start-column="41" selection-end-line="26" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/characters/Chev.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/characters/LegoMan.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="22" column="5" selection-start-line="12" selection-start-column="4" selection-end-line="22" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/characters/ElPresidente.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/characters/CharacterState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/RedBall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="26" column="32" selection-start-line="26" selection-start-column="32" selection-end-line="26" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/characters/PlayerCharacter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="55" column="21" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1048#1049#0" expanded="true" />
+            <element signature="e#1090#1091#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessage.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardInputListener.java">
+    <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageField.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageQueue.java">
+    <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageFieldKeyListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/CS350Project.java">
+    <entry file="file://$PROJECT_DIR$/src/cs350project/chat/ChatMessageQueue.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="26" column="44" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/GamePanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="60" column="28" selection-start-line="60" selection-start-column="28" selection-end-line="60" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/KeyboardInput.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="27" column="41" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageField.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="78" column="22" selection-start-line="78" selection-start-column="22" selection-end-line="78" selection-end-column="22" />
-          <folding>
-            <element signature="e#1719#1720#0" expanded="true" />
-            <element signature="e#1757#1758#0" expanded="true" />
-            <element signature="e#1875#1876#0" expanded="true" />
-            <element signature="e#1893#1894#0" expanded="true" />
-            <element signature="e#1982#1983#0" expanded="true" />
-            <element signature="e#2000#2001#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="32" selection-start-line="3" selection-start-column="32" selection-end-line="3" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cs350project/ChatMessageFieldKeyAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="136">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
         </state>
       </provider>
     </entry>

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.*;
 import javax.swing.*;
+import cs350project.characters.*;
 
 
 public class RedBall extends JComponent implements ActionListener, MouseMotionListener, KeyListener {
@@ -22,8 +23,8 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
     private boolean movingRight = false;
 
     private final Platform[] platArray = new Platform[7];
-    private final int width = 30;
-    private final int height = 30;
+    private final int width = 50;
+    private final int height = 50;
     private Fighter type;
 
     public enum Fighter
@@ -87,27 +88,28 @@ public class RedBall extends JComponent implements ActionListener, MouseMotionLi
         }
 
         //draw the ball
+        PlayerCharacter character = null;
         switch(type) {
-
             case normal:
-
-                g.setColor(Color.RED);
-
-            break;
+                character = new LegoMan();
+                break;
             case ninja:
-
-                g.setColor(Color.darkGray);
-
+                character = new Chev();
                 break;
             case mage:
-
-                g.setColor(Color.GREEN);
-
+                character = new ElPresidente();
                 break;
-
         }
 
-        g.fillRect(x, y, width, height );
+        if(character != null) {
+            character.setBounds(x,y,width,height);
+            if(movingRight)
+                character.setDirection(1);
+            if(movingLeft)
+                character.setDirection(-1);
+            character.draw((java.awt.Graphics2D) g);
+        }
+        //g.fillRect(x, y, width, height );
 
 
     }

@@ -32,7 +32,7 @@ public class Communication {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println(message);
         } catch(Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Unable to send messages to server.");
         }
         //BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         //BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
