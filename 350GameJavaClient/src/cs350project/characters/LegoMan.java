@@ -21,4 +21,9 @@ public class LegoMan extends PlayerCharacter {
                 CharacterState.IDLE
         );
     }
+
+    @Override
+    public CharacterClass getCharacterClass() {
+        return CharacterClass.NORMAL;
+    }
 }

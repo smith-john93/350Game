@@ -11,7 +11,9 @@ package cs350project.characters;
  */
 public enum CharacterState {
     IDLE,
-    ATTACK,
+    JUMP,
+    CROUCH,
     PUNCH,
-    KICK;
+    KICK,
+    BLOCK;
 }

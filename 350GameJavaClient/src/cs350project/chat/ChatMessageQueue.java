@@ -4,16 +4,17 @@
  * and open the template in the editor.
  */
 package cs350project.chat;
-import cs350project.chat.ChatMessage;
 
+import java.awt.Graphics;
 import java.util.LinkedList;
 import java.awt.Graphics2D;
+import javax.swing.JComponent;
 
 /**
  *
  * @author Mark Masone
  */
-public class ChatMessageQueue {
+public class ChatMessageQueue extends JComponent {
     
     private final LinkedList<ChatMessage> chatMessages;
     private final int maxMessagesOnScreen;
@@ -22,6 +23,7 @@ public class ChatMessageQueue {
     private final int spacing;
     
     public ChatMessageQueue() {
+        setBounds(0,0,1600,900);
         chatMessages = new LinkedList<>();
         maxMessagesOnScreen = 6;
         maxOpacity = 1;
@@ -36,7 +38,9 @@ public class ChatMessageQueue {
         }
     }
     
-    public void draw(Graphics2D g2d) {
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D)g;
         int y = startingYPosition;
         double opacity = maxOpacity;
         double opacityDecrement = opacity / maxMessagesOnScreen;
