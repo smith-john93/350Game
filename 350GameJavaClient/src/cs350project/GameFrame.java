@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package cs350project;
+import cs350project.screens.ScreenListener;
+import cs350project.screens.Screen;
 import javax.swing.JFrame;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.panels.Panel;

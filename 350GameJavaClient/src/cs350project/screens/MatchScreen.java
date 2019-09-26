@@ -5,8 +5,6 @@
  */
 package cs350project.screens;
 
-import cs350project.Screen;
-import cs350project.ScreenListener;
 import cs350project.characters.PlayerCharacter;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.keymaps.MatchKeyMap;
