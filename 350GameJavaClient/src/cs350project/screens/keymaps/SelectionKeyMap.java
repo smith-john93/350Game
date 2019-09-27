@@ -17,25 +17,21 @@ import cs350project.screens.keymaps.MatchKeyMapListener;
 /*
 Key bindings for the selection screen.
 */
-public class SelectionKeyMap extends KeyMap {
+public class SelectionKeyMap extends KeyMap<SelectionKeyMapListener> {
     
     @Override
     public void keyPressed(KeyEvent ke) {
-        for(KeyMapListener keyMapListener : keyMapListeners) {
-            if(keyMapListener instanceof SelectionKeyMapListener) {
-                SelectionKeyMapListener selectionKeyMapListener = 
-                        (SelectionKeyMapListener)keyMapListener;
-                switch(ke.getKeyCode()) {
-                    case KeyEvent.VK_SPACE: 
-                        selectionKeyMapListener.characterSelected();
-                        break;
-                    case KeyEvent.VK_D:
-                        selectionKeyMapListener.selectNextRight();
-                        break;
-                    case KeyEvent.VK_A:
-                        selectionKeyMapListener.selectNextLeft();
-                        break;
-                }
+        for(SelectionKeyMapListener selectionKeyMapListener : keyMapListeners) {
+            switch(ke.getKeyCode()) {
+                case KeyEvent.VK_SPACE: 
+                    selectionKeyMapListener.characterSelected();
+                    break;
+                case KeyEvent.VK_D:
+                    selectionKeyMapListener.selectNextRight();
+                    break;
+                case KeyEvent.VK_A:
+                    selectionKeyMapListener.selectNextLeft();
+                    break;
             }
         }
     }

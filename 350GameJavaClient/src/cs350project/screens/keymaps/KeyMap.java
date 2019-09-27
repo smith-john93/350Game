@@ -11,8 +11,9 @@ import java.util.ArrayList;
 /**
  *
  * @author Mark Masone
+ * @param <KeyMapListener>
  */
-public class KeyMap extends KeyAdapter {
+public class KeyMap<KeyMapListener> extends KeyAdapter {
     
     protected final ArrayList<KeyMapListener> keyMapListeners;
     

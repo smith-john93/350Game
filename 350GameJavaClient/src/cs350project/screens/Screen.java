@@ -5,7 +5,6 @@
  */
 package cs350project.screens;
 import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.keymaps.KeyMapListener;
 import javax.swing.JComponent;
 import java.util.ArrayList;
 import cs350project.screens.panels.Panel;
@@ -15,7 +14,7 @@ import cs350project.screens.panels.PanelListener;
  *
  * @author Mark Masone
  */
-public abstract class Screen extends JComponent implements KeyMapListener, PanelListener {
+public abstract class Screen extends JComponent implements PanelListener {
     
     protected final ArrayList<ScreenListener> screenListeners;
     

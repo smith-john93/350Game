@@ -9,7 +9,7 @@ package cs350project.screens.keymaps;
  *
  * @author Mark Masone
  */
-public interface SelectionKeyMapListener extends KeyMapListener {
+public interface SelectionKeyMapListener {
     public void characterSelected();
     public void selectNextRight();
     public void selectNextLeft();

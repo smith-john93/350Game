@@ -16,50 +16,44 @@ import java.util.ArrayList;
 /*
 Key bindings for the fight screen.
 */
-public class MatchKeyMap extends KeyMap {
+public class MatchKeyMap extends KeyMap<MatchKeyMapListener> {
     
     @Override
     public void keyPressed(KeyEvent ke) {
-        for(KeyMapListener keyMapListener : keyMapListeners) {
-            if(keyMapListener instanceof MatchKeyMapListener) {
-                MatchKeyMapListener matchKeyMapListener = (MatchKeyMapListener)keyMapListener;
-                switch(ke.getKeyCode()) {
-                    case KeyEvent.VK_C:
-                        matchKeyMapListener.messageStart();
-                        break;
-                    case KeyEvent.VK_A:
-                        matchKeyMapListener.startMoveLeft();
-                        break;
-                    case KeyEvent.VK_D:
-                        matchKeyMapListener.startMoveRight();
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        matchKeyMapListener.startJump();
-                        break;
-                    case KeyEvent.VK_ESCAPE:
-                        matchKeyMapListener.endGame();
-                        break;
-                }
+        for(MatchKeyMapListener matchKeyMapListener : keyMapListeners) {
+            switch(ke.getKeyCode()) {
+                case KeyEvent.VK_C:
+                    matchKeyMapListener.messageStart();
+                    break;
+                case KeyEvent.VK_A:
+                    matchKeyMapListener.startMoveLeft();
+                    break;
+                case KeyEvent.VK_D:
+                    matchKeyMapListener.startMoveRight();
+                    break;
+                case KeyEvent.VK_SPACE:
+                    matchKeyMapListener.startJump();
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    matchKeyMapListener.endGame();
+                    break;
             }
         }
     }
     
     @Override
     public void keyReleased(KeyEvent ke) {
-        for(KeyMapListener keyMapListener : keyMapListeners) {
-            if(keyMapListener instanceof MatchKeyMapListener) {
-                MatchKeyMapListener matchKeyMapListener = (MatchKeyMapListener)keyMapListener;
-                switch(ke.getKeyCode()) {
-                    case KeyEvent.VK_A:
-                        matchKeyMapListener.endMoveLeft();
-                        break;
-                    case KeyEvent.VK_D:
-                        matchKeyMapListener.endMoveRight();
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        matchKeyMapListener.endJump();
-                        break;
-                }
+        for(MatchKeyMapListener matchKeyMapListener : keyMapListeners) {
+            switch(ke.getKeyCode()) {
+                case KeyEvent.VK_A:
+                    matchKeyMapListener.endMoveLeft();
+                    break;
+                case KeyEvent.VK_D:
+                    matchKeyMapListener.endMoveRight();
+                    break;
+                case KeyEvent.VK_SPACE:
+                    matchKeyMapListener.endJump();
+                    break;
             }
         }
     }
