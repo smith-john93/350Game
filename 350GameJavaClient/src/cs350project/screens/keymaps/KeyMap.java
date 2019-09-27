@@ -4,14 +4,12 @@
  * and open the template in the editor.
  */
 package cs350project.screens.keymaps;
-import cs350project.screens.keymaps.SelectionKeyMapListener;
 import java.awt.event.KeyAdapter;
 import java.util.ArrayList;
 
 /**
  *
  * @author Mark Masone
- * @param <KeyMapListener>
  */
 public class KeyMap<KeyMapListener> extends KeyAdapter {
     
