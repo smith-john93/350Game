@@ -9,11 +9,8 @@ package cs350project.characters;
  *
  * @author Mark Masone
  */
-public enum CharacterState {
-    IDLE,
-    JUMP,
-    CROUCH,
-    PUNCH,
-    KICK,
-    BLOCK;
+public enum CharacterClass {
+    NORMAL,
+    NINJA,
+    MAGE
 }

@@ -12,4 +12,9 @@ public class ElPresidente extends PlayerCharacter {
                 CharacterState.IDLE
         );
     }
+
+    @Override
+    public CharacterClass getCharacterClass() {
+        return CharacterClass.NINJA;
+    }
 }

@@ -12,4 +12,9 @@ public class Chev extends PlayerCharacter {
                 CharacterState.IDLE
         );
     }
+
+    @Override
+    public CharacterClass getCharacterClass() {
+        return CharacterClass.MAGE;
+    }
 }

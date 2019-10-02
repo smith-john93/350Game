@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.characters;
+package cs350project.screens.panels;
 
 /**
  *
  * @author Mark Masone
  */
-public enum CharacterState {
-    IDLE,
-    JUMP,
-    CROUCH,
-    PUNCH,
-    KICK,
-    BLOCK;
+public interface PanelListener {
+    public void panelClose();
 }
