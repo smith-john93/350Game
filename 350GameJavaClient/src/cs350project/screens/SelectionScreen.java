@@ -4,18 +4,17 @@
  * and open the template in the editor.
  */
 package cs350project.screens;
-import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.keymaps.SelectionKeyMap;
 import cs350project.screens.panels.SelectionPanel;
 import cs350project.Music;
-import cs350project.screens.panels.Panel;
-import cs350project.screens.panels.PanelListener;
+import cs350project.screens.keymaps.KeyMap;
+import cs350project.screens.keymaps.SelectionKeyMapListener;
 
 /**
  *
  * @author Mark Masone
  */
-public class SelectionScreen extends Screen implements PanelListener {
+public class SelectionScreen extends Screen implements SelectionKeyMapListener {
     
     private final SelectionKeyMap selectionKeyMap;
     private final SelectionPanel selectionPanel;
@@ -24,10 +23,7 @@ public class SelectionScreen extends Screen implements PanelListener {
     public SelectionScreen() {
         selectionPanel = new SelectionPanel();
         selectionKeyMap = new SelectionKeyMap();
-        selectionKeyMap.addKeyMapListener(selectionPanel);
         music = new Music();
-        music.playSelectionPanelMusic();
-        add(selectionPanel);
     }
     
     @Override
@@ -36,12 +32,14 @@ public class SelectionScreen extends Screen implements PanelListener {
     }
     
     @Override
-    public Panel getPanel() {
-        return selectionPanel;
+    public void showPanel() {
+        selectionKeyMap.addSelectionKeyMapListener(this);
+        add(selectionPanel);
+        music.playSelectionPanelMusic();
     }
 
     @Override
-    public void panelClose() {
+    public void characterSelected() {
         for(ScreenListener screenListener : screenListeners) {
             MatchScreen matchScreen = new MatchScreen(
                     selectionPanel.getPlayer1Selection(),
@@ -50,5 +48,15 @@ public class SelectionScreen extends Screen implements PanelListener {
             screenListener.showScreen(matchScreen);
             music.stop();
         }
+    }
+
+    @Override
+    public void selectNextRight() {
+        selectionPanel.selectNextRight();
+    }
+
+    @Override
+    public void selectNextLeft() {
+        selectionPanel.selectNextLeft();
     }
 }

@@ -4,19 +4,41 @@
  * and open the template in the editor.
  */
 package cs350project;
+import cs350project.screens.Screen;
+import cs350project.screens.ScreenListener;
 import cs350project.screens.SelectionScreen;
 
 /**
  *
  * @author Mark Masone
  */
-public class CS350Project {
+public class CS350Project implements ScreenListener {
  
+    private Screen screen;
+    private final GameFrame gameFrame;
+    
+    public CS350Project() {
+        gameFrame = new GameFrame();
+    }
+    
+    @Override
+    public void showScreen(Screen screen) {
+        if(this.screen != null) {
+            gameFrame.remove(this.screen);
+        }
+        screen.addScreenListener(this);
+        gameFrame.setKeyMap(screen.getKeyMap());
+        gameFrame.add(screen);
+        gameFrame.setVisible(true);
+        screen.showPanel();
+        this.screen = screen;
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        GameFrame gameFrame = new GameFrame();
-        gameFrame.showScreen(new SelectionScreen());
+        CS350Project cs350Project = new CS350Project();
+        cs350Project.showScreen(new SelectionScreen());
     }
 }

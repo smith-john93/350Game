@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  *
  * @author Mark Masone
  */
-public class Communication {
+public class Communication implements OutgoingMessageListener {
     private final String host = "127.0.0.1";
     private final int port = 12345;
     private Socket socket;
@@ -27,9 +27,11 @@ public class Communication {
         }
     }
     
+    @Override
     public void sendMessage(String message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.print(0x0C);
             out.println(message);
         } catch(Exception e) {
             JOptionPane.showMessageDialog(null, "Unable to send messages to server.");

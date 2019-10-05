@@ -9,6 +9,6 @@ package cs350project.screens.keymaps;
  *
  * @author Mark Masone
  */
-public interface MatchKeyMapListener {
-    
+public interface MenuKeyMapListener extends MatchKeyMapListener {
+    void endGame();
 }

@@ -12,13 +12,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import cs350project.characters.*;
-import cs350project.screens.keymaps.SelectionKeyMapListener;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Mark Masone
  */
-public class SelectionPanel extends Panel implements SelectionKeyMapListener {
+public class SelectionPanel extends JPanel {
     
     private int selectedIndex;
     private final int selections;
@@ -68,14 +68,6 @@ public class SelectionPanel extends Panel implements SelectionKeyMapListener {
         return null;
     }
 
-    @Override
-    public void characterSelected() {
-        for(PanelListener panelListener : panelListeners) {
-            panelListener.panelClose();
-        }
-    }
-
-    @Override
     public void selectNextRight() {
         if(selectedIndex < selections - 1) {
             selectedIndex++;
@@ -83,7 +75,6 @@ public class SelectionPanel extends Panel implements SelectionKeyMapListener {
         }
     }
 
-    @Override
     public void selectNextLeft() {
         if(selectedIndex > 0) {
             selectedIndex--;

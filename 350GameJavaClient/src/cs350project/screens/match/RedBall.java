@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import cs350project.characters.*;
+import cs350project.screens.keymaps.MovementKeyMapListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 
-public class RedBall extends JComponent implements ActionListener {
+public class RedBall extends JComponent implements ActionListener, MovementKeyMapListener {
 
     private int fuel = 0;
     private int x = 150;
@@ -27,28 +28,34 @@ public class RedBall extends JComponent implements ActionListener {
     private final int height = 50;
     private final PlayerCharacter character;
 
+    @Override
     public void startMoveLeft() {
         movingLeft = true;
     }
 
+    @Override
     public void startMoveRight() {
         movingRight = true;
     }
 
+    @Override
     public void startJump() {
         if(!jumping) {
             jumping = true;
         }
     }
 
+    @Override
     public void endMoveLeft() {
         movingLeft = false;
     }
 
+    @Override
     public void endMoveRight() {
         movingRight = false;
     }
 
+    @Override
     public void endJump() {
         jumping = false;
     }

@@ -7,19 +7,17 @@ package cs350project.screens;
 import cs350project.screens.keymaps.KeyMap;
 import javax.swing.JComponent;
 import java.util.ArrayList;
-import cs350project.screens.panels.Panel;
-import cs350project.screens.panels.PanelListener;
 
 /**
  *
  * @author Mark Masone
  */
-public abstract class Screen extends JComponent implements PanelListener {
+public abstract class Screen extends JComponent {
     
     protected final ArrayList<ScreenListener> screenListeners;
     
     public Screen() {
-        screenListeners = new ArrayList();
+        screenListeners = new ArrayList<>();
     }
     
     public void addScreenListener(ScreenListener sl) {
@@ -27,5 +25,5 @@ public abstract class Screen extends JComponent implements PanelListener {
     }
     
     public abstract KeyMap getKeyMap();
-    public abstract Panel getPanel();
+    public abstract void showPanel();
 }

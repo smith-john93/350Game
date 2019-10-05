@@ -9,6 +9,11 @@ package cs350project.screens.keymaps;
  *
  * @author Mark Masone
  */
-public interface MatchKeyMapListener {
-    
+public interface MovementKeyMapListener extends MatchKeyMapListener {
+    public void startMoveLeft();
+    public void endMoveLeft();
+    public void startMoveRight();
+    public void endMoveRight();
+    public void startJump();
+    public void endJump();
 }
