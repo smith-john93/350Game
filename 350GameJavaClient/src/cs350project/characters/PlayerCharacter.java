@@ -62,4 +62,6 @@ public abstract class PlayerCharacter {
         Image scaledImage = getScaledImage(resources.getStateImage(currentState),width,height);
         g2d.drawImage(scaledImage,x,y,null);
     }
+    
+    public abstract CharacterClass getCharacterClass();
 }

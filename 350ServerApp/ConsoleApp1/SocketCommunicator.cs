@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Threading;
-using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.WebSockets;
 
 namespace ConsoleApp1
 {
@@ -15,6 +11,9 @@ namespace ConsoleApp1
         private IPHostEntry ipHost;
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
+        // 0x100007F is 127.0.0.1 in big-endian.
+        private const long localhost = 0x100007F;
+        private const int commandPort = 12345;
 
         public bool RequestShutdown;
         public GameQueue Queue;
@@ -23,10 +22,9 @@ namespace ConsoleApp1
             RequestShutdown = false;
             Queue = masterQueue;
             SocketInfo = new SocketInformation();
-
-            ipHost = Dns.GetHostEntry(Dns.GetHostName());
-            ipAddr = ipHost.AddressList[0];
-            localEndPoint = new IPEndPoint(ipAddr, 0);
+            
+            ipAddr = new IPAddress(localhost);
+            localEndPoint = new IPEndPoint(ipAddr, commandPort);
 
             PrimarySocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
@@ -38,19 +36,13 @@ namespace ConsoleApp1
             {
                 PrimarySocket.Bind(localEndPoint);
                 PrimarySocket.Listen(100);
-                string socketInfo = PrimarySocket.LocalEndPoint.ToString();
-                string[] info = socketInfo.Split("]:");
-                info[0] = info[0].Replace("[", "");
 
-                Console.WriteLine($"Server IP: {info[0]}. \nServer Socket: {info[1]}");
-                int i = 0;
+                Console.WriteLine($"Server IP: {ipAddr}. \nServer Socket: {commandPort}");
+
                 while(true && !RequestShutdown)
                 {
-                    if(PrimarySocket.Connected)
-                    {
-                        Queue.queue.Enqueue(new PlayerSocketController(PrimarySocket.Accept()));
-
-                    }
+                    short playerID = (short)(Queue.queue.Count + 1);
+                    Queue.queue.Enqueue(new PlayerSocketController(PrimarySocket.Accept(),playerID));
                 }
                 if(RequestShutdown)
                 {

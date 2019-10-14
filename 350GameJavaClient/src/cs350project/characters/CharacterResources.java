@@ -16,18 +16,18 @@ import javax.swing.ImageIcon;
 public class CharacterResources {
     
     private final String idleStateImageFileName;
-    private final String attackStateImageFileName;
+    private final String jumpStateImageFileName;
     private final String punchStateImageFileName;
     private final String kickStateImageFileName;
     
     public CharacterResources(
             String idleStateImageFileName,
-            String attackStateImageFileName,
+            String jumpStateImageFileName,
             String punchStateImageFileName,
             String kickStateImageFileName
     ) {
         this.idleStateImageFileName = idleStateImageFileName;
-        this.attackStateImageFileName = attackStateImageFileName;
+        this.jumpStateImageFileName = jumpStateImageFileName;
         this.punchStateImageFileName = punchStateImageFileName;
         this.kickStateImageFileName = kickStateImageFileName;
     }
@@ -35,7 +35,7 @@ public class CharacterResources {
     private String getStateImageFileName(CharacterState state) {
         switch(state) {
             case IDLE: return idleStateImageFileName;
-            case ATTACK: return attackStateImageFileName;
+            case JUMP: return jumpStateImageFileName;
             case PUNCH: return punchStateImageFileName;
             case KICK:  return kickStateImageFileName;
             default: return null;

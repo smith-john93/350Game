@@ -9,11 +9,11 @@ package cs350project.characters;
  *
  * @author Mark Masone
  */
-public class LegoMan extends PlayerCharacter {
-    public LegoMan() {
+public class Coffman extends PlayerCharacter {
+    public Coffman() {
         super(
                 new CharacterResources(
-                        "Punch-Hit.gif",
+                        "Coffman.png",
                         "Punch-Hit.gif",
                         "Punch-Hit.gif",
                         "Punch-Hit.gif"
@@ -24,6 +24,6 @@ public class LegoMan extends PlayerCharacter {
 
     @Override
     public CharacterClass getCharacterClass() {
-        return CharacterClass.NORMAL;
+        return CharacterClass.MAGE;
     }
 }
