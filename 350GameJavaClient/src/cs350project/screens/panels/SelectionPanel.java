@@ -18,7 +18,7 @@ import javax.swing.JPanel;
  *
  * @author Mark Masone
  */
-public class SelectionPanel extends JPanel {
+public class SelectionPanel extends Panel {
     
     private int selectedIndex;
     private final int selections;
@@ -35,15 +35,7 @@ public class SelectionPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
-        URL url = SelectionPanel.class.getResource("/resources/background.jpg");
-        
-        try {
-            BufferedImage background = ImageIO.read(url);
-            g2d.drawImage(background, 0, 0, this);
-        } catch(Exception e) {
-            
-        }
-        
+        paintBackground(g2d,"/resources/background.jpg");
         for(int i = 0; i < selections; i++) {
             if(i == selectedIndex)
                 g2d.setColor(Color.red);

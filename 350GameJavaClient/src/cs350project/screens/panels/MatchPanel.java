@@ -9,13 +9,12 @@ import cs350project.characters.PlayerCharacter;
 import cs350project.chat.*;
 import cs350project.screens.keymaps.ChatKeyMapListener;
 import java.util.ArrayList;
-import javax.swing.JPanel;
 
 /**
  *
  * @author Mark Masone
  */
-public class MatchPanel extends JPanel implements ChatMessageFieldKeyListener, ChatKeyMapListener {
+public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, ChatKeyMapListener {
     
     private final ChatMessageQueue chatMessageQueue;
     private final ChatMessageField chatMessageField;

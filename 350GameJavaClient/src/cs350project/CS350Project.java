@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package cs350project;
+import cs350project.screens.MainMenuScreen;
 import cs350project.screens.Screen;
 import cs350project.screens.ScreenListener;
 import cs350project.screens.SelectionScreen;
+import cs350project.screens.keymaps.KeyMap;
 
 /**
  *
@@ -27,9 +29,11 @@ public class CS350Project implements ScreenListener {
             gameFrame.remove(this.screen);
         }
         screen.addScreenListener(this);
-        gameFrame.setKeyMap(screen.getKeyMap());
+        KeyMap keyMap = screen.getKeyMap();
+        gameFrame.setKeyMap(keyMap);
         gameFrame.add(screen);
         gameFrame.setVisible(true);
+        gameFrame.requestFocus();
         screen.showPanel();
         this.screen = screen;
     }
@@ -39,6 +43,6 @@ public class CS350Project implements ScreenListener {
      */
     public static void main(String[] args) {
         CS350Project cs350Project = new CS350Project();
-        cs350Project.showScreen(new SelectionScreen());
+        cs350Project.showScreen(new MainMenuScreen());
     }
 }

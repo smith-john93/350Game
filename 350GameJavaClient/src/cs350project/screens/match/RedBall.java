@@ -3,10 +3,14 @@ package cs350project.screens.match;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+
+import cs350project.Command;
+import cs350project.OutgoingCommandListener;
 import cs350project.characters.*;
 import cs350project.screens.keymaps.MovementKeyMapListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 
 public class RedBall extends JComponent implements ActionListener, MovementKeyMapListener {
@@ -28,18 +32,33 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
     private final int height = 50;
     private final PlayerCharacter character;
 
+    private final ArrayList<OutgoingCommandListener> outgoingCommandListeners = new ArrayList<>();
+
+    public void addOutgoingCommandListener(OutgoingCommandListener outgoingCommandListener) {
+        outgoingCommandListeners.add(outgoingCommandListener);
+    }
+
+    private void sendCommand(Command command) {
+        for(OutgoingCommandListener outgoingCommandListener : outgoingCommandListeners) {
+            outgoingCommandListener.sendCommand(command);
+        }
+    }
+
     @Override
     public void startMoveLeft() {
+        sendCommand(Command.START_MOVE_LEFT);
         movingLeft = true;
     }
 
     @Override
     public void startMoveRight() {
+        sendCommand(Command.START_MOVE_RIGHT);
         movingRight = true;
     }
 
     @Override
     public void startJump() {
+        sendCommand(Command.START_JUMP);
         if(!jumping) {
             jumping = true;
         }
@@ -47,16 +66,19 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
 
     @Override
     public void endMoveLeft() {
+        sendCommand(Command.END_MOVE_LEFT);
         movingLeft = false;
     }
 
     @Override
     public void endMoveRight() {
+        sendCommand(Command.END_MOVE_RIGHT);
         movingRight = false;
     }
 
     @Override
     public void endJump() {
+        sendCommand(Command.END_JUMP);
         jumping = false;
     }
 

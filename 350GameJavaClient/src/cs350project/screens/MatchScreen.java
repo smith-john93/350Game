@@ -6,6 +6,7 @@
 package cs350project.screens;
 
 import cs350project.Communication;
+import cs350project.Settings;
 import cs350project.characters.PlayerCharacter;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.keymaps.MatchKeyMap;
@@ -39,13 +40,17 @@ public class MatchScreen extends Screen implements MenuKeyMapListener {
 
     @Override
     public void showPanel() {
-        redBall.setBounds(0,0,1600,900);
+        Settings settings = Settings.getSettings();
+        int screenW = settings.getScreenWidth();
+        int screenH = settings.getScreenHeight();
+        redBall.setBounds(0,0,screenW,screenH);
         matchKeyMap.addKeyMapListener(redBall);
         matchKeyMap.addKeyMapListener(matchPanel);
         matchKeyMap.addKeyMapListener(this);
         matchPanel.addOutgoingMessageListener(comm);
+        redBall.addOutgoingCommandListener(comm);
         matchPanel.add(redBall);
-        add(matchPanel);
+        addPanel(matchPanel);
         Timer tt = new Timer(17, redBall);
         tt.start();
         comm.connect();

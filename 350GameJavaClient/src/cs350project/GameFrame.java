@@ -22,10 +22,12 @@ public class GameFrame extends JFrame {
     }
     
     public void setKeyMap(KeyMap keyMap) {
-        if(this.keyMap != null) {
-            removeKeyListener(this.keyMap);
+        if(keyMap != null) {
+            if (this.keyMap != null) {
+                removeKeyListener(this.keyMap);
+            }
+            this.keyMap = keyMap;
+            addKeyListener(keyMap);
         }
-        this.keyMap = keyMap;
-        addKeyListener(keyMap);
     }
 }

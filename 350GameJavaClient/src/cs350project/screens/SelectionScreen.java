@@ -34,7 +34,7 @@ public class SelectionScreen extends Screen implements SelectionKeyMapListener {
     @Override
     public void showPanel() {
         selectionKeyMap.addSelectionKeyMapListener(this);
-        add(selectionPanel);
+        addPanel(selectionPanel);
         music.playSelectionPanelMusic();
     }
 
