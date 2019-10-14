@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.panels;
+package cs350project.menu;
+
+import javax.swing.JButton;
 
 /**
  *
  * @author Mark Masone
  */
-public interface PanelListener {
-    public void panelClose();
+public interface MenuMouseListener {
+    void buttonClicked(JButton button);
 }

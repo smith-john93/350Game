@@ -18,43 +18,29 @@ Key bindings for the fight screen.
 */
 public class MatchKeyMap extends KeyMap<MatchKeyMapListener> {
     
-    @Override
-    public void keyPressed(KeyEvent ke) {
-        for(MatchKeyMapListener matchKeyMapListener : keyMapListeners) {
-            switch(ke.getKeyCode()) {
-                case KeyEvent.VK_C:
-                    matchKeyMapListener.messageStart();
-                    break;
-                case KeyEvent.VK_A:
-                    matchKeyMapListener.startMoveLeft();
-                    break;
-                case KeyEvent.VK_D:
-                    matchKeyMapListener.startMoveRight();
-                    break;
-                case KeyEvent.VK_SPACE:
-                    matchKeyMapListener.startJump();
-                    break;
-                case KeyEvent.VK_ESCAPE:
-                    matchKeyMapListener.endGame();
-                    break;
-            }
-        }
+    private final ChatKeyMap chatKeyMap;
+    private final MovementKeyMap movementKeyMap;
+    private final MenuKeyMap menuKeyMap;
+    
+    public MatchKeyMap() {
+        chatKeyMap = new ChatKeyMap();
+        movementKeyMap = new MovementKeyMap();
+        menuKeyMap = new MenuKeyMap();
+        addKeyMap(chatKeyMap);
+        addKeyMap(movementKeyMap);
+        addKeyMap(menuKeyMap);
     }
     
     @Override
-    public void keyReleased(KeyEvent ke) {
-        for(MatchKeyMapListener matchKeyMapListener : keyMapListeners) {
-            switch(ke.getKeyCode()) {
-                case KeyEvent.VK_A:
-                    matchKeyMapListener.endMoveLeft();
-                    break;
-                case KeyEvent.VK_D:
-                    matchKeyMapListener.endMoveRight();
-                    break;
-                case KeyEvent.VK_SPACE:
-                    matchKeyMapListener.endJump();
-                    break;
-            }
+    public void addKeyMapListener(MatchKeyMapListener matchKeyMapListener) {
+        if(matchKeyMapListener instanceof ChatKeyMapListener) {
+            chatKeyMap.addKeyMapListener((ChatKeyMapListener)matchKeyMapListener);
+        } else if(matchKeyMapListener instanceof MovementKeyMapListener) {
+            movementKeyMap.addKeyMapListener((MovementKeyMapListener)matchKeyMapListener);
+        } else if(matchKeyMapListener instanceof MenuKeyMapListener) {
+            menuKeyMap.addKeyMapListener((MenuKeyMapListener)matchKeyMapListener);
+        } else {
+            super.addKeyMapListener(matchKeyMapListener);
         }
     }
 }

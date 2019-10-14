@@ -4,19 +4,15 @@
  * and open the template in the editor.
  */
 package cs350project;
-import cs350project.screens.ScreenListener;
-import cs350project.screens.Screen;
-import javax.swing.JFrame;
 import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.panels.Panel;
+import javax.swing.JFrame;
 
 /**
  *
  * @author Mark Masone
  */
-public class GameFrame extends JFrame implements ScreenListener {
+public class GameFrame extends JFrame {
     
-    private Screen screen;
     private KeyMap keyMap;
     
     public GameFrame() {
@@ -25,25 +21,13 @@ public class GameFrame extends JFrame implements ScreenListener {
         setSize(1600, 900);
     }
     
-    private void setKeyMap(KeyMap keyMap) {
-        if(this.keyMap != null) {
-            removeKeyListener(this.keyMap);
+    public void setKeyMap(KeyMap keyMap) {
+        if(keyMap != null) {
+            if (this.keyMap != null) {
+                removeKeyListener(this.keyMap);
+            }
+            this.keyMap = keyMap;
+            addKeyListener(keyMap);
         }
-        this.keyMap = keyMap;
-        addKeyListener(keyMap);
-    }
-    
-    @Override
-    public void showScreen(Screen screen) {
-        if(this.screen != null) {
-            remove(this.screen);
-        }
-        screen.addScreenListener(this);
-        Panel panel = screen.getPanel();
-        panel.addPanelListener(screen);
-        setKeyMap(screen.getKeyMap());
-        add(screen);
-        setVisible(true);
-        this.screen = screen;
     }
 }
