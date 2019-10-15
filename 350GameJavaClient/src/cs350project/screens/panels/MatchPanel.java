@@ -23,9 +23,7 @@ public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, Ch
     
     public MatchPanel(PlayerCharacter player1, PlayerCharacter player2) {
         outgoingMessageListeners = new ArrayList<>();
-        setBounds(0,0,1600,900);
         chatMessageQueue = new ChatMessageQueue();
-        setLayout(null);
         chatMessageField = new ChatMessageField();
         chatMessageField.setVisible(false);
         add(chatMessageQueue);

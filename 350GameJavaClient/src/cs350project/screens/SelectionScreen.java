@@ -8,13 +8,14 @@ import cs350project.screens.keymaps.SelectionKeyMap;
 import cs350project.screens.panels.SelectionPanel;
 import cs350project.Music;
 import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.keymaps.SelectionKeyMapListener;
+import cs350project.screens.listeners.SelectionInputListener;
+import cs350project.screens.overlays.SelectionOverlay;
 
 /**
  *
  * @author Mark Masone
  */
-public class SelectionScreen extends Screen implements SelectionKeyMapListener {
+public class SelectionScreen extends Screen implements SelectionInputListener {
     
     private final SelectionKeyMap selectionKeyMap;
     private final SelectionPanel selectionPanel;
@@ -33,7 +34,9 @@ public class SelectionScreen extends Screen implements SelectionKeyMapListener {
     
     @Override
     public void showPanel() {
-        selectionKeyMap.addSelectionKeyMapListener(this);
+        selectionKeyMap.addSelectionInputListener(this);
+        SelectionOverlay selectionOverlay = selectionPanel.getSelectionOverlay();
+        selectionOverlay.addSelectionInputListener(this);
         addPanel(selectionPanel);
         music.playSelectionPanelMusic();
     }
@@ -51,12 +54,12 @@ public class SelectionScreen extends Screen implements SelectionKeyMapListener {
     }
 
     @Override
-    public void selectNextRight() {
-        selectionPanel.selectNextRight();
+    public void highlightNextRight() {
+        selectionPanel.getSelectionOverlay().highlightNextRight();
     }
 
     @Override
-    public void selectNextLeft() {
-        selectionPanel.selectNextLeft();
+    public void highlightNextLeft() {
+        selectionPanel.getSelectionOverlay().highlightNextLeft();
     }
 }

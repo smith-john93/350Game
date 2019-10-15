@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.keymaps;
+package cs350project.screens.listeners;
 
 /**
  *
  * @author Mark Masone
  */
-public interface SelectionKeyMapListener {
-    public void characterSelected();
-    public void selectNextRight();
-    public void selectNextLeft();
+public interface SelectionInputListener {
+    void characterSelected();
+    void highlightNextRight();
+    void highlightNextLeft();
 }

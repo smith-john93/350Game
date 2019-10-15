@@ -31,6 +31,7 @@ public abstract class Screen extends JComponent {
         int screenW = settings.getScreenWidth();
         int screenH = settings.getScreenHeight();
         panel.setBounds(0, 0, screenW, screenH);
+        panel.setLayout(null);
         add(panel);
     }
     

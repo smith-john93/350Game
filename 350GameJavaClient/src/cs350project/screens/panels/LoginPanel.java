@@ -19,7 +19,6 @@ public class LoginPanel extends Panel {
 
     public LoginPanel() {
         loginMouseListeners = new ArrayList<>();
-        setLayout(null);
         usernameField = new JTextField();
         passwordField = new JPasswordField();
         loginButton = new JButton("Log In");
@@ -27,7 +26,7 @@ public class LoginPanel extends Panel {
         menu.addField(usernameField);
         menu.addField(passwordField);
         menu.addButton(loginButton);
-        menu.addMenuMouseListener(new MenuActionListener() {
+        menu.addMenuActionListener(new MenuActionListener() {
             @Override
             public void buttonClicked(JButton button) {
                 for(LoginMouseListener loginMouseListener : loginMouseListeners) {

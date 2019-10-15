@@ -16,13 +16,12 @@ public class MainMenuPanel extends Panel {
 
     public MainMenuPanel() {
         mainMenuMouseListeners = new ArrayList<>();
-        setLayout(null);
         loginButton = new JButton("Log In");
         createAccountButton = new JButton("Create New Account");
         Menu menu = new Menu();
         menu.addButton(loginButton);
         menu.addButton(createAccountButton);
-        menu.addMenuMouseListener(new MenuActionListener(){
+        menu.addMenuActionListener(new MenuActionListener(){
             @Override
             public void buttonClicked(JButton button) {
                 for (MainMenuMouseListener mainMenuMouseListener : mainMenuMouseListeners) {

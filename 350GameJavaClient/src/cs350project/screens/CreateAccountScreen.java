@@ -1,10 +1,10 @@
 package cs350project.screens;
 
 import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.mouse.CreateAccountMouseListener;
 import cs350project.screens.panels.CreateAccountPanel;
+import cs350project.screens.listeners.CreateAccountInputListener;
 
-public class CreateAccountScreen extends Screen implements CreateAccountMouseListener {
+public class CreateAccountScreen extends Screen implements CreateAccountInputListener {
     
     private final CreateAccountPanel createAccountPanel;
     
@@ -19,12 +19,12 @@ public class CreateAccountScreen extends Screen implements CreateAccountMouseLis
 
     @Override
     public void showPanel() {
-        createAccountPanel.addCreateAccountMouseListener(this);
+        createAccountPanel.addCreateAccountInputListener(this);
         addPanel(createAccountPanel);
     }
 
     @Override
-    public void createAccountButtonClicked() {
+    public void createAccount() {
         for(ScreenListener screenListener : screenListeners) {
             screenListener.showScreen(new SelectionScreen());
         }

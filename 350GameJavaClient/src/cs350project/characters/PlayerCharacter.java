@@ -7,19 +7,16 @@ package cs350project.characters;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.swing.JComponent;
 
 /**
  *
  * @author Mark Masone
  */
-public abstract class PlayerCharacter {
+public abstract class PlayerCharacter extends JComponent {
     
     private CharacterState currentState;
     private final CharacterResources resources;
-    private int x;
-    private int y;
-    private int width;
-    private int height;
     private int direction;
     
     public PlayerCharacter(CharacterState defaultCharacterState, String defaultFileName) {
@@ -35,35 +32,34 @@ public abstract class PlayerCharacter {
     public void setState(CharacterState state) {
         currentState = state;
     }
-    
-    public void setBounds(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
 
     public void setDirection(int direction) {
         this.direction = direction;
     }
 
-    private Image getScaledImage(Image srcImg, int w, int h){
-        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    private Image getScaledImage(Image srcImg){
+        Rectangle bounds = getBounds();
+        int width = bounds.width;
+        int height = bounds.height;
+        BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = resizedImg.createGraphics();
 
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         int scaledImageX = 0;
         if(direction < 0)
-            scaledImageX = w;
-        g2.drawImage(srcImg, scaledImageX, 0, w * direction, h, null);
+            scaledImageX = width;
+        g2.drawImage(srcImg, scaledImageX, 0, width * direction, height, null);
         g2.dispose();
 
         return resizedImg;
     }
-    
-    public void draw(Graphics2D g2d) {
-        Image scaledImage = getScaledImage(resources.getStateImage(currentState),width,height);
-        g2d.drawImage(scaledImage,x,y,null);
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D)g;
+        Image scaledImage = getScaledImage(resources.getStateImage(currentState));
+        g2d.drawImage(scaledImage,0,0,null);
     }
     
     public abstract CharacterClass getCharacterClass();

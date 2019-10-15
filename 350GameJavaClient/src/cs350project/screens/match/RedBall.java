@@ -93,6 +93,7 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
         platArray[6] = new Platform(150,150,100,25);
 
         this.character = character;
+        add(character);
     }
     
     @Override
@@ -122,7 +123,6 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
                 character.setDirection(1);
             if(movingLeft)
                 character.setDirection(-1);
-            character.draw((java.awt.Graphics2D) g);
         }
     }
 
