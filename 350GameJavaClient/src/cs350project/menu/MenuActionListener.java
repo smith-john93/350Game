@@ -11,6 +11,6 @@ import javax.swing.JButton;
  *
  * @author Mark Masone
  */
-public interface MenuMouseListener {
+public interface MenuActionListener {
     void buttonClicked(JButton button);
 }

@@ -1,7 +1,6 @@
 package cs350project.screens.panels;
 
 import cs350project.menu.Menu;
-import cs350project.menu.MenuMouseListener;
 import cs350project.screens.mouse.CreateAccountMouseListener;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import cs350project.menu.MenuActionListener;
 
 public class CreateAccountPanel extends Panel {
     
@@ -27,7 +27,7 @@ public class CreateAccountPanel extends Panel {
         menu.addField(usernameField);
         menu.addField(passwordField);
         menu.addButton(createAccountButton);
-        menu.addMenuMouseListener(new MenuMouseListener() {
+        menu.addMenuMouseListener(new MenuActionListener() {
             @Override
             public void buttonClicked(JButton button) {
                 for (CreateAccountMouseListener createAccountMouseListener : createAccountMouseListeners) {

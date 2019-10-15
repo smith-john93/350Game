@@ -1,12 +1,12 @@
 package cs350project.screens.panels;
 
 import cs350project.menu.Menu;
-import cs350project.menu.MenuMouseListener;
 import cs350project.screens.mouse.MainMenuMouseListener;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JButton;
 import java.util.ArrayList;
+import cs350project.menu.MenuActionListener;
 
 public class MainMenuPanel extends Panel {
 
@@ -22,7 +22,7 @@ public class MainMenuPanel extends Panel {
         Menu menu = new Menu();
         menu.addButton(loginButton);
         menu.addButton(createAccountButton);
-        menu.addMenuMouseListener(new MenuMouseListener(){
+        menu.addMenuMouseListener(new MenuActionListener(){
             @Override
             public void buttonClicked(JButton button) {
                 for (MainMenuMouseListener mainMenuMouseListener : mainMenuMouseListeners) {
