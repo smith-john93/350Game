@@ -7,12 +7,8 @@ package cs350project.screens.panels;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.awt.Color;
 import cs350project.characters.*;
-import javax.swing.JPanel;
 
 /**
  *
@@ -45,10 +41,11 @@ public class SelectionPanel extends Panel {
             int y = 300;
             int w = 100;
             int h = 100;
-            g2d.drawRect(x, y, w, h);
             PlayerCharacter character = characters[i];
+            character.setState(CharacterState.THUMBNAIL);
             character.setBounds(x, y, w, h);
             character.draw(g2d);
+            g2d.drawRect(x, y, w, h);
         }
     }
     

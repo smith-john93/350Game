@@ -7,6 +7,7 @@ package cs350project.screens;
 
 import cs350project.Communication;
 import cs350project.Settings;
+import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.keymaps.MatchKeyMap;
@@ -27,6 +28,7 @@ public class MatchScreen extends Screen implements MenuKeyMapListener {
     private final Communication comm;
     
     public MatchScreen(PlayerCharacter player1, PlayerCharacter player2) {
+        player1.setState(CharacterState.IDLE);
         matchKeyMap = new MatchKeyMap();
         matchPanel = new MatchPanel(player1,player2);
         comm = new Communication();

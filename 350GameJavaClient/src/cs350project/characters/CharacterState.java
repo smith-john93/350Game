@@ -15,5 +15,6 @@ public enum CharacterState {
     CROUCH,
     PUNCH,
     KICK,
-    BLOCK;
+    BLOCK,
+    THUMBNAIL;
 }

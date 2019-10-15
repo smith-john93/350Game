@@ -7,6 +7,7 @@ package cs350project.characters;
 
 import java.awt.Image;
 import java.net.URL;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
 
 /**
@@ -15,36 +16,26 @@ import javax.swing.ImageIcon;
  */
 public class CharacterResources {
     
-    private final String idleStateImageFileName;
-    private final String jumpStateImageFileName;
-    private final String punchStateImageFileName;
-    private final String kickStateImageFileName;
+    private final HashMap<CharacterState,String> resources;
+    private final CharacterState defaultCharacterState;
     
-    public CharacterResources(
-            String idleStateImageFileName,
-            String jumpStateImageFileName,
-            String punchStateImageFileName,
-            String kickStateImageFileName
-    ) {
-        this.idleStateImageFileName = idleStateImageFileName;
-        this.jumpStateImageFileName = jumpStateImageFileName;
-        this.punchStateImageFileName = punchStateImageFileName;
-        this.kickStateImageFileName = kickStateImageFileName;
+    public CharacterResources(CharacterState defaultCharacterState, String fileName) {
+        this.defaultCharacterState = defaultCharacterState;
+        resources = new HashMap<>();
+        resources.put(defaultCharacterState, fileName);
     }
     
-    private String getStateImageFileName(CharacterState state) {
-        switch(state) {
-            case IDLE: return idleStateImageFileName;
-            case JUMP: return jumpStateImageFileName;
-            case PUNCH: return punchStateImageFileName;
-            case KICK:  return kickStateImageFileName;
-            default: return null;
+    public void setResource(CharacterState characterState, String fileName) {
+        resources.put(characterState, fileName);
+    }
+    
+    public Image getStateImage(CharacterState characterState) {
+        String fileName = resources.get(characterState);
+        if(fileName == null) {
+            fileName = resources.get(defaultCharacterState);
         }
-    }
-    
-    public Image getStateImage(CharacterState state) {
-        URL url = PlayerCharacter.class.getResource("/resources/characters/" + getStateImageFileName(state));
-        ImageIcon character = new ImageIcon(url);
+        URL url = PlayerCharacter.class.getResource("/resources/" + fileName);
+        ImageIcon characterImageIcon = new ImageIcon(url);
         
         // This could be useful later.
         /*
@@ -60,6 +51,6 @@ public class CharacterResources {
             }
         }*/
         
-        return character.getImage();
+        return characterImageIcon.getImage();
     }
 }

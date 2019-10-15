@@ -11,15 +11,9 @@ package cs350project.characters;
  */
 public class Coffman extends PlayerCharacter {
     public Coffman() {
-        super(
-                new CharacterResources(
-                        "Coffman.png",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif"
-                ),
-                CharacterState.IDLE
-        );
+        super(CharacterState.IDLE,"characters/Coffman.png");
+        CharacterResources resources = getCharacterResources();
+        resources.setResource(CharacterState.THUMBNAIL, "charSelectThumbs/coffmanThumb.png");
     }
 
     @Override

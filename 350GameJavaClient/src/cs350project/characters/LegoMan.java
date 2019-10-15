@@ -11,15 +11,9 @@ package cs350project.characters;
  */
 public class LegoMan extends PlayerCharacter {
     public LegoMan() {
-        super(
-                new CharacterResources(
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif"
-                ),
-                CharacterState.IDLE
-        );
+        super(CharacterState.IDLE,"characters/Punch-Hit.gif");
+        CharacterResources resources = getCharacterResources();
+        resources.setResource(CharacterState.THUMBNAIL, "charSelectThumbs/legoManThumb.png");
     }
 
     @Override

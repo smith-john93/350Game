@@ -7,7 +7,6 @@ package cs350project.characters;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.geom.AffineTransform;
 
 /**
  *
@@ -23,10 +22,14 @@ public abstract class PlayerCharacter {
     private int height;
     private int direction;
     
-    public PlayerCharacter(CharacterResources resources, CharacterState startState) {
-        currentState = startState;
-        this.resources = resources;
+    public PlayerCharacter(CharacterState defaultCharacterState, String defaultFileName) {
+        currentState = defaultCharacterState;
+        resources = new CharacterResources(defaultCharacterState,defaultFileName);
         direction = 1;
+    }
+    
+    public CharacterResources getCharacterResources() {
+        return resources;
     }
     
     public void setState(CharacterState state) {
@@ -49,10 +52,10 @@ public abstract class PlayerCharacter {
         Graphics2D g2 = resizedImg.createGraphics();
 
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        int x = 0;
+        int scaledImageX = 0;
         if(direction < 0)
-            x = w;
-        g2.drawImage(srcImg, x, 0, w * direction, h, null);
+            scaledImageX = w;
+        g2.drawImage(srcImg, scaledImageX, 0, w * direction, h, null);
         g2.dispose();
 
         return resizedImg;
