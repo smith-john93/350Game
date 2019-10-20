@@ -7,19 +7,22 @@ package cs350project.screens.panels;
 import cs350project.OutgoingMessageListener;
 import cs350project.characters.PlayerCharacter;
 import cs350project.chat.*;
-import cs350project.screens.keymaps.ChatKeyMapListener;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
+import cs350project.screens.listeners.match.ChatInputListener;
 
 /**
  *
  * @author Mark Masone
  */
-public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, ChatKeyMapListener {
+public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, ChatInputListener {
     
     private final ChatMessageQueue chatMessageQueue;
     private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
     private final ArrayList<OutgoingMessageListener> outgoingMessageListeners;
+    private String background;
     
     public MatchPanel(PlayerCharacter player1, PlayerCharacter player2) {
         outgoingMessageListeners = new ArrayList<>();
@@ -62,5 +65,18 @@ public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, Ch
             repaint();
         }
         messageCancel();
+    }
+    
+    public void setBackground(String background) {
+        this.background = background;
+    }
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(background != null) {
+            Graphics2D g2d = (Graphics2D)g;
+            paintBackground(g2d,"/resources/" + background);
+        }
     }
 }

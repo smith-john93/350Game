@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.keymaps;
+package cs350project.screens.listeners;
 
 /**
  *
  * @author Mark Masone
  */
-public interface ChatKeyMapListener extends MatchKeyMapListener {
-    void messageStart();
+public interface MatchInputListener {
+    
 }

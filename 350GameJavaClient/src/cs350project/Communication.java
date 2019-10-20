@@ -55,21 +55,29 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     }
 
     @Override
-    public void sendCommand(Command command) {
+    public void sendCommand(int command) {
+        //System.out.println(command);
+        for(Command c : Command.values()) {
+            if((command & c.getCode()) == c.getCode()) {
+                System.out.print(c + " ");
+            }
+        }
+        System.out.println("");
+        
         if(commandStream != null) {
             try {
-                commandStream.write(command.getCode());
+                commandStream.write((byte)command);
                 short id = 356;
                 byte[] idBytes = new byte[2];
                 idBytes[0] = (byte)(id >> 8);
                 idBytes[1] = (byte)id;
                 commandStream.write(idBytes);
-                System.out.println("Command sent: " + command.getCode());
+                System.out.println("Command sent: " + command);
             } catch (IOException e) {
                 System.out.println("Failed to write command to stream.");
             }
         } else {
-            System.out.println("Unable to send command.");
+            //System.out.println("Unable to send command.");
         }
     }
 }

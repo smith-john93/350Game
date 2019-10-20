@@ -5,7 +5,6 @@
  */
 package cs350project.screens.keymaps;
 import cs350project.screens.listeners.SelectionInputListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 

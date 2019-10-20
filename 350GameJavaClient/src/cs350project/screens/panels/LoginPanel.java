@@ -1,7 +1,6 @@
 package cs350project.screens.panels;
 
 import cs350project.menu.Menu;
-import cs350project.screens.mouse.LoginMouseListener;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -10,15 +9,16 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import cs350project.menu.MenuActionListener;
+import cs350project.screens.listeners.LoginInputListener;
 
 public class LoginPanel extends Panel {
-    private final ArrayList<LoginMouseListener> loginMouseListeners;
+    private final ArrayList<LoginInputListener> loginInputListeners;
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     private final JButton loginButton;
 
     public LoginPanel() {
-        loginMouseListeners = new ArrayList<>();
+        loginInputListeners = new ArrayList<>();
         usernameField = new JTextField();
         passwordField = new JPasswordField();
         loginButton = new JButton("Log In");
@@ -29,10 +29,10 @@ public class LoginPanel extends Panel {
         menu.addMenuActionListener(new MenuActionListener() {
             @Override
             public void buttonClicked(JButton button) {
-                for(LoginMouseListener loginMouseListener : loginMouseListeners) {
+                for(LoginInputListener loginInputListener : loginInputListeners) {
                     if(button == loginButton) {
                         char[] password = passwordField.getPassword();
-                        loginMouseListener.loginButtonClicked(usernameField.getText(),password);
+                        loginInputListener.login(usernameField.getText(),password);
                         Arrays.fill(password,'0'); // Clear the password array for security.
                     }
                 }
@@ -48,7 +48,7 @@ public class LoginPanel extends Panel {
         paintBackground(g2d,"/resources/background.jpg");
     }
 
-    public void addLoginMouseListener(LoginMouseListener loginMouseListener) {
-        loginMouseListeners.add(loginMouseListener);
+    public void addLoginInputListener(LoginInputListener loginMenuInputListener) {
+        loginInputListeners.add(loginMenuInputListener);
     }
 }

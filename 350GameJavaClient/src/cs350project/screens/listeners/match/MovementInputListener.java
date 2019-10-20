@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.keymaps;
+package cs350project.screens.listeners.match;
+
+import cs350project.screens.listeners.MatchInputListener;
 
 /**
  *
  * @author Mark Masone
  */
-public interface MovementKeyMapListener extends MatchKeyMapListener {
+public interface MovementInputListener extends MatchInputListener {
     public void startMoveLeft();
     public void endMoveLeft();
     public void startMoveRight();

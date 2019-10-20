@@ -5,28 +5,29 @@
  */
 package cs350project.screens.keymaps;
 
+import cs350project.screens.listeners.match.MovementInputListener;
 import java.awt.event.KeyEvent;
 
 /**
  *
  * @author Mark Masone
  */
-public class MovementKeyMap extends KeyMap<MovementKeyMapListener> {
+public class MovementKeyMap extends KeyMap<MovementInputListener> {
     @Override
     public void keyPressed(KeyEvent ke) {
         switch(ke.getKeyCode()) {
             case KeyEvent.VK_A:
-                for(MovementKeyMapListener movementKeyListener : keyMapListeners) {
-                    movementKeyListener.startMoveLeft();
+                for(MovementInputListener movementInputListener : inputListeners) {
+                    movementInputListener.startMoveLeft();
                 }
                 break;
             case KeyEvent.VK_D:
-                for(MovementKeyMapListener movementKeyListener : keyMapListeners) {
+                for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.startMoveRight();
                 }
                 break;
             case KeyEvent.VK_SPACE:
-                for(MovementKeyMapListener movementKeyListener : keyMapListeners) {
+                for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.startJump();
                 }
                 break;
@@ -37,17 +38,17 @@ public class MovementKeyMap extends KeyMap<MovementKeyMapListener> {
     public void keyReleased(KeyEvent ke) {
         switch(ke.getKeyCode()) {
             case KeyEvent.VK_A:
-                for(MovementKeyMapListener movementKeyListener : keyMapListeners) {
+                for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endMoveLeft();
                 }
                 break;
             case KeyEvent.VK_D:
-                for(MovementKeyMapListener movementKeyListener : keyMapListeners) {
+                for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endMoveRight();
                 }
                 break;
             case KeyEvent.VK_SPACE:
-                for(MovementKeyMapListener movementKeyListener : keyMapListeners) {
+                for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endJump();
                 }
                 break;

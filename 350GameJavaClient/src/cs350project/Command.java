@@ -1,20 +1,22 @@
 package cs350project;
 
 public enum Command {
-    START_MOVE_LEFT(0x1),
-    START_MOVE_RIGHT(0x2),
-    START_JUMP(0x3),
-    END_MOVE_LEFT(0x4),
-    END_MOVE_RIGHT(0x5),
-    END_JUMP(0x6);
-
-    private byte code;
-
+    MOVING_LEFT(0x40),
+    MOVING_RIGHT(0x20),
+    CROUCHING(0x10),
+    JUMPING(0x8),
+    BLOCKING(0x4),
+    PUNCH(0x3),
+    HIGH_KICK(0x2),
+    LOW_KICK(0x1);
+        
+    private final int code;
+        
     private Command(int code) {
-        this.code = (byte)code;
+        this.code = code;
     }
-
-    public byte getCode() {
+    
+    public int getCode() {
         return code;
     }
 }

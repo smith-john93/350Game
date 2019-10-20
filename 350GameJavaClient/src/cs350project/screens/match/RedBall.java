@@ -7,13 +7,13 @@ import java.awt.Graphics;
 import cs350project.Command;
 import cs350project.OutgoingCommandListener;
 import cs350project.characters.*;
-import cs350project.screens.keymaps.MovementKeyMapListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JComponent;
+import cs350project.screens.listeners.match.MovementInputListener;
 
-public class RedBall extends JComponent implements ActionListener, MovementKeyMapListener {
+public class RedBall extends JComponent implements ActionListener, MovementInputListener {
 
     private int fuel = 0;
     private int x = 150;
@@ -31,6 +31,7 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
     private final int width = 50;
     private final int height = 50;
     private final PlayerCharacter character;
+    private int command = 0;
 
     private final ArrayList<OutgoingCommandListener> outgoingCommandListeners = new ArrayList<>();
 
@@ -38,7 +39,7 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
         outgoingCommandListeners.add(outgoingCommandListener);
     }
 
-    private void sendCommand(Command command) {
+    private void sendCommand(int command) {
         for(OutgoingCommandListener outgoingCommandListener : outgoingCommandListeners) {
             outgoingCommandListener.sendCommand(command);
         }
@@ -46,19 +47,22 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
 
     @Override
     public void startMoveLeft() {
-        sendCommand(Command.START_MOVE_LEFT);
+        command |= Command.MOVING_LEFT.getCode();
+        sendCommand(command);
         movingLeft = true;
     }
 
     @Override
     public void startMoveRight() {
-        sendCommand(Command.START_MOVE_RIGHT);
+        command |= Command.MOVING_RIGHT.getCode();
+        sendCommand(command);
         movingRight = true;
     }
 
     @Override
     public void startJump() {
-        sendCommand(Command.START_JUMP);
+        command |= Command.JUMPING.getCode();
+        sendCommand(command);
         if(!jumping) {
             jumping = true;
         }
@@ -66,19 +70,22 @@ public class RedBall extends JComponent implements ActionListener, MovementKeyMa
 
     @Override
     public void endMoveLeft() {
-        sendCommand(Command.END_MOVE_LEFT);
+        command ^= Command.MOVING_LEFT.getCode();
+        sendCommand(command);
         movingLeft = false;
     }
 
     @Override
     public void endMoveRight() {
-        sendCommand(Command.END_MOVE_RIGHT);
+        command ^= Command.MOVING_RIGHT.getCode();
+        sendCommand(command);
         movingRight = false;
     }
 
     @Override
     public void endJump() {
-        sendCommand(Command.END_JUMP);
+        command ^= Command.JUMPING.getCode();
+        sendCommand(command);
         jumping = false;
     }
 

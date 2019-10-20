@@ -1,11 +1,11 @@
 package cs350project.screens;
 
 import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.mouse.LoginMouseListener;
 import cs350project.screens.panels.LoginPanel;
 import java.util.Arrays;
+import cs350project.screens.listeners.LoginInputListener;
 
-public class LoginScreen extends Screen implements LoginMouseListener {
+public class LoginScreen extends Screen implements LoginInputListener {
 
     private final LoginPanel loginPanel;
 
@@ -20,12 +20,12 @@ public class LoginScreen extends Screen implements LoginMouseListener {
 
     @Override
     public void showPanel() {
-        loginPanel.addLoginMouseListener(this);
+        loginPanel.addLoginInputListener(this);
         addPanel(loginPanel);
     }
 
     @Override
-    public void loginButtonClicked(String username, char[] password) {
+    public void login(String username, char[] password) {
         String dummyPassword = "1";
         String dummyUsername = "1";
         if(username.equals(dummyUsername) && password.length > 0) {
