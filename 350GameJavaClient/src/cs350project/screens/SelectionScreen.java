@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package cs350project.screens;
+import cs350project.screens.listeners.ScreenListener;
 import cs350project.screens.keymaps.SelectionKeyMap;
 import cs350project.screens.panels.SelectionPanel;
 import cs350project.Music;
@@ -43,14 +44,12 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
 
     @Override
     public void characterSelected() {
-        for(ScreenListener screenListener : screenListeners) {
-            MatchScreen matchScreen = new MatchScreen(
-                    selectionPanel.getPlayer1Selection(),
-                    selectionPanel.getPlayer2Selection()
-            );
-            screenListener.showScreen(matchScreen);
-            music.stop();
-        }
+        MatchScreen matchScreen = new MatchScreen(
+                selectionPanel.getPlayer1Selection(),
+                selectionPanel.getPlayer2Selection()
+        );
+        showScreen(matchScreen);
+        music.stop();
     }
 
     @Override

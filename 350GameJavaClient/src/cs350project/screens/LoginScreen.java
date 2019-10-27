@@ -20,7 +20,7 @@ public class LoginScreen extends Screen implements LoginInputListener {
 
     @Override
     public void showPanel() {
-        loginPanel.addLoginInputListener(this);
+        loginPanel.addInputListener(this);
         addPanel(loginPanel);
     }
 
@@ -37,9 +37,7 @@ public class LoginScreen extends Screen implements LoginInputListener {
                 }
             }
             if(passwordIsValid) {
-                for(ScreenListener screenListener : screenListeners) {
-                    screenListener.showScreen(new SelectionScreen());
-                }
+                showScreen(new LobbyScreen());
             }
         }
         Arrays.fill(password,'0'); // Clear the password array for security.

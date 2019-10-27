@@ -19,21 +19,17 @@ public class MainMenuScreen extends Screen implements MainMenuInputListener {
 
     @Override
     public void showPanel() {
-        mainMenuPanel.addMainMenuInputListener(this);
+        mainMenuPanel.addInputListener(this);
         addPanel(mainMenuPanel);
     }
 
     @Override
     public void login() {
-        for(ScreenListener screenListener : screenListeners) {
-            screenListener.showScreen(new LoginScreen());
-        }
+        showScreen(new LoginScreen());
     }
 
     @Override
     public void createAccount() {
-        for(ScreenListener screenListener : screenListeners) {
-            screenListener.showScreen(new CreateAccountScreen());
-        }
+        showScreen(new CreateAccountScreen());
     }
 }

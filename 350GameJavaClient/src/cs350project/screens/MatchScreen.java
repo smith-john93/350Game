@@ -5,6 +5,7 @@
  */
 package cs350project.screens;
 
+import cs350project.screens.listeners.ScreenListener;
 import cs350project.Communication;
 import cs350project.Settings;
 import cs350project.characters.CharacterState;
@@ -65,8 +66,6 @@ public class MatchScreen extends Screen implements MatchMenuInputListener {
     
     @Override
     public void endGame() {
-        for(ScreenListener screenListener : screenListeners) {
-            screenListener.showScreen(new SelectionScreen());
-        }
+        showScreen(new SelectionScreen());
     }
 }

@@ -6,8 +6,7 @@
 package cs350project;
 import cs350project.screens.MainMenuScreen;
 import cs350project.screens.Screen;
-import cs350project.screens.ScreenListener;
-import cs350project.screens.SelectionScreen;
+import cs350project.screens.listeners.ScreenListener;
 import cs350project.screens.keymaps.KeyMap;
 
 /**

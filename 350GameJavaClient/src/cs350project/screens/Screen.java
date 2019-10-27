@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package cs350project.screens;
+import cs350project.screens.listeners.ScreenListener;
 import cs350project.Settings;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.panels.Panel;
@@ -16,14 +17,14 @@ import java.util.ArrayList;
  */
 public abstract class Screen extends JComponent {
     
-    protected final ArrayList<ScreenListener> screenListeners;
+    private final ArrayList<ScreenListener> screenListeners;
     
     public Screen() {
         screenListeners = new ArrayList<>();
     }
     
-    public void addScreenListener(ScreenListener sl) {
-        screenListeners.add(sl);
+    public void addScreenListener(ScreenListener screenListener) {
+        screenListeners.add(screenListener);
     }
     
     public void addPanel(Panel panel) {
@@ -33,6 +34,12 @@ public abstract class Screen extends JComponent {
         panel.setBounds(0, 0, screenW, screenH);
         panel.setLayout(null);
         add(panel);
+    }
+    
+    protected void showScreen(Screen screen) {
+        for(ScreenListener screenListener : screenListeners) {
+            screenListener.showScreen(screen);
+        }
     }
     
     public abstract KeyMap getKeyMap();

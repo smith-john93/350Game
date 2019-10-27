@@ -1,5 +1,6 @@
 package cs350project.screens;
 
+import cs350project.screens.listeners.ScreenListener;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.panels.CreateAccountPanel;
 import cs350project.screens.listeners.CreateAccountInputListener;
@@ -19,14 +20,12 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
 
     @Override
     public void showPanel() {
-        createAccountPanel.addCreateAccountInputListener(this);
+        createAccountPanel.addInputListener(this);
         addPanel(createAccountPanel);
     }
 
     @Override
     public void createAccount() {
-        for(ScreenListener screenListener : screenListeners) {
-            screenListener.showScreen(new SelectionScreen());
-        }
+        showScreen(new LobbyScreen());
     }
 }
