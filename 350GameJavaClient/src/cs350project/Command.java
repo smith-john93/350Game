@@ -6,9 +6,9 @@ public enum Command {
     CROUCHING(0x10),
     JUMPING(0x8),
     BLOCKING(0x4),
-    PUNCH(0x3),
-    HIGH_KICK(0x2),
-    LOW_KICK(0x1);
+    PUNCH(0x2),
+    HIGH_KICK(0x1),
+    LOW_KICK(0x5);
         
     private final int code;
         
