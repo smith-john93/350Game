@@ -17,16 +17,6 @@ public class AttackKeyMap extends KeyMap<AttackInputListener> {
     @Override
     public void keyPressed(KeyEvent ke) {
         switch(ke.getKeyCode()) {
-            case KeyEvent.VK_W:
-                for(AttackInputListener attackInputListener : inputListeners) {
-                    attackInputListener.block();
-                }
-                break;
-            case KeyEvent.VK_S:
-                for(AttackInputListener attackInputListener : inputListeners) {
-                    attackInputListener.crouch();
-                }
-                break;
             case KeyEvent.VK_P:
                 for(AttackInputListener attackInputListener : inputListeners) {
                     attackInputListener.punch();
@@ -34,7 +24,12 @@ public class AttackKeyMap extends KeyMap<AttackInputListener> {
                 break;
             case KeyEvent.VK_K:
                 for(AttackInputListener attackInputListener : inputListeners) {
-                    attackInputListener.kick();
+                    attackInputListener.highKick();
+                }
+                break;
+            case KeyEvent.VK_L:
+                for(AttackInputListener attackInputListener : inputListeners) {
+                    attackInputListener.lowKick();
                 }
                 break;
         }

@@ -16,9 +16,20 @@ public class MovementKeyMap extends KeyMap<MovementInputListener> {
     @Override
     public void keyPressed(KeyEvent ke) {
         switch(ke.getKeyCode()) {
+            case KeyEvent.VK_W:
+            case KeyEvent.VK_SPACE:
+                for(MovementInputListener movementKeyListener : inputListeners) {
+                    movementKeyListener.startJump();
+                }
+                break;
             case KeyEvent.VK_A:
                 for(MovementInputListener movementInputListener : inputListeners) {
                     movementInputListener.startMoveLeft();
+                }
+                break;
+            case KeyEvent.VK_S:
+                for(MovementInputListener movementInputListener : inputListeners) {
+                    movementInputListener.startCrouch();
                 }
                 break;
             case KeyEvent.VK_D:
@@ -26,9 +37,9 @@ public class MovementKeyMap extends KeyMap<MovementInputListener> {
                     movementKeyListener.startMoveRight();
                 }
                 break;
-            case KeyEvent.VK_SPACE:
+            case KeyEvent.VK_B:
                 for(MovementInputListener movementKeyListener : inputListeners) {
-                    movementKeyListener.startJump();
+                    movementKeyListener.startBlock();
                 }
                 break;
         }
@@ -37,9 +48,20 @@ public class MovementKeyMap extends KeyMap<MovementInputListener> {
     @Override
     public void keyReleased(KeyEvent ke) {
         switch(ke.getKeyCode()) {
+            case KeyEvent.VK_W:
+            case KeyEvent.VK_SPACE:
+                for(MovementInputListener movementKeyListener : inputListeners) {
+                    movementKeyListener.endJump();
+                }
+                break;
             case KeyEvent.VK_A:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endMoveLeft();
+                }
+                break;
+            case KeyEvent.VK_S:
+                for(MovementInputListener movementKeyListener : inputListeners) {
+                    movementKeyListener.endCrouch();
                 }
                 break;
             case KeyEvent.VK_D:
@@ -47,9 +69,9 @@ public class MovementKeyMap extends KeyMap<MovementInputListener> {
                     movementKeyListener.endMoveRight();
                 }
                 break;
-            case KeyEvent.VK_SPACE:
+            case KeyEvent.VK_B:
                 for(MovementInputListener movementKeyListener : inputListeners) {
-                    movementKeyListener.endJump();
+                    movementKeyListener.endBlock();
                 }
                 break;
         }

@@ -6,21 +6,25 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-    public enum Command
+    public enum CharacterState
     {
-        START_MOVE_LEFT = 0x1,
-        START_MOVE_RIGHT = 0x2,
-        START_JUMP = 0x3,
-        END_MOVE_LEFT = 0x4,
-        END_MOVE_RIGHT = 0x5,
-        END_JUMP = 0x6
+        MOVING_LEFT = 0x100,
+        MOVING_RIGHT = 0x80,
+        CROUCHING = 0x40,
+        JUMPING = 0x20,
+        BLOCKING = 0x10,
+        PUNCH = 0x8,
+        HIGH_KICK = 0x4,
+        LOW_KICK = 0x2,
+        FALLING = 0x1,
+        IDLE = 0x0
     }
 
-    public static class CommandUtilities
+    public static class CharacterStateUtilities
     {
-        public static Command ParseCommand(byte commandByte)
+        public static CharacterState ParseCharacterState(int stateCode)
         {
-            return (Command)Enum.Parse(typeof(Command),Enum.GetName(typeof(Command),commandByte));
+            return (CharacterState)Enum.Parse(typeof(CharacterState),Enum.GetName(typeof(CharacterState),stateCode));
         }
     }
 }

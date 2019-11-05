@@ -5,12 +5,14 @@
  */
 package cs350project.screens.panels;
 
+import cs350project.characters.CharacterState;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import cs350project.characters.*;
 import cs350project.screens.overlays.SelectionOverlay;
 import java.awt.Rectangle;
+import java.io.IOException;
 
 /**
  *
@@ -21,8 +23,13 @@ public class SelectionPanel extends Panel {
     private final PlayerCharacter[] characters;
     private final SelectionOverlay selectionOverlay;
 
-    public SelectionPanel() {
-        characters = new PlayerCharacter[]{new Chev(),new Coffman(),new ElPresidente(),new LegoMan()};
+    public SelectionPanel(short objectID) throws IOException {
+        characters = new PlayerCharacter[]{
+                new Chev(objectID),
+                new Coffman(objectID),
+                new ElPresidente(objectID),
+                new LegoMan(objectID)
+        };
         Rectangle[] characterBorders = new Rectangle[characters.length];
         for(int i = 0; i < characters.length; i++) {
             int x = 300 + (i * 140);
@@ -30,8 +37,8 @@ public class SelectionPanel extends Panel {
             int w = 100;
             int h = 100;
             PlayerCharacter character = characters[i];
-            character.setState(CharacterState.THUMBNAIL);
             character.setBounds(x, y, w, h);
+            character.setState(CharacterState.THUMBNAIL);
             add(character);
             setComponentZOrder(character,0);
             characterBorders[i] = character.getBounds();

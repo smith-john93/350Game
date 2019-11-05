@@ -43,14 +43,15 @@ public class MatchKeyMap extends KeyMap<MatchInputListener> {
     public void addInputListener(MatchInputListener matchInputListener) {
         if(matchInputListener instanceof ChatInputListener) {
             chatKeyMap.addInputListener((ChatInputListener)matchInputListener);
-        } else if(matchInputListener instanceof MovementInputListener) {
+        } 
+        if(matchInputListener instanceof MovementInputListener) {
             movementKeyMap.addInputListener((MovementInputListener)matchInputListener);
-        } else if(matchInputListener instanceof MatchMenuInputListener) {
+        } 
+        if(matchInputListener instanceof MatchMenuInputListener) {
             menuKeyMap.addInputListener((MatchMenuInputListener)matchInputListener);
-        } else if(matchInputListener instanceof AttackInputListener) {
+        } 
+        if(matchInputListener instanceof AttackInputListener) {
             attackKeyMap.addInputListener((AttackInputListener)matchInputListener);
-        } else {
-            super.addInputListener(matchInputListener);
         }
     }
 }

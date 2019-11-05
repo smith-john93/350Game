@@ -1,28 +1,17 @@
 package cs350project.screens.match;
 
 import java.awt.*;
+import javax.swing.JComponent;
 
-public class Platform {
+public class Platform extends JComponent {
 
-    public int x = 150;
-    public int y = 200;
-    public int width = 150;
-    public int height = 200;
-
-    Platform(int x,int y, int width, int height)
-    {
-        this.x=x;
-        this.y=y;
-        this.width=width;
-        this.height=height;
-    }
-
-    protected void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2D = (Graphics2D)g;
 
         //draw the platform
-        g.setColor(Color.black);
-        g.fillRect(x, y, width, height);
+        g2D.setColor(Color.black);
+        g2D.fillRect(0,0, getWidth(), getHeight());
     }
-
 
 }

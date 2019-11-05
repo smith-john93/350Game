@@ -1,10 +1,17 @@
 package cs350project.characters;
 
+import java.io.IOException;
+
 public class Chev extends PlayerCharacter {
-    public Chev() {
-        super(CharacterState.IDLE,"characters/Ganchev.png");
-        CharacterResources resources = getCharacterResources();
-        resources.setResource(CharacterState.THUMBNAIL, "charSelectThumbs/ganchevThumb.png");
+    public Chev(short objectID) throws IOException {
+        super(objectID, CharacterState.IDLE, new CharacterResource(
+                "characters/Ganchev.png",
+                CharacterResource.Type.STILL
+        ));
+        resources.setResource(CharacterState.THUMBNAIL, new CharacterResource(
+                "charSelectThumbs/ganchevThumb.png",
+                CharacterResource.Type.STILL
+        ));
     }
 
     @Override

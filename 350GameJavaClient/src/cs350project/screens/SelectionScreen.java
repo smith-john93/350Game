@@ -11,6 +11,7 @@ import cs350project.Music;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.listeners.SelectionInputListener;
 import cs350project.screens.overlays.SelectionOverlay;
+import java.io.IOException;
 
 /**
  *
@@ -22,8 +23,8 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
     private final SelectionPanel selectionPanel;
     private final Music music;
     
-    public SelectionScreen() {
-        selectionPanel = new SelectionPanel();
+    public SelectionScreen() throws IOException {
+        selectionPanel = new SelectionPanel((short)1);
         selectionKeyMap = new SelectionKeyMap();
         music = new Music();
     }
@@ -50,6 +51,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
         );
         showScreen(matchScreen);
         music.stop();
+        //showScreen(new MatchLoadingScreen());
     }
 
     @Override

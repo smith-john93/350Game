@@ -8,6 +8,7 @@ package cs350project.screens;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.listeners.LobbyInputListener;
 import cs350project.screens.panels.LobbyPanel;
+import java.io.IOException;
 
 /**
  *
@@ -34,7 +35,11 @@ public class LobbyScreen extends Screen implements LobbyInputListener {
 
     @Override
     public void createMatch() {
-        showScreen(new SelectionScreen());
+        try {
+            showScreen(new SelectionScreen());
+        } catch(IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override

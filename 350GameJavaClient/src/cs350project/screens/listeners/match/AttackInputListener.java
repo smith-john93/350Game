@@ -13,7 +13,6 @@ import cs350project.screens.listeners.MatchInputListener;
  */
 public interface AttackInputListener extends MatchInputListener {
     void punch();
-    void kick();
-    void block();
-    void crouch();
+    void highKick();
+    void lowKick();
 }

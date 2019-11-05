@@ -12,10 +12,14 @@ import cs350project.screens.listeners.MatchInputListener;
  * @author Mark Masone
  */
 public interface MovementInputListener extends MatchInputListener {
-    public void startMoveLeft();
-    public void endMoveLeft();
-    public void startMoveRight();
-    public void endMoveRight();
-    public void startJump();
-    public void endJump();
+    void startMoveLeft();
+    void endMoveLeft();
+    void startMoveRight();
+    void endMoveRight();
+    void startJump();
+    void endJump();
+    void startBlock();
+    void endBlock();
+    void startCrouch();
+    void endCrouch();
 }

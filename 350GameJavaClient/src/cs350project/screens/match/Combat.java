@@ -5,6 +5,8 @@
  */
 package cs350project.screens.match;
 
+import cs350project.characters.CharacterState;
+import cs350project.characters.PlayerCharacter;
 import cs350project.screens.listeners.match.AttackInputListener;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,29 +21,31 @@ public class Combat implements AttackInputListener {
 
     private final ArrayList<Attack> attacks;
     private Timer comboTimer;
+    private final PlayerCharacter character;
     
-    public Combat() {
+    public Combat(PlayerCharacter character) {
         attacks = new ArrayList<>();
+        this.character = character;
     }
     
     private void addAttack(Attack attack) {
         if(comboTimer != null) {
             comboTimer.cancel();
         }
-        System.out.println(attack);
+        //System.out.println(attack);
         comboTimer = new Timer();
         comboTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 attacks.clear();
-                System.out.println("combo canceled");
+                //System.out.println("combo canceled");
             }
         }, 1000);
         attacks.add(attack);
         int comboLength = attacks.size();
         Attack[] attacksArray = new Attack[comboLength];
         attacks.toArray(attacksArray);
-        Attack[] combo1 = {Attack.PUNCH,Attack.PUNCH,Attack.KICK,Attack.BLOCK};
+        Attack[] combo1 = {Attack.PUNCH,Attack.PUNCH,Attack.HIGH_KICK,Attack.BLOCK};
         if(compareCombos(attacksArray,combo1)) {
             attacks.clear();
             System.out.println("HADOKEN!");
@@ -61,18 +65,12 @@ public class Combat implements AttackInputListener {
     }
 
     @Override
-    public void kick() {
-        addAttack(Attack.KICK);
-    }
-
-    @Override
-    public void block() {
-        addAttack(Attack.BLOCK);
-    }
-
-    @Override
-    public void crouch() {
-        addAttack(Attack.CROUCH);
+    public void highKick() {
+        addAttack(Attack.HIGH_KICK);
     }
     
+    @Override
+    public void lowKick() {
+        addAttack(Attack.LOW_KICK);
+    }
 }

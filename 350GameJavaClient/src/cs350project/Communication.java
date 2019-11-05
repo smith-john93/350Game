@@ -4,14 +4,17 @@
  * and open the template in the editor.
  */
 package cs350project;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
 import java.io.PrintWriter;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.ServerSocket;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,13 +27,16 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private final int commandPort = 12345;
     private PrintWriter commandWriter;
     private PrintWriter messageWriter;
-    private OutputStream commandStream;
+    private DataOutputStream commandOutputStream;
+    private DataInputStream commandInputStream;
     private OutputStream messageStream;
+    private final ArrayList<IncomingCommunicationListener> incomingCommunicationListeners = new ArrayList<>();
     
     public void connect() {
         try {
             Socket commandSocket = new Socket(host, commandPort);
-            commandStream = commandSocket.getOutputStream();
+            commandOutputStream = new DataOutputStream(commandSocket.getOutputStream());
+            commandInputStream = new DataInputStream(commandSocket.getInputStream());
         } catch(IOException e) {
             JOptionPane.showMessageDialog(null,"Cannot send commands to the server.");
         }
@@ -40,6 +46,39 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         } catch(IOException e) {
             JOptionPane.showMessageDialog(null,"Cannot send messages to the server.");
         }
+        Thread listenerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        while(true) {
+                            byte command = commandInputStream.readByte();
+                            byte matchObjectType = commandInputStream.readByte();
+                            short objectID = commandInputStream.readShort();
+                            int stateCode = commandInputStream.readShort();
+                            int x = commandInputStream.readShort();
+                            int y = commandInputStream.readShort();
+                            /*System.out.print("command: " + command);
+                            System.out.print("match object type: " + matchObjectType);
+                            System.out.print("object id: " + objectID);
+                            System.out.print("state code: " + stateCode);
+                            System.out.print("x: " + x);
+                            System.out.println("y: " + y);*/
+                            for(IncomingCommunicationListener incomingCommunicationListener : incomingCommunicationListeners) {
+                                incomingCommunicationListener.updatePlayerCharacter(objectID,stateCode,x,y);
+                            }
+                        }
+                    } catch(IOException e) {
+                        System.err.println(e.getMessage());
+                    }
+                }
+            }
+        });
+        listenerThread.start();
+    }
+    
+    public void addIncomingCommandListener(IncomingCommunicationListener incomingCommandListener) {
+        incomingCommunicationListeners.add(incomingCommandListener);
     }
     
     @Override
@@ -57,27 +96,21 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     @Override
     public void sendCommand(int command) {
         //System.out.println(command);
-        for(Command c : Command.values()) {
-            if((command & c.getCode()) == c.getCode()) {
-                System.out.print(c + " ");
-            }
-        }
-        System.out.println("");
         
-        if(commandStream != null) {
+        //System.out.println("");
+        
+        if(commandOutputStream != null) {
             try {
-                commandStream.write((byte)command);
-                short id = 356;
-                byte[] idBytes = new byte[2];
-                idBytes[0] = (byte)(id >> 8);
-                idBytes[1] = (byte)id;
-                commandStream.write(idBytes);
-                System.out.println("Command sent: " + command);
+                commandOutputStream.writeShort(command);
             } catch (IOException e) {
                 System.out.println("Failed to write command to stream.");
             }
         } else {
-            //System.out.println("Unable to send command.");
+            System.out.println("Unable to send command.");
         }
+    }
+    
+    public byte receiveCommand() throws IOException {
+        return commandInputStream.readByte();
     }
 }

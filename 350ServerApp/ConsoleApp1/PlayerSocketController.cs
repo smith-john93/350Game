@@ -33,7 +33,7 @@ namespace ConsoleApp1
                 id += (byte)clientReader.Read();
                 Console.Write("Player " + playerID + ",");
                 Console.Write("ID: " + id + ",");
-                Console.WriteLine("command received: " + CommandUtilities.ParseCommand(commandByte));
+                Console.WriteLine("command received: " + CharacterStateUtilities.ParseCharacterState(commandByte));
             }
         }
 
