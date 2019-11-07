@@ -5,18 +5,18 @@
  */
 package cs350project.screens;
 
-import cs350project.ClientCommand;
-import cs350project.screens.listeners.ScreenListener;
-import cs350project.Communication;
+import cs350project.CS350Project;
+import cs350project.communication.Communication;
 import cs350project.Settings;
 import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.keymaps.MatchKeyMap;
 import cs350project.screens.panels.MatchPanel;
-import javax.swing.Timer;
 import cs350project.screens.listeners.match.MatchMenuInputListener;
 import cs350project.screens.match.Combat;
+import cs350project.screens.match.MatchObject;
+import cs350project.screens.match.MatchObjectManager;
 import java.io.IOException;
 
 /**
@@ -29,13 +29,16 @@ public class MatchScreen extends Screen implements MatchMenuInputListener {
     private final MatchPanel matchPanel;
     private final Combat combat;
     private final Communication comm;
+    private final MatchObjectManager matchObjectManager;
     
-    public MatchScreen(PlayerCharacter player1, PlayerCharacter player2) {
-        player1.setState(CharacterState.IDLE);
+    public MatchScreen(PlayerCharacter player, PlayerCharacter opponent) {
+        player.setState(CharacterState.IDLE);
         matchKeyMap = new MatchKeyMap();
-        matchPanel = new MatchPanel(player1,player2);
-        comm = new Communication();
-        combat = new Combat(player1);
+        matchPanel = new MatchPanel(player,opponent);
+        comm = Communication.getInstance();
+        combat = new Combat(player);
+        matchObjectManager = MatchObjectManager.getInstance();
+        matchObjectManager.setPlayerCharacters(player, opponent);
     }
     
     @Override
@@ -54,15 +57,21 @@ public class MatchScreen extends Screen implements MatchMenuInputListener {
         matchPanel.addOutgoingMessageListener(comm);
         matchPanel.addOutgoingCommandListener(comm);
         matchPanel.setBackground("maps/whitehouse.png");
-        comm.addIncomingCommandListener(matchPanel);
+        matchObjectManager.addMatchObjectManagerListener(matchPanel);
+        for(MatchObject matchObject : matchObjectManager.getMatchObjects()) {
+            if(matchObject != null) {
+                matchPanel.add(matchObject);
+            }
+        }
         addPanel(matchPanel);
-        comm.connect();
+        //comm.connect();
+        //comm.listen();
     }
     
     @Override
     public void endGame() {
         try {
-            showScreen(new SelectionScreen());
+            CS350Project.showScreen(new SelectionScreen());
         } catch(IOException e) {
             System.out.println(e.getMessage());
         }

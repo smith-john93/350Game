@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project;
+package cs350project.communication;
 
 /**
  *
  * @author Mark Masone
  */
-public interface IncomingCommunicationListener {
-    void updatePlayerCharacter(short objectID, int stateCode, int x, int y);
+public interface OutgoingMessageListener {
+    void sendMessage(String message);
 }

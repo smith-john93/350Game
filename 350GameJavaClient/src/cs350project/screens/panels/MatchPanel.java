@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 package cs350project.screens.panels;
-import cs350project.IncomingCommunicationListener;
-import cs350project.OutgoingCommandListener;
-import cs350project.OutgoingMessageListener;
+import cs350project.MessageDialog;
+import cs350project.communication.OutgoingCommandListener;
+import cs350project.communication.OutgoingMessageListener;
 import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
 import cs350project.chat.*;
+import cs350project.communication.ClientCommand;
+import cs350project.communication.Communication;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -23,19 +25,27 @@ import cs350project.screens.listeners.match.MovementInputListener;
 import cs350project.screens.match.Platform;
 
 import javax.swing.*;
+import cs350project.screens.match.MatchObject;
+import cs350project.screens.match.MatchObjectManagerListener;
+import java.io.IOException;
 
 /**
  *
  * @author Mark Masone
  */
-public class MatchPanel extends Panel implements MovementInputListener, AttackInputListener, ChatMessageFieldKeyListener, ChatInputListener, IncomingCommunicationListener {
+public class MatchPanel extends Panel implements 
+        MovementInputListener, 
+        AttackInputListener, 
+        ChatMessageFieldKeyListener, 
+        ChatInputListener, 
+        MatchObjectManagerListener {
     
     private final ChatMessageQueue chatMessageQueue;
     private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
     private final ArrayList<OutgoingMessageListener> outgoingMessageListeners;
     private String background;
-    private final Platform[] platforms;
+    //private final Platform[] platforms;
     private int stateCode = 0;
     private final PlayerCharacter playerCharacter;
     private final PlayerCharacter opponent;
@@ -69,28 +79,17 @@ public class MatchPanel extends Panel implements MovementInputListener, AttackIn
             attackTimer.setRepeats(false);
             attackTimers.put(attackState, attackTimer);
         }
-
-        platforms = new Platform[7];
-        for(int i = 0; i < platforms.length; i++) {
-            platforms[i] = new Platform();
-        }
-        platforms[0].setBounds(50,300,150,200);
-        platforms[1].setBounds(150,450,450,50);
-        platforms[2].setBounds(600,400,100,100);
-        platforms[3].setBounds(700,100,50,400);
-        platforms[4].setBounds(550,100,50,250);
-        platforms[5].setBounds(300,150,100,25);
-        platforms[6].setBounds(150,150,100,25);
-
-        for(Platform platform : platforms) {
-            add(platform);
-        }
+    }
+    
+    @Override
+    public void addNotify() {
+        super.addNotify();
 
         add(chatMessageQueue);
         add(chatMessageField);
 
-        add(playerCharacter);
-        add(opponent);
+        //add(playerCharacter);
+        //add(opponent);
     }
     
     public void addOutgoingMessageListener(OutgoingMessageListener outgoingMessageListener) {
@@ -131,26 +130,34 @@ public class MatchPanel extends Panel implements MovementInputListener, AttackIn
         messageCancel();
     }
 
-    private void sendCommand(int command) {
+    private void sendCommand(ClientCommand clientCommand) {
         for(OutgoingCommandListener outgoingCommandListener : outgoingCommandListeners) {
-            outgoingCommandListener.sendCommand(command);
+            outgoingCommandListener.sendCommand(clientCommand);
+        }
+    }
+    
+    private void sendCharacterState(int stateCode) {
+        try {
+            Communication.getInstance().sendCharacterState(stateCode);
+        } catch(IOException e) {
+            MessageDialog.showErrorMessage("Unable to send character state.", getClass());
         }
     }
 
     private void enableState(int stateCode) {
         this.stateCode |= stateCode;
         playerCharacter.enableState(stateCode);
-        sendCommand(this.stateCode);
+        sendCharacterState(this.stateCode);
     }
 
     private void disableState(int stateCode) {
         this.stateCode ^= stateCode;
         playerCharacter.disableState(stateCode);
-        sendCommand(this.stateCode);
+        sendCharacterState(this.stateCode);
     }
 
     private void attack(int attackState) {
-        sendCommand(attackState);
+        sendCharacterState(attackState);
         Timer attackTimer = attackTimers.get(attackState);
         if(!attackTimer.isRunning()) {
             playerCharacter.enableState(attackState);
@@ -248,12 +255,7 @@ public class MatchPanel extends Panel implements MovementInputListener, AttackIn
     }
 
     @Override
-    public void updatePlayerCharacter(short objectID, int stateCode, int x, int y) {
-        if(objectID == playerCharacter.getObjectID()) {
-
-        }
-        playerCharacter.setLocation(x,y);
-        System.out.println("stateCode: " + stateCode + " x: " + x + " y: " + y);
+    public void matchObjectChanged() {
         repaint();
     }
 }

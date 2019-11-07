@@ -37,7 +37,7 @@ public class CharacterResources {
     }
     
     public CharacterResource getResource(int stateCode) {
-        System.out.println("get resource " + stateCode);
+        //System.out.println("get resource " + stateCode);
         return resources.get(stateCode);
     }
 }

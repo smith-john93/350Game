@@ -5,15 +5,17 @@
  */
 package cs350project.characters;
 
+import cs350project.screens.match.MatchObject;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  *
  * @author Mark Masone
  */
-public abstract class PlayerCharacter extends JComponent {
+public abstract class PlayerCharacter extends MatchObject {
     
     protected final CharacterResources resources;
     private int direction;
@@ -33,6 +35,10 @@ public abstract class PlayerCharacter extends JComponent {
         this.defaultStateCode = defaultStateCode;
         resources = new CharacterResources(defaultStateCode, cr);
         direction = 1;
+    }
+    
+    public class PlayerCharacterData extends MatchObjectData {
+        
     }
 
     public short getObjectID() {
@@ -130,6 +136,15 @@ public abstract class PlayerCharacter extends JComponent {
             }
         }
         g2d.drawImage(currentFrame,0,0,null);
+    }
+    
+    @Override
+    public void receiveData(DataInputStream dataInputStream) throws IOException {
+        stateCode = dataInputStream.readShort();
+        short x = dataInputStream.readShort();
+        short y = dataInputStream.readShort();
+        System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
+        setLocation(x,y);
     }
     
     public abstract CharacterClass getCharacterClass();

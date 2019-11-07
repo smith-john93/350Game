@@ -1,5 +1,6 @@
 package cs350project.screens;
 
+import cs350project.CS350Project;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.panels.LoginPanel;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public class LoginScreen extends Screen implements LoginInputListener {
                 }
             }
             if(passwordIsValid) {
-                showScreen(new LobbyScreen());
+                CS350Project.showScreen(new LobbyScreen());
             }
         }
         Arrays.fill(password,'0'); // Clear the password array for security.

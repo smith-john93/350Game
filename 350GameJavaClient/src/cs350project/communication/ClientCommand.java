@@ -3,20 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.characters;
+package cs350project.communication;
 
 /**
  *
  * @author Mark Masone
  */
-public enum CharacterClass {
-    NORMAL(0x1),
-    NINJA(0x2),
-    MAGE(0x3);
+public enum ClientCommand {
+    LOGIN(0x0),
+    CREATE_ACCOUNT(0x1),
+    CREATE_MATCH(0x2),
+    JOIN_MATCH(0x3);
     
     private final int value;
     
-    private CharacterClass(int value) {
+    private ClientCommand(int value) {
         this.value = value;
     }
     
