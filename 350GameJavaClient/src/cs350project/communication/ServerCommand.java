@@ -18,7 +18,7 @@ public enum ServerCommand {
     
     private final int value;
     
-    private ServerCommand(int value) {
+    ServerCommand(int value) {
         this.value = value;
     }
     

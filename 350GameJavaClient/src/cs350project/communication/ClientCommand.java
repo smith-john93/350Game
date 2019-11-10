@@ -13,11 +13,12 @@ public enum ClientCommand {
     LOGIN(0x0),
     CREATE_ACCOUNT(0x1),
     CREATE_MATCH(0x2),
-    JOIN_MATCH(0x3);
+    JOIN_MATCH(0x3),
+    UPDATE_MATCH(0x4);
     
     private final int value;
     
-    private ClientCommand(int value) {
+    ClientCommand(int value) {
         this.value = value;
     }
     

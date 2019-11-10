@@ -25,9 +25,9 @@ public class SelectionPanel extends Panel {
 
     public SelectionPanel(short objectID) throws IOException {
         characters = new PlayerCharacter[]{
-                new Chev(objectID),
+                new Ganchev(objectID),
                 new Coffman(objectID),
-                new ElPresidente(objectID),
+                new Trump(objectID),
                 new LegoMan(objectID)
         };
         Rectangle[] characterBorders = new Rectangle[characters.length];

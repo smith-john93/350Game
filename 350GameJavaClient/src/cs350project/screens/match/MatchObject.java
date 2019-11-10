@@ -14,9 +14,5 @@ import javax.swing.JComponent;
  * @author Mark Masone
  */
 public abstract class MatchObject extends JComponent {
-    public class MatchObjectData {
-        
-    }
-    
     public abstract void receiveData(DataInputStream dataInputStream) throws IOException;
 }

@@ -5,13 +5,34 @@
  */
 package cs350project.screens.match;
 
+import java.util.NoSuchElementException;
+
 /**
  *
  * @author Mark Masone
  */
-public class MatchObjectType {
-    public static final byte PLATFORM = 0x0;
-    public static final byte PLAYER = 0x1;
-    public static final byte ATTACK = 0x2;
-    public static final byte PROJECTILE = 0x3;
+public enum MatchObjectType {
+    PLATFORM(0x0),
+    PLAYER(0x1),
+    ATTACK(0x2),
+    PROJECTILE(0x3);
+
+    private final int value;
+
+    MatchObjectType(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public static MatchObjectType parse(byte value) {
+        for(MatchObjectType matchObjectType : MatchObjectType.values()) {
+            if(matchObjectType.getValue() == value) {
+                return matchObjectType;
+            }
+        }
+        throw new NoSuchElementException("Match object type not found.");
+    }
 }

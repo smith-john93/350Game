@@ -30,22 +30,16 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private final String host = "127.0.0.1";
     private final int messagePort = 12346;
     private final int commandPort = 12345;
-    private PrintWriter commandWriter;
     private PrintWriter messageWriter;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private OutputStream messageStream;
     private Socket dataSocket;
-
-
     private final CopyOnWriteArrayList<IncomingCommandListener> incomingCommandListeners;
-    private final MatchObjectManager matchObjectManager;
     private static Communication communication;
-    private Thread listenerThread;
 
     private Communication() {
         incomingCommandListeners = new CopyOnWriteArrayList<>();
-        matchObjectManager = MatchObjectManager.getInstance();
     }
 
     public static Communication getInstance() {
@@ -56,15 +50,11 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     }
 
     public void addIncomingCommandListener(IncomingCommandListener incomingCommandListener) {
-        synchronized(this) {
-            incomingCommandListeners.add(incomingCommandListener);
-        }
+        incomingCommandListeners.add(incomingCommandListener);
     }
     
     public void removeIncomingCommandListener(IncomingCommandListener incomingCommandListener) {
-        synchronized(this) {
-            incomingCommandListeners.remove(incomingCommandListener);
-        }
+        incomingCommandListeners.remove(incomingCommandListener);
     }
 
     public void connect() {
@@ -94,38 +84,14 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         if(dataInputStream == null || !dataSocket.isConnected()) {
             MessageDialog.showErrorMessage(error, c);
         } else {
-            listenerThread = new Thread(){
+            Thread listenerThread = new Thread(){
                 @Override
                 public void run() {
                     try {
                         while(true) {
                             ServerCommand serverCommand = receiveCommand();
-                            System.out.println("command received: "+ serverCommand);
-                            /*switch(command) {
-                                case ServerCommand.CREATE_MATCH_OBJECT:
-                                    createMatchObject();
-                                    break;
-                                case ServerCommand.SELECT_CHARACTER:
-                                    CS350Project.showScreen(new SelectionScreen());
-                                    break;
-                                case ServerCommand.UPDATE_MATCH:
-                                    updateMatchObject();
-                                    break;
-                                case ServerCommand.UPDATE_LOBBY:
-                                    break;
-                                default:
-                                    throw new IllegalArgumentException("Invalid command received.");
-                            }*/
-                            /*System.out.print("command: " + command);
-                            System.out.print("match object type: " + matchObjectType);
-                            System.out.print("object id: " + objectID);
-                            System.out.print("state code: " + stateCode);
-                            System.out.print("x: " + x);
-                            System.out.println("y: " + y);*/
-                            synchronized(this) {
-                                for(IncomingCommandListener incomingCommandListener : incomingCommandListeners) {
-                                    incomingCommandListener.commandReceived(serverCommand, dataInputStream);
-                                }
+                            for(IncomingCommandListener incomingCommandListener : incomingCommandListeners) {
+                                incomingCommandListener.commandReceived(serverCommand, dataInputStream);
                             }
                             
                         }
@@ -136,6 +102,16 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             };
             listenerThread.start();
         }
+    }
+
+    private ServerCommand receiveCommand() throws IOException {
+        byte value = dataInputStream.readByte();
+        for(ServerCommand serverCommand : ServerCommand.values()) {
+            if(value == serverCommand.getValue()) {
+                return serverCommand;
+            }
+        }
+        throw new NoSuchElementException("Invalid command received.");
     }
     
     @Override
@@ -153,10 +129,10 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     @Override
     public void sendCommand(ClientCommand clientCommand) {
         System.out.println("send command: " + clientCommand);
-        
+
         //System.out.println("");
-        
-        if(dataOutputStream != null) {
+
+        if (dataOutputStream != null) {
             try {
                 dataOutputStream.writeByte(clientCommand.getValue());
             } catch (IOException e) {
@@ -167,22 +143,13 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         }
     }
     
-    public ServerCommand receiveCommand() throws IOException {
-        byte value = dataInputStream.readByte();
-        for(ServerCommand serverCommand : ServerCommand.values()) {
-            if(value == serverCommand.getValue()) {
-                return serverCommand;
-            }
-        }
-        throw new NoSuchElementException("Invalid command received.");
-    }
-    
     public void joinMatch(CharacterClass characterClass) throws IOException {
         dataOutputStream.writeByte(ClientCommand.JOIN_MATCH.getValue());
         dataOutputStream.writeByte(characterClass.getValue());
     }
     
-    public void sendCharacterState(int stateCode) throws IOException {
+    public void updateMatch(int stateCode) throws IOException {
+        dataOutputStream.writeByte(ClientCommand.UPDATE_MATCH.getValue());
         dataOutputStream.writeShort(stateCode);
     }
 }

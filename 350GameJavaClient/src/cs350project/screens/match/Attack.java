@@ -5,5 +5,5 @@ public enum Attack {
     HIGH_KICK,
     LOW_KICK,
     BLOCK,
-    CROUCH;
+    CROUCH
 }

@@ -5,22 +5,13 @@
  */
 package cs350project.characters;
 
-import java.io.IOException;
-
 /**
  *
  * @author Mark Masone
  */
 public class Coffman extends PlayerCharacter {
-    public Coffman(short objectID) throws IOException {
-        super(objectID, CharacterState.IDLE, new CharacterResource(
-                "characters/Coffman.png", 
-                CharacterResource.Type.LOOPS
-        ));
-        resources.setResource(CharacterState.THUMBNAIL, new CharacterResource(
-                "charSelectThumbs/coffmanThumb.png",
-                CharacterResource.Type.STILL
-        ));
+    public Coffman(short objectID) {
+        super(objectID, CharacterState.IDLE);
     }
 
     @Override

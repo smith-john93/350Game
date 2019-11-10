@@ -8,7 +8,6 @@ import cs350project.Settings;
 import cs350project.screens.keymaps.KeyMap;
 import cs350project.screens.panels.Panel;
 import javax.swing.JComponent;
-import java.util.ArrayList;
 
 /**
  *

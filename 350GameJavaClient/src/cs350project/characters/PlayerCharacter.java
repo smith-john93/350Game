@@ -7,9 +7,15 @@ package cs350project.characters;
 
 import cs350project.screens.match.MatchObject;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Timer;
 
 /**
  *
@@ -17,46 +23,75 @@ import java.io.IOException;
  */
 public abstract class PlayerCharacter extends MatchObject {
     
-    protected final CharacterResources resources;
+    protected final CharacterResourceManager characterResourceManager;
     private int direction;
     private Image currentFrame;
     private int frameIndex = 0;
     private Image[] frames;
     private long lastFrameTime = 0;
     private int droppedFrames = 0;
-    private final int defaultStateCode;
-    private CharacterResource characterResource;
     private int stateCode;
     private final short objectID;
     public static final int FRAME_DELAY = 200;
+    private final HashMap<Integer,Timer> attackTimers;
+    private final int[] attackStates;
+    private final int attackStateMask;
+    private final int movementStateMask;
+    private int attackStateCode;
     
-    public PlayerCharacter(short objectID, int defaultStateCode, CharacterResource cr) {
+    public PlayerCharacter(short objectID, int defaultStateCode) {
         this.objectID = objectID;
-        this.defaultStateCode = defaultStateCode;
-        resources = new CharacterResources(defaultStateCode, cr);
+        characterResourceManager = new CharacterResourceManager(defaultStateCode);
         direction = 1;
+        characterResourceManager.loadResources(getClass());
+        attackTimers = new HashMap<>();
+        attackStates = new int[]{
+            CharacterState.PUNCH,
+            CharacterState.HIGH_KICK,
+            CharacterState.LOW_KICK
+        };
+        attackStateMask = CharacterState.PUNCH | CharacterState.HIGH_KICK | CharacterState.LOW_KICK;
+        movementStateMask = attackStateMask ^ 0xffff;
     }
     
-    public class PlayerCharacterData extends MatchObjectData {
+    @Override
+    public void addNotify() {
+        super.addNotify();
         
+        for(int attackState : attackStates) {
+            int attackFramesCount = getFramesCount(attackState);
+            int attackTime = PlayerCharacter.FRAME_DELAY * (attackFramesCount + 1);
+            Timer attackTimer = new Timer(attackTime, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    disableState(attackState);
+                    
+                    // this fixed the stuck attack glitch
+                    attackStateCode = 0;
+                }
+            });
+            attackTimer.setRepeats(false);
+            attackTimers.put(attackState, attackTimer);
+        }
     }
 
     public short getObjectID() {
         return objectID;
     }
     
-    public CharacterResources getCharacterResources() {
-        return resources;
+    public CharacterResourceManager getCharacterResources() {
+        return characterResourceManager;
     }
     
-    public void enableState(int stateCode) {
+    private void enableState(int stateCode) {
         // Make sure the bits are off before or.
         if((this.stateCode & stateCode) == 0x0) {
             setState(this.stateCode | stateCode);
         }
     }
     
-    public void disableState(int stateCode) {
+    private void disableState(int stateCode) {
+        System.out.println("disabling state: " + stateCode);
         // Make sure the bits are on before xor.
         if((this.stateCode & stateCode) == stateCode) {
             setState(this.stateCode ^ stateCode);
@@ -64,11 +99,9 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     public void setState(int stateCode) {
+        System.out.println("setting state: " + stateCode);
         this.stateCode = stateCode;
-        characterResource = resources.getResource(stateCode);
-        if(characterResource == null) {
-            characterResource = resources.getResource(defaultStateCode);
-        }
+        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
         setFrames(characterResource.getFrames());
     }
     
@@ -80,7 +113,11 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     public int getFramesCount(int stateCode) {
-        return resources.getResource(stateCode).getFramesCount();
+        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        if(characterResource == null) {
+            return 0;
+        }
+        return characterResource.getFramesCount();
     }
 
     public void setDirection(int direction) {
@@ -109,6 +146,17 @@ public abstract class PlayerCharacter extends MatchObject {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
+        
+        boolean movingRight = (stateCode & CharacterState.MOVING_RIGHT) == CharacterState.MOVING_RIGHT;
+        boolean movingLeft = (stateCode & CharacterState.MOVING_LEFT) == CharacterState.MOVING_LEFT;
+
+        if(movingRight) {
+            setDirection(1);
+        } else if(movingLeft) {
+            setDirection(-1);
+        }
+        
+        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
         long currentTime = System.currentTimeMillis();
         long diff = currentTime - lastFrameTime;
         if(diff >= FRAME_DELAY) {
@@ -138,12 +186,39 @@ public abstract class PlayerCharacter extends MatchObject {
         g2d.drawImage(currentFrame,0,0,null);
     }
     
+    // This method may require synchronization
     @Override
     public void receiveData(DataInputStream dataInputStream) throws IOException {
-        stateCode = dataInputStream.readShort();
+        int newStateCode = dataInputStream.readShort();
+        if((newStateCode | attackStateCode) != stateCode) {
+            int newAttackStateCode = newStateCode & attackStateMask;
+            System.out.println("new state code: " + newStateCode);
+            System.out.println("old attack state: " + attackStateCode);
+            System.out.println("new attack state: " + newAttackStateCode);
+            Timer attackTimer = attackTimers.get(attackStateCode);
+            Timer newAttackTimer = attackTimers.get(newAttackStateCode);
+            
+            // If the attack is a new or different attack
+            if(newAttackTimer != null && newAttackTimer != attackTimer) {
+                if(attackTimer != null && attackTimer.isRunning()) {
+                    attackTimer.stop();
+                    System.out.println("starting different attack timer");
+                } else {
+                    System.out.println("starting new attack timer");
+                }
+                newAttackTimer.start();
+                setState(newStateCode);
+                attackStateCode = newAttackStateCode;
+            } 
+            // If no attack is in progress and there is a new movement
+            else if(attackTimer == null || !attackTimer.isRunning()) {
+                setState(newStateCode);
+                //attackStateCode = 0;
+            }
+        }
         short x = dataInputStream.readShort();
         short y = dataInputStream.readShort();
-        System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
+        //System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
         setLocation(x,y);
     }
     
