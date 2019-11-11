@@ -5,16 +5,14 @@
  */
 package cs350project.screens.lobby;
 
+import cs350project.menu.BackButtonPanel;
 import cs350project.Settings;
 import cs350project.screens.Panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
@@ -34,17 +32,10 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
     final GridBagConstraints gbc;
     private final EmptyBorder lobbyBorder;
     private final int buttonHeight;
-    final Insets noBottomInset;
-    final Insets allInsets;
-    final Insets noRightInset;
     
     public LobbyPanel() {
         
         lobbyBorder = new EmptyBorder(20,20,20,20);
-        
-        noBottomInset = new Insets(20,20,0,20);
-        allInsets = new Insets(20,20,20,20);
-        noRightInset = new Insets(20,20,20,0);
         
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
@@ -61,6 +52,7 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
         setBorder(lobbyBorder);
+        setBackground(Settings.TRANSPARENT);
         
         add(new MatchesPanel(this,inputListeners),BorderLayout.LINE_START);
         add(new FriendsPanel(this,inputListeners),BorderLayout.LINE_END);
@@ -93,7 +85,7 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         JLabel jLabel = new JLabel(label);
         jLabel.setForeground(Color.white);
         jLabel.setFont(Settings.HEADING_FONT);
-        gbc.insets = noBottomInset;
+        gbc.insets = Settings.NO_BOTTOM_INSET;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -107,12 +99,5 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         jPanel.add(jScrollPane,gbc);
         
         return jPanel;
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        paintBackground(g2d,"/resources/background.jpg");
     }
 }

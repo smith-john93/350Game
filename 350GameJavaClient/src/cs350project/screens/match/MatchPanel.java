@@ -5,15 +5,13 @@
  */
 package cs350project.screens.match;
 
+import cs350project.Settings;
 import cs350project.communication.OutgoingCommandListener;
 import cs350project.communication.OutgoingMessageListener;
 import cs350project.characters.PlayerCharacter;
 import cs350project.chat.*;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import cs350project.screens.Panel;
-import java.awt.Color;
 
 /**
  *
@@ -47,7 +45,7 @@ public class MatchPanel extends Panel implements
         super.addNotify();
         
         setLayout(null);
-        setBackground(new Color(0,0,0,0));
+        setBackground(Settings.TRANSPARENT);
 
         add(chatMessageQueue);
         add(chatMessageField);

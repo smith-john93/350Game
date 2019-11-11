@@ -23,7 +23,7 @@ public class CS350Project {
         }
         KeyMap keyMap = screen.getKeyMap();
         gameFrame.setKeyMap(keyMap);
-        gameFrame.setContentPane(screen);
+        gameFrame.add(screen);
         gameFrame.setVisible(true);
         gameFrame.requestFocus();
         CS350Project.screen = screen;

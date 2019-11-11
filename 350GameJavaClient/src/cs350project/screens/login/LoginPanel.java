@@ -25,9 +25,9 @@ public class LoginPanel extends Panel<LoginInputListener> {
     @Override
     public void addNotify() {
         super.addNotify();
-        
+
         setLayout(null);
-        
+
         Menu menu = new Menu();
         menu.addField(usernameField);
         menu.addField(passwordField);
@@ -35,22 +35,15 @@ public class LoginPanel extends Panel<LoginInputListener> {
         menu.addMenuActionListener(new MenuActionListener() {
             @Override
             public void buttonClicked(JButton button) {
-                for(LoginInputListener loginInputListener : inputListeners) {
-                    if(button == loginButton) {
+                for (LoginInputListener loginInputListener : inputListeners) {
+                    if (button == loginButton) {
                         char[] password = passwordField.getPassword();
-                        loginInputListener.login(usernameField.getText(),password);
-                        Arrays.fill(password,'0'); // Clear the password array for security.
+                        loginInputListener.login(usernameField.getText(), password);
+                        Arrays.fill(password, '0'); // Clear the password array for security.
                     }
                 }
             }
         });
         add(menu);
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        paintBackground(g2d,"/resources/background.jpg");
     }
 }

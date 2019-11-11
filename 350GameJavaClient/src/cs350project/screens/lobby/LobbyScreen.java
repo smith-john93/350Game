@@ -6,7 +6,7 @@
 package cs350project.screens.lobby;
 
 import cs350project.CS350Project;
-import cs350project.MessageDialog;
+import cs350project.screens.MessageDialog;
 import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
 import cs350project.communication.IncomingCommandListener;

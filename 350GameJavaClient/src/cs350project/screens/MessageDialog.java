@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project;
+package cs350project.screens;
 
 import javax.swing.JOptionPane;
 

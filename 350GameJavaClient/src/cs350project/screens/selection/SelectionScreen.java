@@ -6,7 +6,7 @@
 package cs350project.screens.selection;
 import cs350project.screens.match.MatchScreen;
 import cs350project.CS350Project;
-import cs350project.MessageDialog;
+import cs350project.screens.MessageDialog;
 import cs350project.Music;
 import cs350project.characters.PlayerCharacter;
 import cs350project.communication.Communication;

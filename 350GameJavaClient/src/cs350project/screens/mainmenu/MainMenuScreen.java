@@ -21,6 +21,12 @@ public class MainMenuScreen extends Screen implements MainMenuInputListener {
     public KeyMap getKeyMap() {
         return null;
     }
+    
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        mainMenuPanel.addInputListener(this);
+    }
    
     @Override
     public void login() {
@@ -44,7 +50,6 @@ public class MainMenuScreen extends Screen implements MainMenuInputListener {
 
     @Override
     public JPanel getJPanel() {
-        mainMenuPanel.addInputListener(this);
         return mainMenuPanel;
     }
 }

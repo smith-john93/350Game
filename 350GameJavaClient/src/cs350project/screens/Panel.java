@@ -28,16 +28,6 @@ public class Panel<E extends InputListener> extends JPanel {
         inputListeners = new ArrayList<>();
     }
     
-    public void paintBackground(Graphics2D g2d, String backgroundFile) {
-        URL url = SelectionPanel.class.getResource(backgroundFile);
-        try {
-            BufferedImage background = ImageIO.read(url);
-            g2d.drawImage(background, 0, 0, this);
-        } catch(IOException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-    }
-    
     public void addInputListener(E inputListener) {
         inputListeners.add(inputListener);
     }

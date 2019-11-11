@@ -5,6 +5,7 @@
  */
 package cs350project.screens.selection;
 
+import cs350project.Settings;
 import cs350project.characters.CharacterState;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -51,6 +52,7 @@ public class SelectionPanel extends Panel {
         super.addNotify();
         
         setLayout(null);
+        setBackground(Settings.TRANSPARENT);
         
         for(PlayerCharacter character : characters) {
             add(character);
@@ -59,13 +61,6 @@ public class SelectionPanel extends Panel {
         
         add(selectionOverlay);
         setComponentZOrder(selectionOverlay,1);
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        paintBackground(g2d,"/resources/background.jpg");
     }
     
     public PlayerCharacter getPlayer1Selection() {

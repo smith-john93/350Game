@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package cs350project.communication;
-import cs350project.MessageDialog;
+import cs350project.screens.MessageDialog;
 import cs350project.characters.CharacterClass;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

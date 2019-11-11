@@ -5,12 +5,16 @@
  */
 package cs350project.screens.settings;
 
-import cs350project.screens.InputListener;
+import cs350project.screens.KeyMap;
+import java.awt.event.KeyEvent;
 
 /**
  *
  * @author Mark Masone
  */
-public interface SettingsInputListener extends InputListener {
-    void back();
+public class SettingsKeyMap extends KeyMap<SettingsInputListener> {
+    @Override
+    public void keyTyped(KeyEvent ke) {
+        
+    }
 }

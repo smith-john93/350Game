@@ -7,7 +7,7 @@ package cs350project.screens.match;
 
 import cs350project.screens.lobby.LobbyScreen;
 import cs350project.CS350Project;
-import cs350project.MessageDialog;
+import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
 import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;

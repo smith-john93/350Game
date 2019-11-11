@@ -1,10 +1,10 @@
 package cs350project.screens.mainmenu;
 
+import cs350project.Settings;
 import cs350project.menu.Menu;
 import javax.swing.JButton;
 import cs350project.menu.MenuActionListener;
 import cs350project.screens.Panel;
-import java.awt.Color;
 
 public class MainMenuPanel extends Panel<MainMenuInputListener> {
     
@@ -12,7 +12,7 @@ public class MainMenuPanel extends Panel<MainMenuInputListener> {
     public void addNotify() {
         super.addNotify();
         setLayout(null);
-        setBackground(new Color(0,0,0,0));
+        setBackground(Settings.TRANSPARENT);
         
         JButton loginButton = new JButton("Log In");
         JButton createAccountButton = new JButton("Create New Account");

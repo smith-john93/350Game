@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.lobby;
+package cs350project.menu;
 
 import cs350project.Settings;
 import java.awt.Color;
@@ -33,7 +33,7 @@ public class BackButtonPanel extends JPanel {
         setLayout(new FlowLayout(FlowLayout.LEADING,0,0));
         setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         // Make the background transparent.
-        setBackground(new Color(0,0,0,0));
+        setBackground(Settings.TRANSPARENT);
    
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(150,50));

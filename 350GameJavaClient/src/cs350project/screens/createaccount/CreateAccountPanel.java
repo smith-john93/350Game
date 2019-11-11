@@ -1,8 +1,8 @@
 package cs350project.screens.createaccount;
 
+import cs350project.Settings;
 import cs350project.menu.Menu;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -24,9 +24,10 @@ public class CreateAccountPanel extends Panel<CreateAccountInputListener> {
     @Override
     public void addNotify() {
         super.addNotify();
-        
+
         setLayout(null);
-        
+        setBackground(Settings.TRANSPARENT);
+
         Menu menu = new Menu();
         menu.addField(usernameField);
         menu.addField(passwordField);
@@ -35,19 +36,12 @@ public class CreateAccountPanel extends Panel<CreateAccountInputListener> {
             @Override
             public void buttonClicked(JButton button) {
                 for (CreateAccountInputListener createAccountInputListener : inputListeners) {
-                    if(button == createAccountButton) {
+                    if (button == createAccountButton) {
                         createAccountInputListener.createAccount();
                     }
                 }
             }
         });
         add(menu);
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        paintBackground(g2d,"/resources/background.jpg");
     }
 }

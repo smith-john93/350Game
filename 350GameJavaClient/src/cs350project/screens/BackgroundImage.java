@@ -5,9 +5,12 @@
  */
 package cs350project.screens;
 
+import cs350project.Settings;
 import cs350project.screens.selection.SelectionPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -21,26 +24,38 @@ import javax.swing.JOptionPane;
  */
 public class BackgroundImage extends JComponent {
     
-    private final String fileName;
+    private final BufferedImage background;
     
     public BackgroundImage(String fileName) {
-        this.fileName = fileName;
+        background = getBackgroundImage(fileName);
     }
     
-    private void paintBackground(Graphics2D g2d, String backgroundFile) {
+    private BufferedImage getBackgroundImage(String backgroundFile) {
         URL url = SelectionPanel.class.getResource(backgroundFile);
         try {
-            BufferedImage background = ImageIO.read(url);
-            g2d.drawImage(background, 0, 0, this);
+            int width = Settings.getSettings().getScreenWidth();
+            int height = Settings.getSettings().getScreenHeight();
+            BufferedImage bufferedImage = ImageIO.read(url);
+            BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2D = resizedImage.createGraphics();
+
+            g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2D.drawImage(bufferedImage, 0, 0, width, height, null);
+            g2D.dispose();
+            
+            return resizedImage;
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            MessageDialog.showErrorMessage("Unable to load background image.",getClass());
         }
+        return null;
     }
     
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        paintBackground(g2d,fileName);
+        if(background != null) {
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.drawImage(background, 0, 0, this);
+        }
     }
 }

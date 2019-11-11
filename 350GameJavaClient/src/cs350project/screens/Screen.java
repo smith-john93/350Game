@@ -17,16 +17,6 @@ import javax.swing.JPanel;
  */
 public abstract class Screen extends JComponent {
     
-    public void addPanel(Panel panel) {
-        Settings settings = Settings.getSettings();
-        int screenW = settings.getScreenWidth();
-        int screenH = settings.getScreenHeight();
-        panel.setBounds(0, 0, screenW, screenH);
-        panel.setBackground(new Color(0,0,0,0));
-        panel.setLayout(null);
-        add(panel);
-    }
-    
     @Override
     public void addNotify() {
         super.addNotify();
