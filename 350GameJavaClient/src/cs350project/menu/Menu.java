@@ -41,7 +41,7 @@ public class Menu extends JComponent {
     
     public Menu() {
         menuActionListeners = new ArrayList<>();
-        buttonFont = new Font(Font.MONOSPACED,Font.BOLD,32);
+        buttonFont = Settings.BUTTON_FONT;
     }
     
     public void addMenuActionListener(MenuActionListener menuMouseListener) {

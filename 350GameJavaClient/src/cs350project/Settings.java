@@ -5,6 +5,9 @@
  */
 package cs350project;
 
+import java.awt.Font;
+import java.awt.Rectangle;
+
 /**
  *
  * @author Mark Masone
@@ -14,6 +17,9 @@ public class Settings {
     private static Settings settings;
     private int screenW;
     private int screenH;
+    public static final Font BUTTON_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
+    public static final Font LIST_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
+    public static final Font HEADING_FONT = new Font("Arial",Font.BOLD,40);
     
     private Settings() {
         screenW = 1600;
@@ -41,5 +47,9 @@ public class Settings {
     
     public void setScreenHeight(int screenH) {
         this.screenH = screenH;
+    }
+    
+    public Rectangle getBounds() {
+        return new Rectangle(0,0,screenW,screenH);
     }
 }

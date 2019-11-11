@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package cs350project.screens;
+
 import cs350project.Settings;
-import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.panels.Panel;
+import java.awt.Color;
+import java.awt.Rectangle;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 /**
  *
@@ -20,10 +22,29 @@ public abstract class Screen extends JComponent {
         int screenW = settings.getScreenWidth();
         int screenH = settings.getScreenHeight();
         panel.setBounds(0, 0, screenW, screenH);
+        panel.setBackground(new Color(0,0,0,0));
         panel.setLayout(null);
         add(panel);
     }
     
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        setLayout(null);
+        Settings settings = Settings.getSettings();
+        Rectangle bounds = settings.getBounds();
+        
+        BackgroundImage backgroundImage = getBackgroundImage();
+        backgroundImage.setBounds(bounds);
+        
+        JPanel jPanel = getJPanel();
+        jPanel.setBounds(bounds);
+        
+        add(jPanel);
+        add(backgroundImage);
+    }
+    
+    public abstract BackgroundImage getBackgroundImage();
+    public abstract JPanel getJPanel();
     public abstract KeyMap getKeyMap();
-    public abstract void showPanel();
 }
