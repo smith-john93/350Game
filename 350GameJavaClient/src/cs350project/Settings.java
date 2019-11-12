@@ -17,10 +17,15 @@ import java.util.HashMap;
 public class Settings {
     
     private static Settings settings;
-    private int screenW;
-    private int screenH;
+    private Dimension screenDimension;
     private final HashMap<Integer,KeyEvent[]> keyMappings;
 
+    public static final Dimension[] SCREEN_DIMENSIONS = {
+        new Dimension(1366,768),
+        new Dimension(1600,900),
+        new Dimension(1920,1080)
+    };
+    
     public static final Font BUTTON_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
     public static final Font BUTTON_FONT_MEDIUM = new Font(Font.MONOSPACED,Font.BOLD,24);
     public static final Font LIST_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
@@ -36,8 +41,7 @@ public class Settings {
     public static final Insets TOP_LEFT_INSETS = new Insets(20,20,0,0);
     
     private Settings() {
-        screenW = 1600;
-        screenH = 900;
+        screenDimension = new Dimension(1366,768);
         keyMappings = new HashMap<>();
     }
     
@@ -48,24 +52,16 @@ public class Settings {
         return settings;
     }
     
-    public int getScreenWidth() {
-        return screenW;
+    public Dimension getScreenDimension() {
+        return screenDimension;
     }
     
-    public void setScreenWidth(int screenW) {
-        this.screenW = screenW;
+    public void setScreenDimension(Dimension screenDimension) {
+        this.screenDimension = screenDimension;
     }
     
-    public int getScreenHeight() {
-        return screenH;
-    }
-    
-    public void setScreenHeight(int screenH) {
-        this.screenH = screenH;
-    }
-    
-    public Rectangle getBounds() {
-        return new Rectangle(0,0,screenW,screenH);
+    public Rectangle getScreenBounds() {
+        return new Rectangle(0,0,screenDimension.width,screenDimension.height);
     }
     
     public void setKeyMappings(int characterState, KeyEvent[] keys) {

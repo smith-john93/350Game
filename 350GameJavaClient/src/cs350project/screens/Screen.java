@@ -22,7 +22,7 @@ public abstract class Screen extends JComponent {
         super.addNotify();
         setLayout(null);
         Settings settings = Settings.getSettings();
-        Rectangle bounds = settings.getBounds();
+        Rectangle bounds = settings.getScreenBounds();
         
         BackgroundImage backgroundImage = getBackgroundImage();
         backgroundImage.setBounds(bounds);

@@ -7,6 +7,7 @@ package cs350project.screens;
 
 import cs350project.Settings;
 import cs350project.screens.selection.SelectionPanel;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -33,8 +34,9 @@ public class BackgroundImage extends JComponent {
     private BufferedImage getBackgroundImage(String backgroundFile) {
         URL url = SelectionPanel.class.getResource(backgroundFile);
         try {
-            int width = Settings.getSettings().getScreenWidth();
-            int height = Settings.getSettings().getScreenHeight();
+            Dimension screenDimension = Settings.getSettings().getScreenDimension();
+            int width = screenDimension.width;
+            int height = screenDimension.height;
             BufferedImage bufferedImage = ImageIO.read(url);
             BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2D = resizedImage.createGraphics();

@@ -10,6 +10,8 @@ import cs350project.Settings;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -19,6 +21,22 @@ import javax.swing.JTextField;
  * @author Mark Masone
  */
 class IncrementalSetting extends JPanel {
+    
+    private final SettingsPanel settingsPanel;
+    private final JTextField settingText;
+    
+    IncrementalSetting(SettingsPanel settingsPanel) {
+        this.settingsPanel = settingsPanel;
+        settingText = new JTextField();
+        settingText.setFont(Settings.SETTING_FONT);
+        settingText.setPreferredSize(new Dimension(200,0));
+    }
+    
+    public void setText(String text) {
+        System.out.println(text);
+        settingText.setText(text);
+    }
+    
     @Override
     public void addNotify() {
         super.addNotify();
@@ -39,9 +57,20 @@ class IncrementalSetting extends JPanel {
         settingDown.setMaximumSize(buttonSize);
         settingUp.setMaximumSize(buttonSize);
         
-        JTextField settingText = new JTextField();
-        settingText.setFont(Settings.SETTING_FONT);
-        settingText.setPreferredSize(new Dimension(200,0));
+        IncrementalSetting incrementalSetting = this;
+        
+        settingDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                settingsPanel.settingDecrement(incrementalSetting);
+            }
+        });
+        settingUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                settingsPanel.settingIncrement(incrementalSetting);
+            }
+        });
         
         gbc.gridx = 0;
         add(settingDown,gbc);

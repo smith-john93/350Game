@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JOptionPane;
@@ -21,7 +23,7 @@ import javax.swing.JOptionPane;
  * @author Mark Masone
  */
 public class Communication implements OutgoingMessageListener, OutgoingCommandListener {
-    private final String host = "127.0.0.1";
+    private final String host = "127.0.0.1"; // for testing
     private final int messagePort = 12346;
     private final int commandPort = 12345;
     private PrintWriter messageWriter;
@@ -54,11 +56,15 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public void connect() {
         if (dataSocket == null || !dataSocket.isConnected()) {
             try {
+                // use ipv6 address here
+                //InetAddress host = InetAddress.getByName("");
+                //System.out.println(host);
                 dataSocket = new Socket(host, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());
                 dataInputStream = new DataInputStream(dataSocket.getInputStream());
                 listen();
             } catch (IOException e) {
+                System.out.println(e.getMessage());
                 JOptionPane.showMessageDialog(null, "Cannot send commands to the server.");
             }
         }

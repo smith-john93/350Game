@@ -1,8 +1,6 @@
 package cs350project.screens.selection;
 
 import cs350project.Settings;
-import cs350project.screens.selection.SelectionInputListener;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,9 +17,8 @@ public class SelectionOverlay extends JComponent {
     public SelectionOverlay(Rectangle[] characterBorders) {
         selectionInputListeners = new ArrayList<>();
         Settings settings = Settings.getSettings();
-        int screenW = settings.getScreenWidth();
-        int screenH = settings.getScreenHeight();
-        setBounds(0,0,screenW,screenH);
+        Dimension screenDimension = settings.getScreenDimension();
+        setBounds(0,0,screenDimension.width,screenDimension.height);
         selectedCharacter = 0;
         this.characterBorders = characterBorders;
         addMouseMotionListener(new MouseMotionAdapter() {

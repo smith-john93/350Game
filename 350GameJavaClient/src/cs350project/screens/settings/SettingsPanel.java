@@ -5,6 +5,7 @@
  */
 package cs350project.screens.settings;
 
+import cs350project.GameFrame;
 import cs350project.Settings;
 import cs350project.characters.CharacterState;
 import cs350project.menu.BackButtonPanel;
@@ -12,6 +13,7 @@ import cs350project.screens.Panel;
 import cs350project.screens.lobby.LobbyInputListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -26,6 +28,11 @@ import javax.swing.border.LineBorder;
  */
 public class SettingsPanel extends Panel<SettingsInputListener> {
     
+    private final Settings settings = Settings.getSettings();
+    
+    private int screenDimensionsIndex = 0;
+    private final int screenDimensionsLength = Settings.SCREEN_DIMENSIONS.length;
+    
     private final String moveLeft = "Move Left";
     private final String moveRight = "Move Right";
     private final String crouch = "Crouch";
@@ -35,9 +42,15 @@ public class SettingsPanel extends Panel<SettingsInputListener> {
     private final String jump = "Jump";
     private final String highKick = "High Kick";
     
+    private IncrementalSetting screenDimensionSetting;
+    private IncrementalSetting musicVolumeSetting;
+    
     @Override
     public void addNotify() {
         super.addNotify();
+        
+        screenDimensionSetting = new IncrementalSetting(this);
+        musicVolumeSetting = new IncrementalSetting(this);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -50,8 +63,6 @@ public class SettingsPanel extends Panel<SettingsInputListener> {
 
         setBorder(new LineBorder(Color.white, 5));
 
-        IncrementalSetting resolutionSetting = new IncrementalSetting();
-        IncrementalSetting musicVolumeSetting = new IncrementalSetting();
         FiniteSetting moveLeftSetting = new FiniteSetting(this,CharacterState.MOVING_LEFT,moveLeft);
         FiniteSetting moveRightSetting = new FiniteSetting(this,CharacterState.MOVING_RIGHT,moveRight);
         FiniteSetting crouchSetting = new FiniteSetting(this,CharacterState.CROUCHING,crouch);
@@ -73,7 +84,7 @@ public class SettingsPanel extends Panel<SettingsInputListener> {
 
         gbc.gridwidth = 1;
         gbc.gridy = 1;
-        add(resolutionSetting,gbc);
+        add(screenDimensionSetting,gbc);
         gbc.gridy = 2;
         add(musicVolumeSetting,gbc);
 
@@ -99,12 +110,42 @@ public class SettingsPanel extends Panel<SettingsInputListener> {
         gbc.gridy = 4;
         gbc.insets = Settings.ALL_INSETS;
         add(highKickSetting,gbc);
+        updateScreenDimension();
     }
     
     void finiteSettingClicked(String label) {
         switch(label) {
             case moveLeft:
                 
+        }
+    }
+    
+    private void updateScreenDimension() {
+        Dimension screenDimension = Settings.SCREEN_DIMENSIONS[screenDimensionsIndex];
+        settings.setScreenDimension(screenDimension);
+        screenDimensionSetting.setText(screenDimension.width + " x " + screenDimension.height);
+        GameFrame.getInstance().setSize(screenDimension);
+    }
+    
+    void settingIncrement(IncrementalSetting incrementalSetting) {
+        if(incrementalSetting == screenDimensionSetting) {
+            if(screenDimensionsIndex == screenDimensionsLength - 1) {
+                screenDimensionsIndex = 0;
+            } else {
+                screenDimensionsIndex++;
+            }
+            updateScreenDimension();
+        }
+    }
+    
+    void settingDecrement(IncrementalSetting incrementalSetting) {
+        if(incrementalSetting == screenDimensionSetting) {
+            if(screenDimensionsIndex == 0) {
+                screenDimensionsIndex = screenDimensionsLength - 1;
+            } else {
+                screenDimensionsIndex--;
+            }
+            updateScreenDimension();
         }
     }
     
