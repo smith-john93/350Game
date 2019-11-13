@@ -10,16 +10,8 @@ package cs350project.characters;
  * @author Mark Masone
  */
 public class Coffman extends PlayerCharacter {
-    public Coffman() {
-        super(
-                new CharacterResources(
-                        "Coffman.png",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif"
-                ),
-                CharacterState.IDLE
-        );
+    public Coffman(short objectID) {
+        super(objectID, CharacterState.IDLE);
     }
 
     @Override

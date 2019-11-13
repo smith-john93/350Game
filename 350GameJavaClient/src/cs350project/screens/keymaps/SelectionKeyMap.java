@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package cs350project.screens.keymaps;
-import java.awt.event.KeyAdapter;
+import cs350project.screens.listeners.SelectionInputListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -16,34 +16,34 @@ import java.util.ArrayList;
 /*
 Key bindings for the selection screen.
 */
-public class SelectionKeyMap extends KeyMap<SelectionKeyMapListener> {
+public class SelectionKeyMap extends KeyMap<SelectionInputListener> {
     
-    private final ArrayList<SelectionKeyMapListener> selectionKeyMapListeners;
+    private final ArrayList<SelectionInputListener> selectionInputListeners;
     
     public SelectionKeyMap() {
-        selectionKeyMapListeners = new ArrayList<>();
+        selectionInputListeners = new ArrayList<>();
     }
     
-    public void addSelectionKeyMapListener(SelectionKeyMapListener selectionKeyMapListener) {
-        selectionKeyMapListeners.add(selectionKeyMapListener);
+    public void addSelectionInputListener(SelectionInputListener selectionInputListener) {
+        selectionInputListeners.add(selectionInputListener);
     }
     
     @Override
     public void keyPressed(KeyEvent ke) {
         switch(ke.getKeyCode()) {
             case KeyEvent.VK_SPACE: 
-                for(SelectionKeyMapListener selectionKeyMapListener : selectionKeyMapListeners) {
-                    selectionKeyMapListener.characterSelected();
+                for(SelectionInputListener selectionInputListener : selectionInputListeners) {
+                    selectionInputListener.characterSelected();
                 }
                 break;
             case KeyEvent.VK_D:
-                for(SelectionKeyMapListener selectionKeyMapListener : selectionKeyMapListeners) {
-                    selectionKeyMapListener.selectNextRight();
+                for(SelectionInputListener selectionInputListener : selectionInputListeners) {
+                    selectionInputListener.highlightNextRight();
                 }
                 break;
             case KeyEvent.VK_A:
-                for(SelectionKeyMapListener selectionKeyMapListener : selectionKeyMapListeners) {
-                    selectionKeyMapListener.selectNextLeft();
+                for(SelectionInputListener selectionInputListener : selectionInputListeners) {
+                    selectionInputListener.highlightNextLeft();
                 }
                 break;
         }

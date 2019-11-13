@@ -4,36 +4,68 @@
  * and open the template in the editor.
  */
 package cs350project.screens.panels;
-import cs350project.OutgoingMessageListener;
+
+import cs350project.communication.OutgoingCommandListener;
+import cs350project.communication.OutgoingMessageListener;
+import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
 import cs350project.chat.*;
-import cs350project.screens.keymaps.ChatKeyMapListener;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import cs350project.screens.listeners.match.AttackInputListener;
+import cs350project.screens.listeners.match.ChatInputListener;
+import javax.swing.*;
+import cs350project.screens.match.MatchObjectManagerListener;
 
 /**
  *
  * @author Mark Masone
  */
-public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, ChatKeyMapListener {
+public class MatchPanel extends Panel implements   
+        ChatMessageFieldKeyListener, 
+        ChatInputListener, 
+        MatchObjectManagerListener {
     
     private final ChatMessageQueue chatMessageQueue;
     private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
     private final ArrayList<OutgoingMessageListener> outgoingMessageListeners;
+    private String background;
+    private final PlayerCharacter playerCharacter;
+    private final PlayerCharacter opponent;
+    private final ArrayList<OutgoingCommandListener> outgoingCommandListeners;
     
-    public MatchPanel(PlayerCharacter player1, PlayerCharacter player2) {
+    public MatchPanel(PlayerCharacter playerCharacter, PlayerCharacter opponent) {
+        outgoingCommandListeners = new ArrayList<>();
         outgoingMessageListeners = new ArrayList<>();
-        setBounds(0,0,1600,900);
         chatMessageQueue = new ChatMessageQueue();
-        setLayout(null);
         chatMessageField = new ChatMessageField();
         chatMessageField.setVisible(false);
+        this.playerCharacter = playerCharacter;
+        this.opponent = opponent;
+    }
+    
+    @Override
+    public void addNotify() {
+        super.addNotify();
+
         add(chatMessageQueue);
         add(chatMessageField);
+
+        //add(playerCharacter);
+        //add(opponent);
     }
     
     public void addOutgoingMessageListener(OutgoingMessageListener outgoingMessageListener) {
         outgoingMessageListeners.add(outgoingMessageListener);
+    }
+
+    public void addOutgoingCommandListener(OutgoingCommandListener outgoingCommandListener) {
+        outgoingCommandListeners.add(outgoingCommandListener);
     }
     
     @Override
@@ -64,5 +96,23 @@ public class MatchPanel extends Panel implements ChatMessageFieldKeyListener, Ch
             repaint();
         }
         messageCancel();
+    }
+    
+    public void setBackground(String background) {
+        this.background = background;
+    }
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(background != null) {
+            Graphics2D g2d = (Graphics2D)g;
+            //paintBackground(g2d,"/resources/" + background);
+        }
+    }
+
+    @Override
+    public void matchObjectChanged() {
+        repaint();
     }
 }

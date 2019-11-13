@@ -10,7 +10,17 @@ package cs350project.characters;
  * @author Mark Masone
  */
 public enum CharacterClass {
-    NORMAL,
-    NINJA,
-    MAGE
+    NORMAL(0x1),
+    NINJA(0x2),
+    MAGE(0x3);
+    
+    private final int value;
+    
+    private CharacterClass(int value) {
+        this.value = value;
+    }
+    
+    public int getValue() {
+        return value;
+    }
 }

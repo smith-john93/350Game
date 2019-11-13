@@ -1,10 +1,11 @@
 package cs350project.screens;
 
+import cs350project.CS350Project;
 import cs350project.screens.keymaps.KeyMap;
-import cs350project.screens.mouse.MainMenuMouseListener;
 import cs350project.screens.panels.MainMenuPanel;
+import cs350project.screens.listeners.MainMenuInputListener;
 
-public class MainMenuScreen extends Screen implements MainMenuMouseListener {
+public class MainMenuScreen extends Screen implements MainMenuInputListener {
 
     private final MainMenuPanel mainMenuPanel;
 
@@ -19,21 +20,17 @@ public class MainMenuScreen extends Screen implements MainMenuMouseListener {
 
     @Override
     public void showPanel() {
-        mainMenuPanel.addMainMenuButtonListener(this);
+        mainMenuPanel.addInputListener(this);
         addPanel(mainMenuPanel);
     }
 
     @Override
-    public void loginButtonClicked() {
-        for(ScreenListener screenListener : screenListeners) {
-            screenListener.showScreen(new LoginScreen());
-        }
+    public void login() {
+        CS350Project.showScreen(new LoginScreen());
     }
 
     @Override
-    public void createAccountButtonClicked() {
-        for(ScreenListener screenListener : screenListeners) {
-            screenListener.showScreen(new CreateAccountScreen());
-        }
+    public void createAccount() {
+        CS350Project.showScreen(new CreateAccountScreen());
     }
 }

@@ -10,16 +10,11 @@ package cs350project.characters;
  * @author Mark Masone
  */
 public class LegoMan extends PlayerCharacter {
-    public LegoMan() {
-        super(
-                new CharacterResources(
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif",
-                        "Punch-Hit.gif"
-                ),
-                CharacterState.IDLE
-        );
+    
+    public LegoMan(short objectID) {
+        super(objectID, CharacterState.IDLE);
+        
+        
     }
 
     @Override

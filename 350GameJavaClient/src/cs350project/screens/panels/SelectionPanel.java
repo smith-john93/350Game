@@ -5,30 +5,47 @@
  */
 package cs350project.screens.panels;
 
+import cs350project.characters.CharacterState;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.Color;
+
 import cs350project.characters.*;
-import javax.swing.JPanel;
+import cs350project.screens.overlays.SelectionOverlay;
+import java.awt.Rectangle;
+import java.io.IOException;
 
 /**
  *
  * @author Mark Masone
  */
 public class SelectionPanel extends Panel {
-    
-    private int selectedIndex;
-    private final int selections;
+
     private final PlayerCharacter[] characters;
-    
-    public SelectionPanel() {
-        setBounds(0,0,1600,900);
-        selectedIndex = 0;
-        selections = 4;
-        characters = new PlayerCharacter[]{new Chev(),new Coffman(),new ElPresidente(),new LegoMan()};
+    private final SelectionOverlay selectionOverlay;
+
+    public SelectionPanel(short objectID) throws IOException {
+        characters = new PlayerCharacter[]{
+                new Ganchev(objectID),
+                new Coffman(objectID),
+                new Trump(objectID),
+                new LegoMan(objectID)
+        };
+        Rectangle[] characterBorders = new Rectangle[characters.length];
+        for(int i = 0; i < characters.length; i++) {
+            int x = 300 + (i * 140);
+            int y = 300;
+            int w = 100;
+            int h = 100;
+            PlayerCharacter character = characters[i];
+            character.setBounds(x, y, w, h);
+            character.setState(CharacterState.THUMBNAIL);
+            add(character);
+            setComponentZOrder(character,0);
+            characterBorders[i] = character.getBounds();
+        }
+        selectionOverlay = new SelectionOverlay(characterBorders);
+        add(selectionOverlay);
+        setComponentZOrder(selectionOverlay,1);
     }
     
     @Override
@@ -36,41 +53,17 @@ public class SelectionPanel extends Panel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
         paintBackground(g2d,"/resources/background.jpg");
-        for(int i = 0; i < selections; i++) {
-            if(i == selectedIndex)
-                g2d.setColor(Color.red);
-            else
-                g2d.setColor(Color.white);
-            int x = 300 + (i * 140);
-            int y = 300;
-            int w = 100;
-            int h = 100;
-            g2d.drawRect(x, y, w, h);
-            PlayerCharacter character = characters[i];
-            character.setBounds(x, y, w, h);
-            character.draw(g2d);
-        }
     }
     
     public PlayerCharacter getPlayer1Selection() {
-        return characters[selectedIndex];
+        return characters[selectionOverlay.getSelectedCharacter()];
     }
     
     public PlayerCharacter getPlayer2Selection() {
         return null;
     }
-
-    public void selectNextRight() {
-        if(selectedIndex < selections - 1) {
-            selectedIndex++;
-            repaint();
-        }
-    }
-
-    public void selectNextLeft() {
-        if(selectedIndex > 0) {
-            selectedIndex--;
-            repaint();
-        }
+    
+    public SelectionOverlay getSelectionOverlay() {
+        return selectionOverlay;
     }
 }

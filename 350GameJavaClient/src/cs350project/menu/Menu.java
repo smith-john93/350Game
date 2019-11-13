@@ -13,13 +13,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 /**
  *
@@ -27,7 +25,7 @@ import javax.swing.JTextField;
  */
 public class Menu extends JComponent {
     
-    private final ArrayList<MenuMouseListener> menuMouseListeners;
+    private final ArrayList<MenuActionListener> menuActionListeners;
     private int menuW;
     private int menuH;
     private final int menuPadding = 20;
@@ -42,12 +40,12 @@ public class Menu extends JComponent {
     private final Font buttonFont;
     
     public Menu() {
-        menuMouseListeners = new ArrayList<>();
+        menuActionListeners = new ArrayList<>();
         buttonFont = new Font(Font.MONOSPACED,Font.BOLD,32);
     }
     
-    public void addMenuMouseListener(MenuMouseListener menuMouseListener) {
-        menuMouseListeners.add(menuMouseListener);
+    public void addMenuActionListener(MenuActionListener menuMouseListener) {
+        menuActionListeners.add(menuMouseListener);
     }
     
     public void addField(JComponent field) {
@@ -58,11 +56,11 @@ public class Menu extends JComponent {
     public void addButton(JButton button) {
         button.setSize(buttonWidth, buttonHeight);
         button.setFont(buttonFont);
-        button.addMouseListener(new MouseAdapter() {
+        button.addActionListener(new ActionListener(){
             @Override
-            public void mouseClicked(MouseEvent e) {
-                for (MenuMouseListener menuMouseListener : menuMouseListeners) {
-                    menuMouseListener.buttonClicked(button);
+            public void actionPerformed(ActionEvent e) {
+                for (MenuActionListener menuActionListener : menuActionListeners) {
+                    menuActionListener.buttonClicked(button);
                 }
             }
         });

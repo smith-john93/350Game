@@ -12,20 +12,20 @@ import java.util.ArrayList;
 /**
  *
  * @author Mark Masone
- * @param <KeyMapListener>
+ * @param <InputListener>
  */
-public class KeyMap<KeyMapListener> extends KeyAdapter {
+public class KeyMap<InputListener> extends KeyAdapter {
     
-    protected final ArrayList<KeyMapListener> keyMapListeners;
+    protected final ArrayList<InputListener> inputListeners;
     private final ArrayList<KeyMap> keyMaps;
     
     public KeyMap() {
-        keyMapListeners = new ArrayList<>();
+        inputListeners = new ArrayList<>();
         keyMaps = new ArrayList<>();
     }
     
-    public void addKeyMapListener(KeyMapListener keyMapListener) {
-        keyMapListeners.add(keyMapListener);
+    public void addInputListener(InputListener inputListener) {
+        inputListeners.add(inputListener);
     }
     
     public void addKeyMap(KeyMap keyMap) {
