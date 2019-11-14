@@ -26,11 +26,13 @@ namespace ConsoleApp1
             {
                 if (queue.queue.Count < 2)
                 {
-
                     continue;
                 }
                 else
+                {
+                    Console.WriteLine("Match made in yeet");
                     execute(queue.queue.Dequeue(), queue.queue.Dequeue());
+                }
             }
             if(RequestShutdown)
             {
@@ -41,7 +43,7 @@ namespace ConsoleApp1
 
         public void Simulation(PlayerSocketController player1, PlayerSocketController player2)
         {
-            //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
+            Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
             
         }
 

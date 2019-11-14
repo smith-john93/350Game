@@ -43,7 +43,7 @@ namespace ConsoleApp1
                 Console.WriteLine("\nOptions:");
                 Console.WriteLine("1: Check the queue size");
                 Console.WriteLine("2: Shutdown the server");
-
+                
                 string a = Console.ReadLine();
 
                 if (a == "1")
