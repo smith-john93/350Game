@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-    public enum CharacterState
+    enum CharacterState
     {
         MOVING_LEFT = 0x100,
         MOVING_RIGHT = 0x80,
@@ -20,9 +20,9 @@ namespace ConsoleApp1
         IDLE = 0x0
     }
 
-    public static class CharacterStateUtilities
+    static class CharacterStateParser
     {
-        public static CharacterState ParseCharacterState(int stateCode)
+        public static CharacterState Parse(int stateCode)
         {
             return (CharacterState)Enum.Parse(typeof(CharacterState),Enum.GetName(typeof(CharacterState),stateCode));
         }
