@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  * @author Mark Masone
  */
 public class Communication implements OutgoingMessageListener, OutgoingCommandListener {
-    private final String host = "127.0.0.1"; // for testing
+    //private final String host = "192.168.163.126"; // for testing
     private final int messagePort = 12346;
     private final int commandPort = 12345;
     private PrintWriter messageWriter;
@@ -57,7 +57,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         if (dataSocket == null || !dataSocket.isConnected()) {
             try {
                 // use ipv6 address here
-                //InetAddress host = InetAddress.getByName("");
+                InetAddress host = InetAddress.getByName("fe80::ac5b:3b2e:ff5f:3b59");
                 //System.out.println(host);
                 dataSocket = new Socket(host, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());
@@ -112,6 +112,23 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             }
         }
         throw new NoSuchElementException("Invalid command received.");
+    }
+    
+    public void sendCredentials(String username, char[] password) {
+        if (dataOutputStream != null) {
+            try {
+                dataOutputStream.writeBytes(username);
+                dataOutputStream.write(0);
+                for(char c : password) {
+                    dataOutputStream.write(c);
+                }
+                //dataOutputStream.writeChar;
+            } catch (IOException e) {
+                System.out.println("Failed to write command to stream.");
+            }
+        } else {
+            System.out.println("Unable to send command.");
+        }
     }
     
     @Override

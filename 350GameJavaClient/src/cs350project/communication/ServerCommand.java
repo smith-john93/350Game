@@ -14,7 +14,10 @@ public enum ServerCommand {
     SELECT_CHARACTER(0x1),
     UPDATE_MATCH(0x2),
     UPDATE_LOBBY(0x3),
-    START_MATCH(0x4);
+    START_MATCH(0x4),
+    USER_AUTH_PASS(0x5),
+    USER_AUTH_FAIL(0x6),
+    USER_AUTH_BLOCKED(0x7);
     
     private final int value;
     
