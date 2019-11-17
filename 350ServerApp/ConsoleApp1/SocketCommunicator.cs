@@ -1,19 +1,30 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 
-namespace ConsoleApp1
+namespace GameSevrer
 {
     public class SocketCommunicator
     {
-        private Socket PrimarySocket;
-        private SocketInformation SocketInfo;
-        private IPHostEntry ipHost;
+        
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
+        private AsyncCallback onConnect;
+        //private ThreadPool _playerThreadPool;
         // 0x100007F is 127.0.0.1 in big-endian.
+        /*
         private const long localhost = 0x100007F;
+        private const long localhost = 0x1EAC840A;
+         */
+        private IPHostEntry ipHost;
         private const int commandPort = 12345;
+        public TcpListener listener;
+
 
         public bool RequestShutdown;
         public GameQueue Queue;
@@ -21,12 +32,17 @@ namespace ConsoleApp1
         {
             RequestShutdown = false;
             Queue = masterQueue;
-            SocketInfo = new SocketInformation();
-            
-            ipAddr = new IPAddress(localhost);
-            localEndPoint = new IPEndPoint(ipAddr, commandPort);
 
-            PrimarySocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+            ipHost = Dns.GetHostEntry(Dns.GetHostName());
+            ipAddr = ipHost.AddressList[0];
+            /*
+            ipAddr = new IPAddress(localhost);
+            */
+
+            localEndPoint = new IPEndPoint(ipAddr, commandPort);
+            //PrimarySocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            //_playerThreadPool = new 
         }
 
         public void listen()
@@ -34,21 +50,41 @@ namespace ConsoleApp1
 
             try
             {
-                PrimarySocket.Bind(localEndPoint);
-                PrimarySocket.Listen(100);
+                //PrimarySocket.Bind(localEndPoint);
+                //PrimarySocket.Listen(100);
+                //PrimarySocket.BeginAccept(onConnect, PrimarySocket);
+                listener = new TcpListener(localEndPoint);
+                listener.Start();               
 
-                Console.WriteLine($"Server IP: {ipAddr}. \nServer Socket: {commandPort}");
+                string socketInfo = listener.LocalEndpoint.ToString();
 
-                while(true && !RequestShutdown)
+                //used for debugging
+                DisplayInfo(socketInfo);
+
+                int i = 0;
+                while(!RequestShutdown)
                 {
-                    short playerID = (short)(Queue.queue.Count + 1);
-                    Queue.queue.Enqueue(new PlayerSocketController(PrimarySocket.Accept(),playerID));
+                    try
+                    {
+
+                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient());
+                        Thread playerThread = new Thread(p.Start);
+                        ThreadPool.QueueUserWorkItem(playerThread.Start);
+                        
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    Console.WriteLine("connection yeeted");
+
                 }
                 if(RequestShutdown)
                 {
                     Console.WriteLine("Shutdown Request Received. Shutting down server...");
                 }
-                PrimarySocket.Close();
+
+                //PrimarySocket.Close();
 
             }
             catch(SocketException e)
@@ -56,5 +92,18 @@ namespace ConsoleApp1
                 Console.WriteLine(e);
             }
         }
+
+        private void DisplayInfo(string information)
+        {
+            /*
+            string[] info = information.Split(":");
+            Console.WriteLine(information);
+            */
+            string[] info = information.Split("]:");
+            info[0] = info[0].ToString().Replace("[", string.Empty);
+            string[] IpV6 = info[0].ToString().Split("%");
+            Console.WriteLine($"Server IP: {IpV6[0]}. \nServer Socket: {info[1]}");
+        }
+
     }
 }
