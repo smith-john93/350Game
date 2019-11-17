@@ -5,7 +5,7 @@ using System.Threading;
 using System.Net;
 
 
-namespace ConsoleApp1
+namespace GameSevrer
 {
     public class GameServer
     {

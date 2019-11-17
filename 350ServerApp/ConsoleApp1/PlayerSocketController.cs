@@ -3,8 +3,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text;
+using GameSevrer.Enumerations;
 
-namespace ConsoleApp1
+namespace GameSevrer
 {
     public class PlayerSocketController
     {
@@ -68,7 +69,7 @@ namespace ConsoleApp1
                 //This will need to validate to check and make sure the client is trying to connect to the server
                 clientInterface = _socket.GetStream();
                 i = clientInterface.ReadByte();
-                Console.WriteLine($"Byte Read: {i}");
+                //if(Enumerations.ClientCommands.LOGIN.Equals(i))
 
                 //get the username from the client
                 StringBuilder cUser = new StringBuilder();

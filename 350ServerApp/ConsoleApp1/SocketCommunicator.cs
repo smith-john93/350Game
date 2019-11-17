@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 
-namespace ConsoleApp1
+namespace GameSevrer
 {
     public class SocketCommunicator
     {
