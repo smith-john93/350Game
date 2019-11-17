@@ -1,1 +1,5 @@
 /350GameJavaClient/dist/
+/.vs
+/350ServerApp/.vs/Server
+/350ServerApp/ConsoleApp1/bin/Debug/netcoreapp2.1
+/350ServerApp/ConsoleApp1/obj
