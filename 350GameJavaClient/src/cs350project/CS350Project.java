@@ -4,37 +4,36 @@
  * and open the template in the editor.
  */
 package cs350project;
-import javax.swing.JFrame;
-import javax.swing.Timer;
+import cs350project.screens.MainMenuScreen;
+import cs350project.screens.Screen;
+import cs350project.screens.keymaps.KeyMap;
 
 /**
  *
  * @author Mark Masone
  */
 public class CS350Project {
+ 
+    private static Screen screen;
 
+    public static void showScreen(Screen screen) {
+        GameFrame gameFrame = GameFrame.getInstance();
+        if(CS350Project.screen != null) {
+            gameFrame.remove(CS350Project.screen);
+        }
+        KeyMap keyMap = screen.getKeyMap();
+        gameFrame.setKeyMap(keyMap);
+        screen.showPanel();
+        gameFrame.add(screen);
+        gameFrame.setVisible(true);
+        gameFrame.requestFocus();
+        CS350Project.screen = screen;
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        JFrame gameFrame = new JFrame();
-        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameFrame.setTitle("CS350 Project");
-        
-        GamePanel gamePanel = new GamePanel();
-        RedBall redBall = new RedBall(RedBall.Fighter.normal);
-        redBall.setBounds(0,0,1600,900);
-        gamePanel.add(redBall);
-        gameFrame.addMouseMotionListener(redBall);
-        gameFrame.addKeyListener(redBall);
-        KeyboardAdapter ki = new KeyboardAdapter();
-        ki.addKeyboardListener(gamePanel);
-        gameFrame.addKeyListener(ki);
-        gameFrame.add(gamePanel);
-        gameFrame.setSize(1600, 900);
-        gameFrame.setVisible(true);
-        Timer tt = new Timer(17, redBall);
-        tt.start();
+        CS350Project.showScreen(new MainMenuScreen());
     }
-    
 }
