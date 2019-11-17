@@ -5,7 +5,7 @@ using System.Threading;
 using System.Net;
 
 
-namespace ConsoleApp1
+namespace GameSevrer
 {
     public class GameServer
     {
@@ -43,15 +43,16 @@ namespace ConsoleApp1
                 Console.WriteLine("\nOptions:");
                 Console.WriteLine("1: Check the queue size");
                 Console.WriteLine("2: Shutdown the server");
-
+                
                 string a = Console.ReadLine();
 
                 if (a == "1")
                     Console.WriteLine($"Queue Size is {queue.queue.Count}");
                 else
                 {
-                    communicator.RequestShutdown = true;
                     matchMaker.RequestShutdown = true;
+                    communicator.listener.Stop();
+                    communicator.RequestShutdown = true;
 
                     MatchmakerThread.Join();
                     SocketThread.Join();

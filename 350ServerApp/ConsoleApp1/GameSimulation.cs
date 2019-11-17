@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace GameSevrer
 {
     public class GameSimulation
     {
@@ -26,11 +26,13 @@ namespace ConsoleApp1
             {
                 if (queue.queue.Count < 2)
                 {
-
                     continue;
                 }
                 else
+                {
+                    Console.WriteLine("Match made in yeet");
                     execute(queue.queue.Dequeue(), queue.queue.Dequeue());
+                }
             }
             if(RequestShutdown)
             {
