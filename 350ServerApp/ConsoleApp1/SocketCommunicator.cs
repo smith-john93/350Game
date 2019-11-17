@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
@@ -10,7 +11,7 @@ namespace ConsoleApp1
 {
     public class SocketCommunicator
     {
-        private Socket PrimarySocket;
+        
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
         private AsyncCallback onConnect;
@@ -22,11 +23,11 @@ namespace ConsoleApp1
          */
         private IPHostEntry ipHost;
         private const int commandPort = 12345;
+        public TcpListener listener;
 
 
         public bool RequestShutdown;
         public GameQueue Queue;
-
         public SocketCommunicator(GameQueue masterQueue)
         {
             RequestShutdown = false;
@@ -52,10 +53,10 @@ namespace ConsoleApp1
                 //PrimarySocket.Bind(localEndPoint);
                 //PrimarySocket.Listen(100);
                 //PrimarySocket.BeginAccept(onConnect, PrimarySocket);
-                TcpListener b = new TcpListener(localEndPoint);
-                b.Start();
+                listener = new TcpListener(localEndPoint);
+                listener.Start();               
 
-                string socketInfo = b.LocalEndpoint.ToString();
+                string socketInfo = listener.LocalEndpoint.ToString();
 
                 //used for debugging
                 DisplayInfo(socketInfo);
@@ -65,7 +66,11 @@ namespace ConsoleApp1
                 {
                     try
                     {
-                        PlayerSocketController a = new PlayerSocketController(b.AcceptTcpClient());
+
+                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient());
+                        Thread playerThread = new Thread(p.Start);
+                        ThreadPool.QueueUserWorkItem(playerThread.Start);
+                        
                     }
                     catch(Exception e)
                     {
@@ -78,7 +83,8 @@ namespace ConsoleApp1
                 {
                     Console.WriteLine("Shutdown Request Received. Shutting down server...");
                 }
-                PrimarySocket.Close();
+
+                //PrimarySocket.Close();
 
             }
             catch(SocketException e)
@@ -98,5 +104,6 @@ namespace ConsoleApp1
             string[] IpV6 = info[0].ToString().Split("%");
             Console.WriteLine($"Server IP: {IpV6[0]}. \nServer Socket: {info[1]}");
         }
+
     }
 }

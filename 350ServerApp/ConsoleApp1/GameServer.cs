@@ -50,8 +50,9 @@ namespace ConsoleApp1
                     Console.WriteLine($"Queue Size is {queue.queue.Count}");
                 else
                 {
-                    communicator.RequestShutdown = true;
                     matchMaker.RequestShutdown = true;
+                    communicator.listener.Stop();
+                    communicator.RequestShutdown = true;
 
                     MatchmakerThread.Join();
                     SocketThread.Join();

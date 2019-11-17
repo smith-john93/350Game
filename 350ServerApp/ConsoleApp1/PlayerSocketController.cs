@@ -8,31 +8,69 @@ namespace ConsoleApp1
 {
     public class PlayerSocketController
     {
-        int i = 0;
-        private byte[] buffer;
-        public int user { get; set; }
-        public StreamWriter clientWriter { get; set; }
-        public NetworkStream clientInterface { get; set; }
+       
+        public int user;
+        public NetworkStream clientInterface;
+        private TcpClient _socket;
 
-        public PlayerSocketController()
-        {
-            
-            Console.WriteLine("fucking default YEET");
-        }
 
         public PlayerSocketController(TcpClient playerSocket)
         {
-            Console.WriteLine("fucking YEET");
-            int i = 0;
-            int failures = 0;
-            while(true)
-            {
+            _socket = playerSocket;
 
-                buffer = new byte[1];
-                clientInterface = playerSocket.GetStream();
+        }
+
+        /// <summary>
+        /// Controls unique player connecitons
+        /// Called for thread starts
+        /// </summary>
+        public void Start()
+        {
+            //because yeet
+            Console.WriteLine("fucking YEET");
+            
+            //validate the user before continuing
+            bool validated = validateUser();
+            
+            //if the user could not be validated, respond with such and close ther connection
+            if(!validated)
+            {
+                Console.WriteLine("Closing Connection");
+                byte[] rejectionResponse = new byte[1] { 7 };
+                ReadOnlySpan<byte> rejection = new ReadOnlySpan<byte>(rejectionResponse);
+                clientInterface.Write(rejectionResponse);
+                clientInterface.Close();
+                _socket.Close();
+            }
+            //if they could be validated, allow them to continue and process their requested action
+            else
+            {
+               //do stuff here
+            }
+        }
+
+        /// <summary>
+        /// This whole method needs to work with the data layer to validate credentials against the database
+        /// </summary>
+        /// <returns></returns>
+        private bool validateUser()
+        {
+            //set variables for the method to use
+            int i;
+            byte[] response = new byte[1];
+            int failures = 0;
+            bool validCred = false;
+
+
+            while (true)
+            {
+                //read the byte sent from the client
+                //This will need to validate to check and make sure the client is trying to connect to the server
+                clientInterface = _socket.GetStream();
                 i = clientInterface.ReadByte();
                 Console.WriteLine($"Byte Read: {i}");
 
+                //get the username from the client
                 StringBuilder cUser = new StringBuilder();
                 do
                 {
@@ -43,7 +81,9 @@ namespace ConsoleApp1
                 }
                 while (clientInterface.DataAvailable);
                 Console.WriteLine($"UserName: {cUser}");
-          
+
+
+                //get the password from the client
                 StringBuilder cPass = new StringBuilder();
                 do
                 {
@@ -55,63 +95,47 @@ namespace ConsoleApp1
                 while (clientInterface.DataAvailable);
                 Console.WriteLine($"Password: {cPass}");
 
-                bool validCred = false;
-
+                
+                //convert the stringbuilders to string for validation
+                //this will be turned into sending the info to the DAL
                 string user = cUser.ToString();
                 string pass = cPass.ToString();
                 if (user == "username")
                     if (pass == "password")
                         validCred = true;
 
-                Console.WriteLine(validCred);
-
+                //checking to see if the credentials are valid
                 if (!validCred)
                 {
                     Console.WriteLine("Incimenting i");
                     failures++;
                     if (failures == 4)
                     {
-                        Console.WriteLine("Closing Connection");
-                        byte[] rejectionResponse = new byte[1] { 7 };
-                        ReadOnlySpan<byte> rejection = new ReadOnlySpan<byte>(rejectionResponse);
-                        clientInterface.Write(rejectionResponse);
-                        clientInterface.Close();
-                        playerSocket.Close();
-                        break;
+                        return false;
                     }
 
                 }
-                byte[] response = new byte[1];
-
+                
+                //set the client respaonse based on the response from validating in the DB
                 if (validCred)
                     response[0] = 5;
                 else
                     response[0] = 6;
 
-                Console.WriteLine($"Reponding with {(response[0] == 5 ? true:false)}");
+                //to be deleted -- used for debugging
+                Console.WriteLine($"Reponding with {(response[0] == 5 ? true : false)}");
 
+                //create a ReadOnlySpan to respond to the client with
                 ReadOnlySpan<byte> a = new ReadOnlySpan<byte>(response);
+
+                //Respond to the client
                 clientInterface.Write(a);
+
+                //if the credentials are correct we can return to the contolling method
+                if(validCred)
+                    return true;
             }
-
-        }
-        public PlayerSocketController(int i)
-        {
-            user = i;
         }
 
-        public void ReceiveCallback(IAsyncResult i)
-        {
-            buffer = new byte[BitConverter.ToInt32(buffer, 0)];
-            // Next receive this data into the buffer with size that we did receive before
-            clientInterface.Read(buffer, buffer.Length,1);
-            // When we received everything its onto you to convert it into the data that you've send.
-            // For example string, int etc... in this example I only use the implementation for sending and receiving a string.
-
-            // Convert the bytes to string and output it in a message box
-            string data = Encoding.Default.GetString(buffer);
-            Console.WriteLine(data);
-            // Now we have to start all over again with waiting for a data to come from the socket.
-        }
     }
 }
