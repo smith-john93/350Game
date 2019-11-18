@@ -3,51 +3,60 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GameSevrer.Enumerations;
 
 namespace GameSevrer
 {
     public class GameSimulation
     {
         public bool RequestShutdown;
-        private TaskFactory tFactory;
-        private GameQueue queue;
-        private Action<PlayerSocketController, PlayerSocketController> execute;
-        public GameSimulation(GameQueue _queue)
+        PlayerController player1;
+        PlayerController player2;
+        //private Action<PlayerController, PlayerController> execute;
+        public GameSimulation(PlayerController player)
         {
-            RequestShutdown = false;
-            queue = _queue;
-            execute = new Action<PlayerSocketController, PlayerSocketController>(Simulation);
-            tFactory = new TaskFactory();
+            player1 = player;
+        }
+
+        public void Player2Join(PlayerController player)
+        {
+            player2 = player;
         }
 
         public void Run()
         {
             while (true && !RequestShutdown)
             {
-                if (queue.queue.Count < 2)
+                if (player2 == null)
                 {
                     continue;
                 }
                 else
                 {
-                    Console.WriteLine("Match made in yeet");
-                    execute(queue.queue.Dequeue(), queue.queue.Dequeue());
+                    Console.WriteLine($"Match made in yeet.");
+                    Thread.Sleep(new TimeSpan(0, 0, 5));
+                    Simulation(player1, player2);
                 }
-            }
-            if(RequestShutdown)
-            {
-                Console.WriteLine("Shutdown Request Received... Ending match making");
             }
         }
 
 
-        public void Simulation(PlayerSocketController player1, PlayerSocketController player2)
+        public void Simulation(PlayerController player1, PlayerController player2)
         {
+
+            SelectCharacter();
+            Console.WriteLine("In Game");
             //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
             //Thread player1Thread = new Thread(player1.listen);
             //player1Thread.Start();
             //Thread player2Thread = new Thread(player2.listen);
             //player2Thread.Start();
+        }
+
+        public void SelectCharacter()
+        {
+            player1.SendMessage(ServerCommands.SELECT_CHARACTER);
+            player2.SendMessage(ServerCommands.SELECT_CHARACTER);
         }
 
     }

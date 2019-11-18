@@ -23,15 +23,14 @@ namespace GameSevrer
         private IPHostEntry ipHost;
         private const int commandPort = 12345;
         public TcpListener listener;
-
+        private GameController gController;
 
         public bool RequestShutdown;
-        public GameQueue Queue;
-        public SocketCommunicator(GameQueue masterQueue)
+        public SocketCommunicator(GameController gameController)
         {
-            RequestShutdown = false;
-            Queue = masterQueue;
+            gController = gameController;
 
+            RequestShutdown = false;
 
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
             ipAddr = ipHost.AddressList[0];
@@ -62,9 +61,9 @@ namespace GameSevrer
                     try
                     {
                         //Get a new TCPClient and hand it off to a PlayerSocketCOntroller, then spawn a new thread
-                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient());
+                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient(), gController);
                         Thread playerThread = new Thread(p.Start);
-                        ThreadPool.QueueUserWorkItem(playerThread.Start);                     
+                        playerThread.Start();                  
                     }
                     catch(Exception e)
                     {
@@ -94,7 +93,7 @@ namespace GameSevrer
             string[] info = information.Split("]:");
             info[0] = info[0].ToString().Replace("[", string.Empty);
             string[] IpV6 = info[0].ToString().Split("%");
-            Console.WriteLine($"Server IP: {IpV6[0]}. \nServer Socket: {info[1]}");
+            Console.WriteLine($"Server Information: \nServer IP: {IpV6[0]}. \nServer Socket: {info[1]}");
         }
     }
 }
