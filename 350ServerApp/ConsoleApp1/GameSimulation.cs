@@ -44,10 +44,10 @@ namespace GameSevrer
         public void Simulation(PlayerSocketController player1, PlayerSocketController player2)
         {
             //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
-            Thread player1Thread = new Thread(player1.listen);
-            player1Thread.Start();
-            Thread player2Thread = new Thread(player2.listen);
-            player2Thread.Start();
+            //Thread player1Thread = new Thread(player1.listen);
+            //player1Thread.Start();
+            //Thread player2Thread = new Thread(player2.listen);
+            //player2Thread.Start();
         }
 
     }

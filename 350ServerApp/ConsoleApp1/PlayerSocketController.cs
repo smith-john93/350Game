@@ -36,12 +36,7 @@ namespace GameSevrer
             //if the user could not be validated, respond with such and close ther connection
             if(!validated)
             {
-                Console.WriteLine("Closing Connection");
-                byte[] rejectionResponse = new byte[1] { 7 };
-                ReadOnlySpan<byte> rejection = new ReadOnlySpan<byte>(rejectionResponse);
-                clientInterface.Write(rejectionResponse);
-                clientInterface.Close();
-                _socket.Close();
+                CloseConneciton();
             }
             //if they could be validated, allow them to continue and process their requested action
             else
@@ -62,14 +57,15 @@ namespace GameSevrer
             int failures = 0;
             bool validCred = false;
 
-
             while (true)
             {
                 //read the byte sent from the client
                 //This will need to validate to check and make sure the client is trying to connect to the server
                 clientInterface = _socket.GetStream();
                 i = clientInterface.ReadByte();
-                //if(Enumerations.ClientCommands.LOGIN.Equals(i))
+                if (i != (int)ClientCommands.LOGIN)
+                    CloseConneciton();
+                    //make a close connecito method
 
                 //get the username from the client
                 StringBuilder cUser = new StringBuilder();
@@ -138,5 +134,14 @@ namespace GameSevrer
             }
         }
 
+        private void CloseConneciton()
+        {
+            Console.WriteLine("Closing Connection");
+            byte[] rejectionResponse = new byte[1] { 7 };
+            ReadOnlySpan<byte> rejection = new ReadOnlySpan<byte>(rejectionResponse);
+            clientInterface.Write(rejectionResponse);
+            clientInterface.Close();
+            _socket.Close();
+        }
     }
 }

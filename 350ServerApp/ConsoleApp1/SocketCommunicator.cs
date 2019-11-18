@@ -14,7 +14,6 @@ namespace GameSevrer
         
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
-        private AsyncCallback onConnect;
         //private ThreadPool _playerThreadPool;
         // 0x100007F is 127.0.0.1 in big-endian.
         /*
@@ -50,9 +49,6 @@ namespace GameSevrer
 
             try
             {
-                //PrimarySocket.Bind(localEndPoint);
-                //PrimarySocket.Listen(100);
-                //PrimarySocket.BeginAccept(onConnect, PrimarySocket);
                 listener = new TcpListener(localEndPoint);
                 listener.Start();               
 
@@ -61,16 +57,14 @@ namespace GameSevrer
                 //used for debugging
                 DisplayInfo(socketInfo);
 
-                int i = 0;
                 while(!RequestShutdown)
                 {
                     try
                     {
-
+                        //Get a new TCPClient and hand it off to a PlayerSocketCOntroller, then spawn a new thread
                         PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient());
                         Thread playerThread = new Thread(p.Start);
-                        ThreadPool.QueueUserWorkItem(playerThread.Start);
-                        
+                        ThreadPool.QueueUserWorkItem(playerThread.Start);                     
                     }
                     catch(Exception e)
                     {
@@ -83,8 +77,6 @@ namespace GameSevrer
                 {
                     Console.WriteLine("Shutdown Request Received. Shutting down server...");
                 }
-
-                //PrimarySocket.Close();
 
             }
             catch(SocketException e)
@@ -104,6 +96,5 @@ namespace GameSevrer
             string[] IpV6 = info[0].ToString().Split("%");
             Console.WriteLine($"Server IP: {IpV6[0]}. \nServer Socket: {info[1]}");
         }
-
     }
 }
