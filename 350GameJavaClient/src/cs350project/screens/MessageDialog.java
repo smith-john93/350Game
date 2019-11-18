@@ -13,15 +13,16 @@ import javax.swing.JOptionPane;
  */
 public abstract class MessageDialog {
     public static void showErrorMessage(String message, Class c) {
-        // This has to go away for now. #pout
-        // Don't call it from addNotify in the future.
-        /*JOptionPane.showMessageDialog(
-                null, 
-                message,
-                c.getSimpleName(), 
-                JOptionPane.ERROR_MESSAGE
-        );*/
-        // This will do for now.
-        System.err.println(c.getSimpleName() + ": " + message);
+        new Thread(){
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(
+                        null, 
+                        message,
+                        c.getSimpleName(), 
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }.start();
     }
 }
