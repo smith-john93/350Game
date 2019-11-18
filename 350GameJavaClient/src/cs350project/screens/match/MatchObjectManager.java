@@ -5,7 +5,7 @@
  */
 package cs350project.screens.match;
 
-import cs350project.MessageDialog;
+import cs350project.screens.MessageDialog;
 import cs350project.characters.PlayerCharacter;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;

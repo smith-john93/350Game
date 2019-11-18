@@ -9,6 +9,7 @@ import cs350project.Settings;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,7 +42,7 @@ public class Menu extends JComponent {
     
     public Menu() {
         menuActionListeners = new ArrayList<>();
-        buttonFont = new Font(Font.MONOSPACED,Font.BOLD,32);
+        buttonFont = Settings.BUTTON_FONT;
     }
     
     public void addMenuActionListener(MenuActionListener menuMouseListener) {
@@ -71,8 +72,7 @@ public class Menu extends JComponent {
     public void addNotify() {
         super.addNotify();
         Settings settings = Settings.getSettings();
-        int screenW = settings.getScreenWidth();
-        int screenH = settings.getScreenHeight();
+        Dimension screenDimension = settings.getScreenDimension();
         int w = 0;
         int h = 0;
         Component[] components = this.getComponents();
@@ -96,8 +96,8 @@ public class Menu extends JComponent {
             h += jComponentH;
         }
         menuH = h + menuPadding * 2;
-        int menuX = screenW / 2 - menuW / 2;
-        int menuY = screenH / 2 - menuH / 2;
+        int menuX = screenDimension.width / 2 - menuW / 2;
+        int menuY = screenDimension.height / 2 - menuH / 2;
         setBounds(menuX,menuY,menuW,menuH);
         setLayout(null);
     }
