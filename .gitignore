@@ -8,3 +8,6 @@
 /350ServerApp/.vs/Server
 /350ServerApp/ConsoleApp1/obj/Debug/netcoreapp2.1
 /350ServerApp/ConsoleApp1/obj
+/FightServer/.vs/WindowsFormsApplication1/v16/Server/sqlite3
+/FightServer/.vs/WindowsFormsApplication1/v16
+/FightServer/WindowsFormsApplication1/obj/Debug/WindowsFormsApplication1.csprojAssemblyReference.cache

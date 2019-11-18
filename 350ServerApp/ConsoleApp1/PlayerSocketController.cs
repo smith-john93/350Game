@@ -3,9 +3,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Threading;
-using GameSevrer.Enumerations;
+using GameServer.Enumerations;
 
-namespace GameSevrer
+namespace GameServer
 {
     public class PlayerSocketController
     {

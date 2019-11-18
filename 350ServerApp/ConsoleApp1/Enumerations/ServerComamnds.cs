@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameSevrer.Enumerations
+namespace GameServer.Enumerations
 {
     public enum ServerCommands
     {

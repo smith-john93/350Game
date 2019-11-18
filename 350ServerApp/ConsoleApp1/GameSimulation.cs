@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using GameSevrer.Enumerations;
+using GameServer.Enumerations;
+using WindowsFormsApplication1;
 
-namespace GameSevrer
+namespace GameServer
 {
     public class GameSimulation
     {
@@ -45,7 +46,12 @@ namespace GameSevrer
         {
 
             SelectCharacter();
-            Console.WriteLine("In Game");
+            
+            Console.WriteLine($"Player1 {player1.selectedCharacter}, PLayer2: {player2.selectedCharacter}");
+            while (true)
+            {
+                Console.WriteLine("In Game");
+            }
             //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
             //Thread player1Thread = new Thread(player1.listen);
             //player1Thread.Start();
@@ -57,8 +63,15 @@ namespace GameSevrer
         {
             player1.SendMessage(ServerCommands.SELECT_CHARACTER);
             player2.SendMessage(ServerCommands.SELECT_CHARACTER);
-        }
+            player1.GetCharacter();
+            player2.GetCharacter();
 
+            while (player1.CharacterPicked == false || player2.CharacterPicked == false)
+            {
+                Console.WriteLine($"Player1 {player1.selectedCharacter}, PLayer2: {player2.selectedCharacter}");
+                Thread.Sleep(new TimeSpan(0, 0, 1));
+            }            
+        }
     }
 
     public class PlayerMatchup

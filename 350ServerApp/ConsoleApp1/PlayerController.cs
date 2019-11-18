@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Net.Sockets;
-using GameSevrer.Enumerations;
+using GameServer.Enumerations;
 
-namespace GameSevrer
+namespace GameServer
 {
     public class PlayerController
     {
         private NetworkStream clientInterface;
         private GameController gController;
 
+        public CharacterEnum selectedCharacter;
+        public bool CharacterPicked;
         public PlayerController(PlayerSocketController stream, GameController gameController)
         {
             clientInterface = stream.clientInterface;
             gController = gameController;
+            CharacterPicked = false;
         }
 
         public void ManagePlayer()
@@ -53,14 +56,6 @@ namespace GameSevrer
                 }
             }
         }
-
-        public void SendMessage(ServerCommands command)
-        {
-            byte[] response = new byte[1] { (byte)command };
-            ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response);
-            clientInterface.Write(responseMessage);
-        }
-
 
         #region Player Options
         private void JoinGame()
@@ -120,6 +115,49 @@ namespace GameSevrer
                 }
             }
         }
+        #endregion
+
+        #region Communication
+
+        async public void GetCharacter()
+        {
+
+            byte[] selectedBuffer = new byte[1];
+            await clientInterface.ReadAsync(selectedBuffer);
+            if (selectedBuffer[0] == (byte)ClientCommands.CHARACTER_SELECTED)
+                CharacterPicked = true;
+
+            Console.WriteLine(selectedBuffer[0]);
+            
+            byte[] buffer = new byte[1];
+            await clientInterface.ReadAsync(buffer);
+            Console.WriteLine(buffer[0]);
+            
+            switch(buffer[0])
+            {
+                case (byte) CharacterEnum.Ganchev:
+                    selectedCharacter = CharacterEnum.Ganchev;
+                    break;
+                case (byte)CharacterEnum.Coffman:
+                    selectedCharacter = CharacterEnum.Coffman;
+                    break;
+                case (byte)CharacterEnum.Trump:
+                    selectedCharacter = CharacterEnum.Trump;
+                    break;
+                default:
+                    selectedCharacter = CharacterEnum.Lego;
+                    break;
+
+            }
+        }
+
+        public void SendMessage(ServerCommands command)
+        {
+            byte[] response = new byte[1] { (byte)command };
+            ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response);
+            clientInterface.Write(responseMessage);
+        }
+
         #endregion
 
         #region Validation and Authenticaiton

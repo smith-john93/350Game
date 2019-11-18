@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameSevrer.Enumerations
+namespace GameServer.Enumerations
 {
     public enum ClientCommands
     {
@@ -10,6 +10,7 @@ namespace GameSevrer.Enumerations
         CREATE_ACCOUNT = 1,
         CREATE_MATCH = 2,
         JOIN_MATCH = 3,
-        UDPATE_MATCH = 4
+        UDPATE_MATCH = 4,
+        CHARACTER_SELECTED = 5
     }
 }
