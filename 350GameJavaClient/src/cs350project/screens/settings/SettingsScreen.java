@@ -44,7 +44,7 @@ public class SettingsScreen extends Screen implements SettingsInputListener {
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/background.jpg");
+        return new BackgroundImage("/resources/menu/background.jpg");
     }
 
     @Override

@@ -84,7 +84,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/background.jpg");
+        return new BackgroundImage("/resources/menu/background.jpg");
     }
 
     @Override

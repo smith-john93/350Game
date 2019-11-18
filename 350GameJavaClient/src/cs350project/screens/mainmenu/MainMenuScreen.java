@@ -45,7 +45,7 @@ public class MainMenuScreen extends Screen implements MainMenuInputListener {
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/background.jpg");
+        return new BackgroundImage("/resources/menu/background.jpg");
     }
 
     @Override

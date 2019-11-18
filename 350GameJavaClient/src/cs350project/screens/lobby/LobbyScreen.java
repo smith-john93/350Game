@@ -81,7 +81,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/background.jpg");
+        return new BackgroundImage("/resources/menu/background.jpg");
     }
 
     @Override

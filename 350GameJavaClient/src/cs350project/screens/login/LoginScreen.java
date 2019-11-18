@@ -58,7 +58,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/background.jpg");
+        return new BackgroundImage("/resources/menu/background.jpg");
     }
 
     @Override
