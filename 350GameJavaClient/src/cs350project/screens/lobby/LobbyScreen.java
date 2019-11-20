@@ -53,8 +53,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     @Override
     public void createMatch(String matchName) {
         if(comm.connect()) {
-            comm.sendCommand(ClientCommand.CREATE_MATCH);
-            comm.sendMatchName(matchName);
+            comm.createMatch(matchName);
         }
     }
     
@@ -62,10 +61,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     public void joinMatch(String matchName) {
         
         //comm.addIncomingCommandListener(matchObjectManager);
-        if(comm.connect()) {
-            comm.sendCommand(ClientCommand.JOIN_MATCH);
-            comm.sendMatchName("match1");
-        }
+        comm.joinMatch("match1");
     }
     
     @Override

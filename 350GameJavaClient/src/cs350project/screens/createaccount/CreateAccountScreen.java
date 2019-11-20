@@ -31,11 +31,8 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
 
     @Override
     public void createAccount(String username, char[] password) {
-        if(comm.connect()) {
-            comm.sendCommand(ClientCommand.CREATE_ACCOUNT);
-            this.username = username;
-            comm.sendCredentials(username, password);
-        }
+        this.username = username;
+        comm.createAccount(username, password);
     }
 
     @Override
