@@ -1,47 +1,34 @@
 package cs350project.screens.createaccount;
 
-import cs350project.Settings;
-import cs350project.menu.Menu;
-
+import cs350project.menu.MenuItemFactory;
+import cs350project.menu.MenuPanel;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import cs350project.menu.MenuActionListener;
-import cs350project.screens.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JComponent;
 
-public class CreateAccountPanel extends Panel<CreateAccountInputListener> {
-    
-    private final JTextField usernameField;
-    private final JPasswordField passwordField;
-    private final JButton createAccountButton;
-    
-    public CreateAccountPanel() {
-        usernameField = new JTextField();
-        passwordField = new JPasswordField();
-        createAccountButton = new JButton("Create Account");
-    }
+public class CreateAccountPanel extends MenuPanel<CreateAccountInputListener> {
     
     @Override
-    public void addNotify() {
-        super.addNotify();
+    public JComponent[] getMenuItems() {
+        JTextField usernameField = MenuItemFactory.createTextField();
+        JPasswordField passwordField = MenuItemFactory.createPasswordField();
 
-        setLayout(null);
-        setBackground(Settings.TRANSPARENT);
-
-        Menu menu = new Menu();
-        menu.addField(usernameField);
-        menu.addField(passwordField);
-        menu.addButton(createAccountButton);
-        menu.addMenuActionListener(new MenuActionListener() {
+        JButton createAccountButton = MenuItemFactory.createButton("Create Account");
+        createAccountButton.addActionListener(new ActionListener() {
             @Override
-            public void buttonClicked(JButton button) {
+            public void actionPerformed(ActionEvent e) {
                 for (CreateAccountInputListener createAccountInputListener : inputListeners) {
-                    if (button == createAccountButton) {
-                        createAccountInputListener.createAccount();
-                    }
+                    createAccountInputListener.createAccount(
+                            usernameField.getText(),
+                            passwordField.getPassword()
+                    );
                 }
             }
         });
-        add(menu);
+        
+        return new JComponent[]{usernameField,passwordField,createAccountButton};
     }
 }

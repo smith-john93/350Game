@@ -5,7 +5,8 @@
  */
 package cs350project.screens.lobby;
 
-import cs350project.CS350Project;
+import cs350project.GameFrame;
+import cs350project.Settings;
 import cs350project.screens.MessageDialog;
 import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
@@ -43,50 +44,60 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     }
     
     @Override
-    public void addNotify() {
-        super.addNotify();
+    public JPanel getJPanel() {
         lobbyPanel.addInputListener(this);
+        comm.addIncomingCommandListener(this);
+        return lobbyPanel;
     }
 
     @Override
-    public void createMatch() {
-        
+    public void createMatch(String matchName) {
+        if(comm.connect()) {
+            comm.sendCommand(ClientCommand.CREATE_MATCH);
+            comm.sendMatchName(matchName);
+        }
     }
     
     @Override
-    public void joinMatch() {
-        comm.connect();
-        //comm.listen();
-        comm.addIncomingCommandListener(this);
-        comm.addIncomingCommandListener(matchObjectManager);
-        comm.sendCommand(ClientCommand.CREATE_MATCH);
+    public void joinMatch(String matchName) {
+        
+        //comm.addIncomingCommandListener(matchObjectManager);
+        if(comm.connect()) {
+            comm.sendCommand(ClientCommand.JOIN_MATCH);
+            comm.sendMatchName("match1");
+        }
     }
     
     @Override
     public void back() {
-        CS350Project.showScreen(new MainMenuScreen());
+        GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        if(serverCommand == ServerCommand.SELECT_CHARACTER) {
-            try {
-                comm.removeIncomingCommandListener(this);
-                CS350Project.showScreen(new SelectionScreen());
-            } catch(IOException e) {
-                MessageDialog.showErrorMessage("Unable to open selection screen.", getClass());
-            }
+        switch(serverCommand) {
+            case SELECT_CHARACTER:
+                try {
+                    comm.removeIncomingCommandListener(this);
+                    GameFrame.getInstance().showScreen(new SelectionScreen());
+                } catch(IOException e) {
+                    MessageDialog.showErrorMessage("Unable to open selection screen.", getClass());
+                }
+                break;
+            case VALID_MATCH_NAME:
+                System.out.println("valid match name");
+                break;
+            case INVALID_MATCH_NAME:
+                System.out.println("invalid match name");
+                break;
         }
     }
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/background.jpg");
+        return new BackgroundImage(Settings.MENU_BACKGROUND_FILE);
     }
 
-    @Override
-    public JPanel getJPanel() {
-        return lobbyPanel;
-    }
+    
     
 }

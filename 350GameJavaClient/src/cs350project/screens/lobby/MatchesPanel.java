@@ -34,9 +34,12 @@ class MatchesPanel extends JPanel {
         matchesList.setModel(new DefaultListModel<>());
     }
     
-    public void addMatch(String name) {
+    public void addMatch(String matchName) {
         DefaultListModel<String> defaultListModel = (DefaultListModel<String>)matchesList.getModel();
-        defaultListModel.addElement(name);
+        defaultListModel.addElement(matchName);
+        for(LobbyInputListener lobbyInputListener : inputListeners) {
+            lobbyInputListener.createMatch(matchName);
+        }
     }
     
     public void removeSelectedMatch() {
@@ -79,7 +82,7 @@ class MatchesPanel extends JPanel {
                 }
             }
         });
-        gbc.insets = Settings.NO_RIGHT_INSET;
+        gbc.insets = Settings.INSETS_MENU_NO_RIGHT;
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
@@ -104,11 +107,11 @@ class MatchesPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for(LobbyInputListener lobbyInputListener : inputListeners) {
-                    lobbyInputListener.joinMatch();
+                    lobbyInputListener.joinMatch(matchesList.getSelectedValue());
                 }
             }
         });
-        gbc.insets = Settings.ALL_INSETS;
+        gbc.insets = Settings.INSETS_MENU_ALL;
         gbc.gridx = 2;
         matchesPanel.add(joinButton,gbc);
     }

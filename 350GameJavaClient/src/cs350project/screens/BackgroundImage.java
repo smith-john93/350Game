@@ -33,21 +33,25 @@ public class BackgroundImage extends JComponent {
     
     private BufferedImage getBackgroundImage(String backgroundFile) {
         URL url = SelectionPanel.class.getResource(backgroundFile);
-        try {
-            Dimension screenDimension = Settings.getSettings().getScreenDimension();
-            int width = screenDimension.width;
-            int height = screenDimension.height;
-            BufferedImage bufferedImage = ImageIO.read(url);
-            BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2D = resizedImage.createGraphics();
+        if(url != null) {
+            try {
+                Dimension screenDimension = Settings.getSettings().getScreenDimension();
+                int width = screenDimension.width;
+                int height = screenDimension.height;
+                BufferedImage bufferedImage = ImageIO.read(url);
+                BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2D = resizedImage.createGraphics();
 
-            g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2D.drawImage(bufferedImage, 0, 0, width, height, null);
-            g2D.dispose();
-            
-            return resizedImage;
-        } catch(IOException e) {
-            MessageDialog.showErrorMessage("Unable to load background image.",getClass());
+                g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g2D.drawImage(bufferedImage, 0, 0, width, height, null);
+                g2D.dispose();
+
+                return resizedImage;
+            } catch(IOException e) {
+                MessageDialog.showErrorMessage("Unable to load background image.",getClass());
+            }
+        } else {
+            MessageDialog.showErrorMessage(backgroundFile + " not found.", getClass());
         }
         return null;
     }

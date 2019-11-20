@@ -5,12 +5,12 @@
  */
 package cs350project.menu;
 
-import javax.swing.JButton;
+import cs350project.screens.InputListener;
 
 /**
  *
  * @author Mark Masone
  */
-public interface MenuActionListener {
-    void buttonClicked(JButton button);
+public interface BackButtonListener extends InputListener {
+    void back();
 }

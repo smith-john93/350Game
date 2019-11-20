@@ -5,18 +5,11 @@
  */
 package cs350project;
 import cs350project.screens.KeyMap;
-import cs350project.screens.selection.SelectionPanel;
-import java.awt.Container;
+import cs350project.screens.Screen;
+import cs350project.screens.mainmenu.MainMenuScreen;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,9 +17,10 @@ import javax.swing.JOptionPane;
  */
 public class GameFrame extends JFrame {
     
-    private KeyMap keyMap;
-
     private static GameFrame gameFrame;
+    
+    private Screen screen;
+    private KeyMap keyMap;
 
     private GameFrame() {
 
@@ -45,6 +39,17 @@ public class GameFrame extends JFrame {
         return gameFrame;
     }
     
+    public void showScreen(Screen screen) {
+        if(this.screen != null) {
+            remove(this.screen);
+        }
+        setKeyMap(screen.getKeyMap());
+        add(screen);
+        setVisible(true);
+        requestFocus();
+        this.screen = screen;
+    }
+    
     @Override
     public void setSize(Dimension screenDimension) {
         Insets insets = getInsets();
@@ -53,7 +58,7 @@ public class GameFrame extends JFrame {
         super.setSize(windowW, windowH);
     }
     
-    public void setKeyMap(KeyMap keyMap) {
+    private void setKeyMap(KeyMap keyMap) {
         if(keyMap != null) {
             if (this.keyMap != null) {
                 removeKeyListener(this.keyMap);
@@ -61,5 +66,12 @@ public class GameFrame extends JFrame {
             this.keyMap = keyMap;
             addKeyListener(keyMap);
         }
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 }

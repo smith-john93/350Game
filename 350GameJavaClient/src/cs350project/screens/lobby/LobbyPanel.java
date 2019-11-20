@@ -7,6 +7,7 @@ package cs350project.screens.lobby;
 
 import cs350project.menu.BackButtonPanel;
 import cs350project.Settings;
+import cs350project.menu.MenuItemFactory;
 import cs350project.screens.Panel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -82,10 +83,8 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         int spacing = leftBorder + leftBorder / 2;
         jPanel.setPreferredSize(new Dimension(getWidth() / 2 - spacing, getHeight()));
         
-        JLabel jLabel = new JLabel(label);
-        jLabel.setForeground(Color.white);
-        jLabel.setFont(Settings.HEADING_FONT);
-        gbc.insets = Settings.NO_BOTTOM_INSET;
+        JLabel jLabel = MenuItemFactory.createLabel(label);
+        gbc.insets = Settings.INSETS_MENU_NO_BOTTOM;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;

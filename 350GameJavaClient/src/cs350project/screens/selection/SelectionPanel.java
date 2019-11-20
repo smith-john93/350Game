@@ -7,9 +7,6 @@ package cs350project.screens.selection;
 
 import cs350project.Settings;
 import cs350project.characters.CharacterState;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
 import cs350project.characters.*;
 import cs350project.screens.Panel;
 import java.awt.Rectangle;

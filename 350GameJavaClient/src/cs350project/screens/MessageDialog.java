@@ -13,11 +13,16 @@ import javax.swing.JOptionPane;
  */
 public abstract class MessageDialog {
     public static void showErrorMessage(String message, Class c) {
-        JOptionPane.showMessageDialog(
-                null, 
-                message,
-                c.getSimpleName(), 
-                JOptionPane.ERROR_MESSAGE
-        );
+        new Thread(){
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(
+                        null, 
+                        message,
+                        c.getSimpleName(), 
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }.start();
     }
 }

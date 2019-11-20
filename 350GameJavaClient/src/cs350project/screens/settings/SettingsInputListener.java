@@ -5,12 +5,12 @@
  */
 package cs350project.screens.settings;
 
-import cs350project.screens.InputListener;
+import cs350project.menu.BackButtonListener;
 
 /**
  *
  * @author Mark Masone
  */
-public interface SettingsInputListener extends InputListener {
-    void back();
+public interface SettingsInputListener extends BackButtonListener {
+    
 }
