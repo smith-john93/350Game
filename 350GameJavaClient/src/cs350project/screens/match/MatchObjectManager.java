@@ -66,6 +66,7 @@ public class MatchObjectManager implements IncomingCommandListener {
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
+        System.out.println("match object manager received command " + serverCommand);
         switch(serverCommand) {
             case CREATE_MATCH_OBJECT:
                 createMatchObject(dataInputStream);
@@ -95,6 +96,7 @@ public class MatchObjectManager implements IncomingCommandListener {
             MatchObject matchObject = null;
             switch (type) {
                 case PLATFORM:
+                    System.out.println("got match object type platform");
                     matchObject = new Platform();
                     matchObject.receiveData(dataInputStream);
             }

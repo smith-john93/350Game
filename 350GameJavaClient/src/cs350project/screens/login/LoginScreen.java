@@ -35,7 +35,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
     public void login(String username, char[] password) {
         this.username = username;
         comm.login(username, password);
-        //this.username = "username"
+        //this.username = "username";
         //comm.login(this.username, "password".toCharArray()); // for testing
     }
 

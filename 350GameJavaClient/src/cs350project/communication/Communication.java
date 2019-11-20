@@ -222,7 +222,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         }
     }
     
-    public void characterSelected(CharacterType characterType) throws IOException {
+    public void characterSelected(CharacterType characterType) {
         if(connect()) {
             try {
                 sendClientCommand(ClientCommand.CHARACTER_SELECTED);
