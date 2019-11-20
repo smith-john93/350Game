@@ -54,8 +54,6 @@ namespace GameServer
                 Thread.Sleep(new TimeSpan(0, 0, 1));
             }
 
-
-
             //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
             //Thread player1Thread = new Thread(player1.listen);
             //player1Thread.Start();
@@ -70,11 +68,31 @@ namespace GameServer
             player1.GetCharacter();
             player2.GetCharacter();
 
+
+
+            string a = "not picked";
             while (player1.CharacterPicked == false || player2.CharacterPicked == false)
             {
-                Console.WriteLine($"Player1 {player1.selectedCharacter}, PLayer2: {player2.selectedCharacter}");
+                Console.WriteLine($"Player1: {(player1.CharacterPicked == true  ? GetEnumName(player1.selectedCharacter) : "Not Selected" )}, Player2: {(player2.CharacterPicked == true ? GetEnumName(player2.selectedCharacter) : "Not Selected")}");
                 Thread.Sleep(new TimeSpan(0, 0, 1));
             }                          
+        }
+
+        private string GetEnumName(CharacterEnum num)
+        {
+            switch (num)
+            {
+                case CharacterEnum.Coffman:
+                    return "Coffman";
+                case CharacterEnum.Ganchev:
+                    return "Ganchev";
+                case CharacterEnum.Trump:
+                    return "Trump";
+                case CharacterEnum.Lego:
+                    return "Lego";
+                default:
+                    return "Invalid Character Selection";
+            }
         }
     }
 
@@ -93,4 +111,6 @@ namespace GameServer
         public PlayerSocketController p1;
         public PlayerSocketController p2;
     }
+
+
 }

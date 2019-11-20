@@ -39,18 +39,22 @@ namespace GameServer
         {
             while (true)
             {
+                Console.WriteLine("Waiting for Player Match Option");
                 int i = clientInterface.ReadByte();
+                Console.WriteLine($"Received option {i}");
 
                 switch (i)
                 {
                     case (int)ClientCommands.CREATE_MATCH:
                         Console.WriteLine("Creating Match");
-                        CreateGame();                       
+                        CreateGame();
+                        Console.WriteLine("Exiting Creating Match");
                         break;
 
                     case (int)ClientCommands.JOIN_MATCH:
                         Console.WriteLine("Joining Match");
                         JoinGame();                       
+                        Console.WriteLine("Exiting Joining Match");
                         break;
 
                     default:
