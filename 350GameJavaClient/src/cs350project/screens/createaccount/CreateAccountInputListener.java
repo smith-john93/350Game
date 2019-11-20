@@ -1,7 +1,7 @@
 package cs350project.screens.createaccount;
 
-import cs350project.screens.InputListener;
+import cs350project.menu.BackButtonListener;
 
-public interface CreateAccountInputListener extends InputListener {
-    void createAccount();
+public interface CreateAccountInputListener extends BackButtonListener {
+    void createAccount(String username, char[] password);
 }

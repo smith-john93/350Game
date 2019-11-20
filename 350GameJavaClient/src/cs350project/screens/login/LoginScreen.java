@@ -1,7 +1,9 @@
 package cs350project.screens.login;
 
+import cs350project.GameFrame;
+import cs350project.Settings;
+import cs350project.screens.MessageDialog;
 import cs350project.screens.lobby.LobbyScreen;
-import cs350project.CS350Project;
 import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
 import cs350project.communication.IncomingCommandListener;
@@ -9,76 +11,70 @@ import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
+import cs350project.screens.mainmenu.MainMenuScreen;
 import java.io.DataInputStream;
 import java.util.Arrays;
 import javax.swing.JPanel;
 
 public class LoginScreen extends Screen implements LoginInputListener, IncomingCommandListener {
 
-    private final LoginPanel loginPanel;
+    private final Communication comm;
+    private String username;
+    private int loginAttempts = 4;
 
     public LoginScreen() {
-        loginPanel = new LoginPanel();
+        comm = Communication.getInstance();
     }
 
     @Override
     public KeyMap getKeyMap() {
         return null;
     }
-    
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        loginPanel.addInputListener(this);
-    }
 
     @Override
     public void login(String username, char[] password) {
-        /*String dummyPassword = "1";
-        String dummyUsername = "1";
-        if(username.equals(dummyUsername) && password.length > 0) {
-            boolean passwordIsValid = true;
-            for(int i = 0; i < password.length; i++) {
-                if(dummyPassword.charAt(i) != password[i]) {
-                    passwordIsValid = false;
-                    break;
-                }
-            }
-            if(passwordIsValid) {
-                CS350Project.showScreen(new LobbyScreen());
-            }
+        if(comm.connect()) {
+            comm.sendCommand(ClientCommand.LOGIN);
+            this.username = username;
+            //comm.sendCredentials("username", "password".toCharArray()); // for testing
+            comm.sendCredentials(username, password);
+            Arrays.fill(password,'0'); // Clear the password array for security.
         }
-        Arrays.fill(password,'0'); // Clear the password array for security.*/
-        Communication comm = Communication.getInstance();
-        comm.connect();
-        comm.addIncomingCommandListener(this);
-        comm.sendCommand(ClientCommand.LOGIN);
-        comm.sendCredentials(username, password);
     }
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/menu/background.jpg");
+        return new BackgroundImage(Settings.MENU_BACKGROUND_FILE);
     }
 
     @Override
     public JPanel getJPanel() {
+        
+        LoginPanel loginPanel = new LoginPanel();
+        loginPanel.addInputListener(this);
+        comm.addIncomingCommandListener(this);
+        
         return loginPanel;
+    }
+
+    @Override
+    public void back() {
+        GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
         switch(serverCommand) {
             case USER_AUTH_PASS:
-                System.out.println("password good");
+                comm.removeIncomingCommandListener(this);
+                GameFrame.getInstance().showScreen(new LobbyScreen());
                 break;
             case USER_AUTH_FAIL:
-                System.out.println("password fail");
+                MessageDialog.showErrorMessage("Invalid password. " + loginAttempts-- + " login attempts remaining.", getClass());
                 break;
             case USER_AUTH_BLOCKED:
-                System.out.println("auth blocked");
+                MessageDialog.showErrorMessage("Logins for " + username + " have been temporarily blocked.", getClass());
                 break;
         }
-        Communication.getInstance().removeIncomingCommandListener(this);
     }
 }

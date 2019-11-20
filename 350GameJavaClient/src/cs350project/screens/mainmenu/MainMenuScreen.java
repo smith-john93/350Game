@@ -1,6 +1,7 @@
 package cs350project.screens.mainmenu;
 
-import cs350project.CS350Project;
+import cs350project.GameFrame;
+import cs350project.Settings;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.createaccount.CreateAccountScreen;
 import cs350project.screens.login.LoginScreen;
@@ -11,45 +12,37 @@ import javax.swing.JPanel;
 
 public class MainMenuScreen extends Screen implements MainMenuInputListener {
 
-    private final MainMenuPanel mainMenuPanel;
-
-    public MainMenuScreen() {
-        mainMenuPanel = new MainMenuPanel();
-    }
-
     @Override
     public KeyMap getKeyMap() {
         return null;
     }
-    
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        mainMenuPanel.addInputListener(this);
-    }
    
     @Override
     public void login() {
-        CS350Project.showScreen(new LoginScreen());
+        GameFrame.getInstance().showScreen(new LoginScreen());
     }
 
     @Override
     public void createAccount() {
-        CS350Project.showScreen(new CreateAccountScreen());
+        GameFrame.getInstance().showScreen(new CreateAccountScreen());
     }
     
     @Override
     public void showSettings() {
-        CS350Project.showScreen(new SettingsScreen());
+        GameFrame.getInstance().showScreen(new SettingsScreen());
     }
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/menu/background.jpg");
+        return new BackgroundImage(Settings.MENU_BACKGROUND_FILE);
     }
 
     @Override
     public JPanel getJPanel() {
+        
+        MainMenuPanel mainMenuPanel = new MainMenuPanel();
+        mainMenuPanel.addInputListener(this);
+        
         return mainMenuPanel;
     }
 }

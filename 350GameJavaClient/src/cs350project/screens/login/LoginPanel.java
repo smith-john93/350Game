@@ -1,49 +1,34 @@
 package cs350project.screens.login;
 
-import cs350project.menu.Menu;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import cs350project.menu.MenuItemFactory;
+import cs350project.menu.MenuPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import cs350project.menu.MenuActionListener;
-import cs350project.screens.Panel;
 
-public class LoginPanel extends Panel<LoginInputListener> {
-    
-    private final JTextField usernameField;
-    private final JPasswordField passwordField;
-    private final JButton loginButton;
-
-    public LoginPanel() {
-        usernameField = new JTextField();
-        passwordField = new JPasswordField();
-        loginButton = new JButton("Log In");
-    }
+public class LoginPanel extends MenuPanel<LoginInputListener> {
     
     @Override
-    public void addNotify() {
-        super.addNotify();
-
-        setLayout(null);
-
-        Menu menu = new Menu();
-        menu.addField(usernameField);
-        menu.addField(passwordField);
-        menu.addButton(loginButton);
-        menu.addMenuActionListener(new MenuActionListener() {
+    public JComponent[] getMenuItems() {
+        JTextField usernameField = MenuItemFactory.createTextField();
+        JPasswordField passwordField = MenuItemFactory.createPasswordField();
+        
+        JButton loginButton = MenuItemFactory.createButton("Log In");
+        loginButton.addActionListener(new ActionListener(){
             @Override
-            public void buttonClicked(JButton button) {
+            public void actionPerformed(ActionEvent e) {
                 for (LoginInputListener loginInputListener : inputListeners) {
-                    if (button == loginButton) {
-                        char[] password = passwordField.getPassword();
-                        loginInputListener.login(usernameField.getText(), password);
-                        Arrays.fill(password, '0'); // Clear the password array for security.
-                    }
+                    char[] password = passwordField.getPassword();
+                    loginInputListener.login(usernameField.getText(), password);
+                    Arrays.fill(password, '0'); // Clear the password array for security.
                 }
             }
         });
-        add(menu);
+        
+        return new JComponent[]{usernameField,passwordField,loginButton};
     }
 }

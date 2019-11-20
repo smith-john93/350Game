@@ -1,40 +1,50 @@
 package cs350project.screens.mainmenu;
 
-import cs350project.Settings;
-import cs350project.menu.Menu;
 import javax.swing.JButton;
-import cs350project.menu.MenuActionListener;
-import cs350project.screens.Panel;
+import cs350project.menu.MenuItemFactory;
+import cs350project.menu.MenuPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JComponent;
 
-public class MainMenuPanel extends Panel<MainMenuInputListener> {
+public class MainMenuPanel extends MenuPanel<MainMenuInputListener> {
     
     @Override
-    public void addNotify() {
-        super.addNotify();
-        setLayout(null);
-        setBackground(Settings.TRANSPARENT);
+    public JComponent[] getMenuItems() {
         
-        JButton loginButton = new JButton("Log In");
-        JButton createAccountButton = new JButton("Create New Account");
-        JButton settingsButton = new JButton("Settings");
-        Menu menu = new Menu();
-        menu.addButton(loginButton);
-        menu.addButton(createAccountButton);
-        menu.addButton(settingsButton);
-        menu.addMenuActionListener(new MenuActionListener(){
+        setBackButtonEnabled(false);
+        
+        final String logInCommand = "Log In";
+        final String createAccountCommand = "Create New Account";
+        final String settingsCommand = "Settings";
+        
+        JButton loginButton = MenuItemFactory.createButton(logInCommand);
+        JButton createAccountButton = MenuItemFactory.createButton(createAccountCommand);
+        JButton settingsButton = MenuItemFactory.createButton(settingsCommand);
+        
+        ActionListener buttonListener = new ActionListener() {
             @Override
-            public void buttonClicked(JButton button) {
+            public void actionPerformed(ActionEvent e) {
                 for (MainMenuInputListener mainMenuInputListener : inputListeners) {
-                    if(button == loginButton) {
-                        mainMenuInputListener.login();
-                    } else if(button == createAccountButton) {
-                        mainMenuInputListener.createAccount();
-                    } else if(button == settingsButton) {
-                        mainMenuInputListener.showSettings();
+                    switch(e.getActionCommand()) {
+                        case logInCommand:
+                            mainMenuInputListener.login();
+                            break;
+                        case createAccountCommand:
+                            mainMenuInputListener.createAccount();
+                            break;
+                        case settingsCommand:
+                            mainMenuInputListener.showSettings();
+                            break;
                     }
                 }
             }
-        });
-        add(menu);
+        };
+        
+        loginButton.addActionListener(buttonListener);
+        createAccountButton.addActionListener(buttonListener);
+        settingsButton.addActionListener(buttonListener);
+        
+        return new JComponent[]{loginButton,createAccountButton,settingsButton};
     }
 }

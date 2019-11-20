@@ -5,8 +5,8 @@
  */
 package cs350project.screens.match;
 
+import cs350project.GameFrame;
 import cs350project.screens.lobby.LobbyScreen;
-import cs350project.CS350Project;
 import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
 import cs350project.characters.CharacterState;
@@ -78,7 +78,7 @@ public class MatchScreen extends Screen implements
     @Override
     public void endGame() {
         MatchObjectManager.getInstance().clear();
-        CS350Project.showScreen(new LobbyScreen());
+        GameFrame.getInstance().showScreen(new LobbyScreen());
     }
     
     private void updateMatch() {

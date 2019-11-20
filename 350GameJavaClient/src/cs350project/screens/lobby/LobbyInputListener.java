@@ -5,14 +5,13 @@
  */
 package cs350project.screens.lobby;
 
-import cs350project.screens.InputListener;
+import cs350project.menu.BackButtonListener;
 
 /**
  *
  * @author Mark Masone
  */
-public interface LobbyInputListener extends InputListener {
-    void createMatch();
-    void back();
-    void joinMatch();
+public interface LobbyInputListener extends BackButtonListener {
+    void createMatch(String matchName);
+    void joinMatch(String matchName);
 }

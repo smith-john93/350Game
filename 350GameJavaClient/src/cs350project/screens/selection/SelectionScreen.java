@@ -4,10 +4,9 @@
  * and open the template in the editor.
  */
 package cs350project.screens.selection;
-import cs350project.screens.match.MatchScreen;
-import cs350project.CS350Project;
 import cs350project.screens.MessageDialog;
 import cs350project.Music;
+import cs350project.characters.CharacterType;
 import cs350project.characters.PlayerCharacter;
 import cs350project.communication.Communication;
 import cs350project.screens.BackgroundImage;
@@ -59,17 +58,17 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
                 selectionPanel.getPlayer2Selection()
         );
         showScreen(matchScreen);*/
-        comm.connect();
+        //comm.connect();
         //comm.addIncomingCommandListener(this);
-        music.stop();
-        try {
-            comm.joinMatch(player1.getCharacterClass());
-            CS350Project.showScreen(new MatchScreen(player1,player2));
-        } catch(IOException e) {
-            MessageDialog.showErrorMessage("Unable to join match.", getClass());
+        //music.stop();
+        if(comm.connect()) {
+            try {
+                comm.characterSelected(CharacterType.COFFMAN);
+                //CS350Project.showScreen(new MatchScreen(player1,player2));
+            } catch(IOException e) {
+                MessageDialog.showErrorMessage("Unable to join match.", getClass());
+            }
         }
-        
-        //CS350Project.showScreen(new MatchLoadingScreen(player1,player2));
     }
 
     @Override

@@ -9,4 +9,9 @@ public class Ganchev extends PlayerCharacter {
     public CharacterClass getCharacterClass() {
         return CharacterClass.MAGE;
     }
+
+    @Override
+    public CharacterType getCharacterType() {
+        return CharacterType.GANCHEV;
+    }
 }

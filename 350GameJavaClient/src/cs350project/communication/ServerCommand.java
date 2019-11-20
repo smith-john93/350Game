@@ -17,7 +17,9 @@ public enum ServerCommand {
     START_MATCH(0x4),
     USER_AUTH_PASS(0x5),
     USER_AUTH_FAIL(0x6),
-    USER_AUTH_BLOCKED(0x7);
+    USER_AUTH_BLOCKED(0x7),
+    VALID_MATCH_NAME(0x8),
+    INVALID_MATCH_NAME(0x9);
     
     private final int value;
     

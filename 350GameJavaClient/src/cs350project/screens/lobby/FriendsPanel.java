@@ -80,7 +80,7 @@ class FriendsPanel extends JPanel {
                 }
             }
         });
-        gbc.insets = Settings.NO_RIGHT_INSET;
+        gbc.insets = Settings.INSETS_MENU_NO_RIGHT;
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
@@ -97,7 +97,7 @@ class FriendsPanel extends JPanel {
                 removeSelectedFriend();
             }
         });
-        gbc.insets = Settings.ALL_INSETS;
+        gbc.insets = Settings.INSETS_MENU_ALL;
         gbc.gridx = 1;
         friendsPanel.add(removeButton,gbc);
     }

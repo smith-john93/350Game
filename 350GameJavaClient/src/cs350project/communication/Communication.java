@@ -6,6 +6,7 @@
 package cs350project.communication;
 import cs350project.screens.MessageDialog;
 import cs350project.characters.CharacterClass;
+import cs350project.characters.CharacterType;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -33,6 +34,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private Socket dataSocket;
     private final CopyOnWriteArrayList<IncomingCommandListener> incomingCommandListeners;
     private static Communication communication;
+    private boolean connected = false;
 
     private Communication() {
         incomingCommandListeners = new CopyOnWriteArrayList<>();
@@ -53,8 +55,13 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         incomingCommandListeners.remove(incomingCommandListener);
     }
 
-    public void connect() {
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean connect() {
         if (dataSocket == null || !dataSocket.isConnected()) {
+            connected = false;
             try {
                 // use ipv6 address here
                 InetAddress host = InetAddress.getByName("fe80::ac5b:3b2e:ff5f:3b59");
@@ -62,10 +69,11 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
                 dataSocket = new Socket(host, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());
                 dataInputStream = new DataInputStream(dataSocket.getInputStream());
-                listen();
+                return listen();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
-                JOptionPane.showMessageDialog(null, "Cannot send commands to the server.");
+                System.err.println(e.getMessage());
+                MessageDialog.showErrorMessage("Unable to connect to server.", getClass());
+                return false;
             }
         }
         /*
@@ -75,14 +83,15 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         } catch(IOException e) {
             JOptionPane.showMessageDialog(null,"Cannot send messages to the server.");
         }*/
-        
+        return true;
     }
     
-    private void listen() {
+    private boolean listen() {
         Class c = getClass();
         String error = "Unable to listen for incoming data.";
         if(dataInputStream == null || !dataSocket.isConnected()) {
             MessageDialog.showErrorMessage(error, c);
+            return false;
         } else {
             Thread listenerThread = new Thread(){
                 @Override
@@ -93,14 +102,17 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
                             for(IncomingCommandListener incomingCommandListener : incomingCommandListeners) {
                                 incomingCommandListener.commandReceived(serverCommand, dataInputStream);
                             }
-                            
                         }
                     } catch(IOException e) {
+                        System.err.println(e.getMessage());
                         MessageDialog.showErrorMessage(error, c);
+                    } catch(NoSuchElementException e) {
+                        MessageDialog.showErrorMessage(e.getMessage(), c);
                     }
                 }
             };
             listenerThread.start();
+            return true;
         }
     }
 
@@ -128,6 +140,19 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             }
         } else {
             System.out.println("Unable to send command.");
+        }
+    }
+    
+    public void sendMatchName(String matchName) {
+        System.out.println("send match name: " + matchName);
+        if (dataOutputStream != null) {
+            try {
+                dataOutputStream.writeBytes(matchName);
+            } catch (IOException e) {
+                System.out.println("Failed to write match name to stream.");
+            }
+        } else {
+            System.out.println("Unable to send match name.");
         }
     }
     
@@ -168,5 +193,10 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public void updateMatch(int stateCode) throws IOException {
         dataOutputStream.writeByte(ClientCommand.UPDATE_MATCH.getValue());
         dataOutputStream.writeShort(stateCode);
+    }
+    
+    public void characterSelected(CharacterType characterType) throws IOException {
+        dataOutputStream.writeByte(ClientCommand.CHARACTER_SELECTED.getValue());
+        dataOutputStream.writeByte(characterType.getValue());
     }
 }
