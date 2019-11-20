@@ -14,7 +14,8 @@ public enum ClientCommand {
     CREATE_ACCOUNT(0x1),
     CREATE_MATCH(0x2),
     JOIN_MATCH(0x3),
-    UPDATE_MATCH(0x4);
+    UPDATE_MATCH(0x4),
+    CHARACTER_SELECTED(0x5);
     
     private final int value;
     

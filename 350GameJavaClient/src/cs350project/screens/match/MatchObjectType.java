@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  */
 public enum MatchObjectType {
     PLATFORM(0x0),
-    PLAYER(0x1),
+    PLAYER_CHARACTER(0x1),
     ATTACK(0x2),
     PROJECTILE(0x3);
 

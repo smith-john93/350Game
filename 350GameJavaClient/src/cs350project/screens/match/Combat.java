@@ -5,9 +5,7 @@
  */
 package cs350project.screens.match;
 
-import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
-import cs350project.screens.listeners.match.AttackInputListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;

@@ -9,4 +9,9 @@ public class Trump extends PlayerCharacter {
     public CharacterClass getCharacterClass() {
         return CharacterClass.NINJA;
     }
+    
+    @Override
+    public CharacterType getCharacterType() {
+        return CharacterType.TRUMP;
+    }
 }

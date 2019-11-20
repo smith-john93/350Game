@@ -21,4 +21,9 @@ public class LegoMan extends PlayerCharacter {
     public CharacterClass getCharacterClass() {
         return CharacterClass.NORMAL;
     }
+    
+    @Override
+    public CharacterType getCharacterType() {
+        return CharacterType.LEGOMAN;
+    }
 }

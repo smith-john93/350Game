@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 package cs350project;
-import cs350project.screens.keymaps.KeyMap;
+import cs350project.screens.KeyMap;
+import cs350project.screens.Screen;
+import cs350project.screens.mainmenu.MainMenuScreen;
+import java.awt.Dimension;
 import java.awt.Insets;
 import javax.swing.JFrame;
 
@@ -14,9 +17,10 @@ import javax.swing.JFrame;
  */
 public class GameFrame extends JFrame {
     
-    private KeyMap keyMap;
-
     private static GameFrame gameFrame;
+    
+    private Screen screen;
+    private KeyMap keyMap;
 
     private GameFrame() {
 
@@ -28,20 +32,33 @@ public class GameFrame extends JFrame {
             gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             gameFrame.setTitle("CS350 Project");
             gameFrame.pack();
-            Insets insets = gameFrame.getInsets();
             Settings settings = Settings.getSettings();
-            int screenW = settings.getScreenWidth();
-            int screenH = settings.getScreenHeight();
-            int windowW = screenW + insets.left + insets.right;
-            int windowH = screenH + insets.top + insets.bottom;
-            System.out.println("windowW: " + windowW);
-            System.out.println("windowH: " + windowH);
-            gameFrame.setSize(windowW, windowH);
+            Dimension screenDimension = settings.getScreenDimension();
+            gameFrame.setSize(screenDimension);
         }
         return gameFrame;
     }
     
-    public void setKeyMap(KeyMap keyMap) {
+    public void showScreen(Screen screen) {
+        if(this.screen != null) {
+            remove(this.screen);
+        }
+        setKeyMap(screen.getKeyMap());
+        add(screen);
+        setVisible(true);
+        requestFocus();
+        this.screen = screen;
+    }
+    
+    @Override
+    public void setSize(Dimension screenDimension) {
+        Insets insets = getInsets();
+        int windowW = screenDimension.width + insets.left + insets.right;
+        int windowH = screenDimension.height + insets.top + insets.bottom;
+        super.setSize(windowW, windowH);
+    }
+    
+    private void setKeyMap(KeyMap keyMap) {
         if(keyMap != null) {
             if (this.keyMap != null) {
                 removeKeyListener(this.keyMap);
@@ -49,5 +66,12 @@ public class GameFrame extends JFrame {
             this.keyMap = keyMap;
             addKeyListener(keyMap);
         }
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 }

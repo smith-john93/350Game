@@ -223,4 +223,5 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     public abstract CharacterClass getCharacterClass();
+    public abstract CharacterType getCharacterType();
 }
