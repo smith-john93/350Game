@@ -16,6 +16,7 @@ namespace GameServer
         public bool CharacterPicked;
         public PlayerController(PlayerSocketController stream, GameController gameController)
         {
+            Console.WriteLine("Player Instance Created");
             clientInterface = stream.clientInterface;
             gController = gameController;
             CharacterPicked = false;
@@ -43,10 +44,12 @@ namespace GameServer
                 switch (i)
                 {
                     case (int)ClientCommands.CREATE_MATCH:
+                        Console.WriteLine("Creating Match");
                         CreateGame();                       
                         break;
 
                     case (int)ClientCommands.JOIN_MATCH:
+                        Console.WriteLine("Joining Match");
                         JoinGame();                       
                         break;
 
@@ -121,14 +124,13 @@ namespace GameServer
 
         async public void GetCharacter()
         {
-
+            Console.WriteLine("In Character Selection");
             byte[] selectedBuffer = new byte[1];
             await clientInterface.ReadAsync(selectedBuffer);
             if (selectedBuffer[0] == (byte)ClientCommands.CHARACTER_SELECTED)
                 CharacterPicked = true;
 
-            Console.WriteLine(selectedBuffer[0]);
-            
+            Console.WriteLine(selectedBuffer[0]);            
             byte[] buffer = new byte[1];
             await clientInterface.ReadAsync(buffer);
             Console.WriteLine(buffer[0]);
@@ -147,7 +149,6 @@ namespace GameServer
                 default:
                     selectedCharacter = CharacterEnum.Lego;
                     break;
-
             }
         }
 
@@ -157,7 +158,6 @@ namespace GameServer
             ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response);
             clientInterface.Write(responseMessage);
         }
-
         #endregion
 
         #region Validation and Authenticaiton
@@ -166,7 +166,6 @@ namespace GameServer
             //set variables for the method to use
             int i;
             byte[] response = new byte[1];
-
 
             while (true)
             {
@@ -258,7 +257,6 @@ namespace GameServer
                 //checking to see if the credentials are valid
                 if (!validCred)
                 {
-                    Console.WriteLine("Incimenting i");
                     failures++;
                     if (failures == 4)
                     {

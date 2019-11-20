@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FightServer\WindowsFormsApplication1\WindowsFormsApplication1.csproj" />
+    <ProjectReference Include="..\..\FightServer\ServerPhysics\ServerPhysics.csproj" />
   </ItemGroup>
 
 </Project>

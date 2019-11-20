@@ -13,7 +13,7 @@ namespace GameServer
         public bool RequestShutdown;
         PlayerController player1;
         PlayerController player2;
-        //private Action<PlayerController, PlayerController> execute;
+
         public GameSimulation(PlayerController player)
         {
             player1 = player;
@@ -34,7 +34,7 @@ namespace GameServer
                 }
                 else
                 {
-                    Console.WriteLine($"Match made in yeet.");
+                    Console.WriteLine($"Game creation start.");
                     Thread.Sleep(new TimeSpan(0, 0, 5));
                     Simulation(player1, player2);
                 }
@@ -47,11 +47,15 @@ namespace GameServer
 
             SelectCharacter();
             
-            Console.WriteLine($"Player1 {player1.selectedCharacter}, PLayer2: {player2.selectedCharacter}");
+            Console.WriteLine($"Player1 {player1.selectedCharacter}, Player2: {player2.selectedCharacter}");
             while (true)
             {
                 Console.WriteLine("In Game");
+                Thread.Sleep(new TimeSpan(0, 0, 1));
             }
+
+
+
             //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
             //Thread player1Thread = new Thread(player1.listen);
             //player1Thread.Start();
@@ -70,7 +74,7 @@ namespace GameServer
             {
                 Console.WriteLine($"Player1 {player1.selectedCharacter}, PLayer2: {player2.selectedCharacter}");
                 Thread.Sleep(new TimeSpan(0, 0, 1));
-            }            
+            }                          
         }
     }
 
