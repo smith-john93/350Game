@@ -12,7 +12,7 @@ namespace GameServer
         private NetworkStream clientInterface;
         private GameController gController;
         public string playername;
-        private bool inGame;
+        public bool inGame;
         public CharacterEnum selectedCharacter;
         public bool CharacterPicked;
         public PlayerController(PlayerSocketController stream, GameController gameController)
@@ -32,6 +32,8 @@ namespace GameServer
                 CloseConneciton();
                 return;
             }
+
+            gController.playerList.Add(this);
 
             PlayerControl();
         }
@@ -99,7 +101,6 @@ namespace GameServer
         {
             while(true)
             {
-
                 //get the matchName from the client
                 StringBuilder matchMake = new StringBuilder();
                 do
@@ -118,6 +119,7 @@ namespace GameServer
                     byte[] responseByte = new byte[1] { (byte)ServerCommands.VALID_MATCH_NAME};
                     ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
                     clientInterface.Write(response);
+                    inGame = true;
                     JoinGame(gameName);
                 }
                 else
@@ -131,6 +133,34 @@ namespace GameServer
         #endregion
 
         #region Communication
+
+        async public void PulseLobby(string match, bool addMatch)
+        {
+            if (!inGame)
+                SendMatchList(match, addMatch);
+        }
+
+        async public void SendMatchList(string match, bool addMatch)
+        {
+            byte[] updateCommand = new byte[1] { (byte)ServerCommands.UPDATE_LOBBY };
+            await clientInterface.WriteAsync(updateCommand);
+
+            Console.WriteLine($"sent udpate command");
+
+            byte[] add = new byte[1] { addMatch ? (byte)1 : (byte)0 };
+            await clientInterface.WriteAsync(add);
+
+            Console.WriteLine($"sent action bit {add[0]}");
+            
+            byte[] matchName = new byte[10];
+            int loc = 0;
+            foreach (char a in match.ToCharArray())
+            {
+                matchName[loc++] = (byte)a;
+            }
+            await clientInterface.WriteAsync(matchName);
+            Console.WriteLine($"sent match name {match}");
+        }
 
         async public void GetCharacter()
         {
