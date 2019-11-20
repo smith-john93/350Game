@@ -35,7 +35,6 @@ namespace GameServer
                 else
                 {
                     Console.WriteLine($"Game creation start.");
-                    Thread.Sleep(new TimeSpan(0, 0, 5));
                     Simulation(player1, player2);
                 }
             }
@@ -46,13 +45,26 @@ namespace GameServer
         {
 
             SelectCharacter();
+
+            //command byte is CreateMatchObject
+            //byte for platform (matchObjectType)
+            //5 2bytes for matchobjectId, 2 for x, 2 for y, 2 for height
+            player1.SendMessage(ServerCommands.CREATE_MATCH_OBJECT);
+            player2.SendMessage(ServerCommands.CREATE_MATCH_OBJECT);
+
+            player1.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
+            player2.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
+            Console.WriteLine("Sent Platform");
+
+            player1.SendMessage(ServerCommands.START_MATCH);
+            player2.SendMessage(ServerCommands.START_MATCH);
+            Console.WriteLine("Sent start match");
             
-            Console.WriteLine($"Player1 {player1.selectedCharacter}, Player2: {player2.selectedCharacter}");
-            while (true)
+            while(true)
             {
-                Console.WriteLine("In Game");
-                Thread.Sleep(new TimeSpan(0, 0, 1));
+                continue;
             }
+
 
             //Console.WriteLine($"Game spawned for {player1.user} and {player2.user}");
             //Thread player1Thread = new Thread(player1.listen);

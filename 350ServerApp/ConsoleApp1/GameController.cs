@@ -33,12 +33,18 @@ namespace GameServer
             throw new NotImplementedException();
         }
 
-        public void AddPlayer(string game, PlayerController player)
+        public bool AddPlayer(string game, PlayerController player)
         {
             if (!gameListing.ContainsKey(game))
+            { 
                 Console.WriteLine("Game Not Preset");
+                return false;
+            }
             else
+            {
                 gameListing.GetValueOrDefault(game).Player2Join(player);
+                return true;
+            }
             
         }
 

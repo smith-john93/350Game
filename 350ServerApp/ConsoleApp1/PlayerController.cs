@@ -11,7 +11,8 @@ namespace GameServer
     {
         private NetworkStream clientInterface;
         private GameController gController;
-
+        public string playername;
+        private bool inGame;
         public CharacterEnum selectedCharacter;
         public bool CharacterPicked;
         public PlayerController(PlayerSocketController stream, GameController gameController)
@@ -37,8 +38,9 @@ namespace GameServer
 
         private void PlayerControl()
         {
-            while (true)
+            while(true)
             {
+
                 Console.WriteLine("Waiting for Player Match Option");
                 int i = clientInterface.ReadByte();
                 Console.WriteLine($"Received option {i}");
@@ -81,7 +83,11 @@ namespace GameServer
             string game = matchJoin.ToString();
 
             //Add the player to the match
-            gController.AddPlayer(game, this);
+            inGame = gController.AddPlayer(game, this);
+            while(inGame)
+            {
+                continue;
+            }
         }
         private void JoinGame(string gameName)
         {
@@ -128,7 +134,7 @@ namespace GameServer
 
         async public void GetCharacter()
         {
-            Console.WriteLine("In Character Selection");
+            Console.WriteLine($"{playername} In Character Selection");
             byte[] selectedBuffer = new byte[1];
             await clientInterface.ReadAsync(selectedBuffer);
             if (selectedBuffer[0] == (byte)ClientCommands.CHARACTER_SELECTED)
@@ -161,6 +167,29 @@ namespace GameServer
             byte[] response = new byte[1] { (byte)command };
             ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response);
             clientInterface.Write(responseMessage);
+        }
+        
+        public void SendPlatform(MatchObjectType command, byte MatchObjectId, byte x, byte y, byte w, byte h)
+        {
+
+            byte[] response = new byte[5] { MatchObjectId, x, y, w, h };
+            clientInterface.WriteByte((byte)command);
+            foreach (byte i in response)
+            {                
+                clientInterface.WriteByte(0);
+                clientInterface.WriteByte(i);
+            }
+
+            //ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response[0]);
+            //clientInterface.Write(responseMessage);
+            //responseMessage = new ReadOnlySpan<byte>(response[1]);
+            //clientInterface.Write(responseMessage);
+            //responseMessage = new ReadOnlySpan<byte>(response[2]);
+            //clientInterface.Write(responseMessage);
+            //responseMessage = new ReadOnlySpan<byte>(response[3]);
+            //clientInterface.Write(responseMessage);
+            //responseMessage = new ReadOnlySpan<byte>(response[4]);
+            //clientInterface.Write(responseMessage);
         }
         #endregion
 
@@ -254,8 +283,8 @@ namespace GameServer
                 //this will be turned into sending the info to the DAL
                 string user = cUser.ToString();
                 string pass = cPass.ToString();
-                if (user == "username")
-                    if (pass == "password")
+                //if (user == "username")
+                //    if (pass == "password")
                         validCred = true;
 
                 //checking to see if the credentials are valid
@@ -290,9 +319,17 @@ namespace GameServer
 
                 //if the credentials are correct we can return to the contolling method
                 if (validCred)
+                {
+                    playername = user;
                     return true;
+                }
             }
             return false;
+        }
+
+        public void LeaveGame()
+        {
+            inGame = false;
         }
 
         #endregion
