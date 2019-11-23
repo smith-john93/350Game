@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 namespace WindowsFormsApplication1
@@ -7,6 +7,7 @@ namespace WindowsFormsApplication1
     {
         public platform(int x, int y, int width, int height, object_manager o)
         {
+            id = o.world_object_count++;
             this.x = x;
             this.y = y;
             this.width = width;
