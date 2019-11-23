@@ -52,7 +52,7 @@ namespace WindowsFormsApplication1
 
         public System.Net.Sockets.NetworkStream player_stream;
  
-
+        
         public player(Fighter f, object_manager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
         {
             id = o.world_object_count++;
@@ -66,6 +66,25 @@ namespace WindowsFormsApplication1
 
 
             player_stream = strm;
+
+            o.player_list.Add(this);
+
+        }
+        
+
+        public player(Fighter f, object_manager o, int xx, int yy)
+        {
+            id = o.world_object_count++;
+            type = f;
+            manager = o;
+
+            x = xx;
+            y = yy;
+            width = 30;
+            height = 30;
+
+
+            o.player_list.Add(this);
 
         }
 
@@ -124,7 +143,7 @@ namespace WindowsFormsApplication1
             //stats
             if (health <= 0)
             {
-                this.manager.control_list.Remove(this);
+                this.manager.player_list.Remove(this);
             }
 
             if (move_cooldown > 0) move_cooldown--;
