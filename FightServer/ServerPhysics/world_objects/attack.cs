@@ -22,6 +22,8 @@ namespace WindowsFormsApplication1
             this.owner.move_cooldown = lifetime;
 
             this.clr = System.Drawing.Color.Blue;
+
+            o.attack_list.Add(this);
         }
         public attack()
         {
