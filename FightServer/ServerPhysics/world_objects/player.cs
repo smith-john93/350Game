@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-
+using System.Net;
 
 public enum Fighter
 {
@@ -49,9 +49,11 @@ namespace WindowsFormsApplication1
         private byte control_byte = (byte)0;
 
         private Fighter type;
+
+        public System.Net.Sockets.NetworkStream player_stream;
  
 
-        public player(Fighter f, object_manager o, int xx, int yy)
+        public player(Fighter f, object_manager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
         {
             id = o.world_object_count++;
             type = f;
@@ -61,6 +63,9 @@ namespace WindowsFormsApplication1
             y = yy;
             width = 30;
             height = 30;
+
+
+            player_stream = strm;
 
         }
 
