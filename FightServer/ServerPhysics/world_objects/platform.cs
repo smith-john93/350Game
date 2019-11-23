@@ -16,6 +16,8 @@ namespace WindowsFormsApplication1
             manager = o;
 
             this.clr = System.Drawing.Color.Black;
+
+            o.platform_list.Add(this);
         }
 
 
