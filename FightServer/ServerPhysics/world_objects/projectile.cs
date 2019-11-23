@@ -20,6 +20,8 @@ namespace WindowsFormsApplication1
             this.owner.move_cooldown = 3;
 
             this.clr = System.Drawing.Color.DarkMagenta;
+
+            o.attack_list.Add(this);
         }
 
         public override void game_tick()
