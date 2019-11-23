@@ -36,6 +36,9 @@ namespace GameServer
 
             gController.playerList.Add(this);
 
+            Console.WriteLine($"Sendigng All Games to {playername}");
+            gController.SendAllGames(this);
+
             PlayerControl();
         }
 
@@ -88,6 +91,7 @@ namespace GameServer
             }
             while (clientInterface.DataAvailable);
             string game = matchJoin.ToString();
+            Console.WriteLine($"Received match name {game}");
 
             //Add the player to the match
             inGame = gController.AddPlayer(game, this);
@@ -140,21 +144,26 @@ namespace GameServer
 
         async public void PulseLobby(string match, bool addMatch)
         {
+            Console.WriteLine($"Player: {playername} inGame: {inGame}");
             if (!inGame)
+            {
+                Console.WriteLine($"Player: {playername} inGame: {inGame} SENDING UPDATE");
                 await Task.Run(() => SendMatchList(match, addMatch));
+            }
         }
 
         async public void SendMatchList(string match, bool addMatch)
         {
+            Console.WriteLine($"Sending {playername} update lobby");
             byte[] updateCommand = new byte[1] { (byte)ServerCommands.UPDATE_LOBBY };
             await clientInterface.WriteAsync(updateCommand);
 
-            Console.WriteLine($"sent udpate command");
+            //Console.WriteLine($"sent udpate command");
 
             byte[] add = new byte[1] { addMatch ? (byte)1 : (byte)0 };
             await clientInterface.WriteAsync(add);
 
-            Console.WriteLine($"sent action bit {add[0]}");
+            //Console.WriteLine($"sent action bit {add[0]}");
             
             byte[] matchName = new byte[10];
             int loc = 0;
@@ -198,9 +207,7 @@ namespace GameServer
 
         public void SendMessage(ServerCommands command)
         {
-            byte[] response = new byte[1] { (byte)command };
-            ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response);
-            clientInterface.Write(responseMessage);
+            clientInterface.WriteByte((byte)command);
         }
         
         public void SendMessage(ReadOnlySpan<byte> byteSpan)
@@ -208,27 +215,61 @@ namespace GameServer
             clientInterface.Write(byteSpan);
         }
 
-        public void SendPlatform(MatchObjectType command, byte MatchObjectId, byte x, byte y, byte w, byte h)
+        public void SendOpponentPlayer(CharacterEnum Selection)
         {
+            //send CREATE_MATCH_OBJECT = 0,         ---- 1 byte
+            //MatchObjectType PlayerCharacter = 1,  ---- 1 byte
+            // ID of 1                              ---- 2 bytes
+            //player seleciton                      ---- 1 byte
+            // State send 0                         ---- 1 byte
+            // x                                    ---- 2 bytes
+            // y                                    ---- 2 bytes
 
-            byte[] response = new byte[5] { MatchObjectId, x, y, w, h };
+
+            //create match object
+            clientInterface.WriteByte((byte)ServerCommands.CREATE_MATCH_OBJECT);
+            
+            //notify a player character is being sent
+            clientInterface.WriteByte((byte)MatchObjectType.PlayerCharacter);
+
+            //send short 1
+            clientInterface.WriteByte(0);
+            clientInterface.WriteByte(1);
+
+            //send the player seleciton
+            clientInterface.WriteByte((byte)Selection);
+
+            //send a state of 0
+            clientInterface.WriteByte(0);
+
+            //send 256
+            clientInterface.WriteByte(1);
+            clientInterface.WriteByte(0);
+
+            //send 256
+            clientInterface.WriteByte(1);
+            clientInterface.WriteByte(0);          
+        }
+
+        public void SendPlatform(MatchObjectType command, byte MatchObjectId, int x, int y, int w, int h)
+        {
+            //create match object
+            clientInterface.WriteByte((byte)ServerCommands.CREATE_MATCH_OBJECT);
             clientInterface.WriteByte((byte)command);
-            foreach (byte i in response)
-            {                
-                clientInterface.WriteByte(0);
-                clientInterface.WriteByte(i);
-            }
+            
 
-            //ReadOnlySpan<byte> responseMessage = new ReadOnlySpan<byte>(response[0]);
-            //clientInterface.Write(responseMessage);
-            //responseMessage = new ReadOnlySpan<byte>(response[1]);
-            //clientInterface.Write(responseMessage);
-            //responseMessage = new ReadOnlySpan<byte>(response[2]);
-            //clientInterface.Write(responseMessage);
-            //responseMessage = new ReadOnlySpan<byte>(response[3]);
-            //clientInterface.Write(responseMessage);
-            //responseMessage = new ReadOnlySpan<byte>(response[4]);
-            //clientInterface.Write(responseMessage);
+            int[] response = new int[5] { MatchObjectId, x, y, w, h };
+            
+
+            foreach (int i in response)
+            {
+                //Console.WriteLine($"Sending {i}");
+                //byte[] buf = BitConverter.GetBytes(i);
+                //clientInterface.Write(buf, 0, buf.Length);
+
+                clientInterface.WriteByte(0);
+                clientInterface.WriteByte((byte)i);
+            }
         }
         #endregion
 

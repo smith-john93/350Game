@@ -17,22 +17,31 @@ namespace GameServer
             playerList = new List<PlayerController>();
         }
 
+        public void StartGame(string game)
+        {
+            gameListing[game].Run();
+        }
+
         public bool CreateGame(string gameName, PlayerController player)
         {
 
             if (gameListing.ContainsKey(gameName))
                 return false;
 
+            Console.WriteLine($"Creating Match {gameName}");
             byte[] responseByte = new byte[1] { (byte)ServerCommands.VALID_MATCH_NAME };
             ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
             player.SendMessage(response);
             player.inGame = true;
 
             //create the game
-            GameSimulation game = new GameSimulation(player);
+            GameSimulation game = new GameSimulation();
+            game.AddPlayer1(player);
+
             //add the game to a dicitonary
             gameListing.Add(gameName, game);
-
+            Console.WriteLine($"{gameListing.Count} games in wait");
+            StartGame(gameName);
             NotifyLobbyUpdate(gameName, true);
             return true;
         }
@@ -53,26 +62,39 @@ namespace GameServer
             {
                 if(gameListing.GetValueOrDefault(game).PlayerOneJoined())
                 {
-                    gameListing.GetValueOrDefault(game).AddPlayer1(player);
+                    Console.WriteLine("Adding player 2");
+                    player.inGame = true;
+                    NotifyLobbyUpdate(game, false);
+                    gameListing.GetValueOrDefault(game).AddPlayer2(player);
                     return true;
                 }
                 else
                 {
-                NotifyLobbyUpdate(game, false);
-                gameListing.GetValueOrDefault(game).AddPlayer2(player);
-                return true;
+                    Console.WriteLine("Adding Player 1");
+                    gameListing.GetValueOrDefault(game).AddPlayer1(player);
+                    return true;
+
+                    
                 }
             }            
         }
 
         async private void NotifyLobbyUpdate(string match, bool add)
         {
-            string a = "addition";
-            string b = "removal";
-            Console.WriteLine($"Pulsing {(add ? a : b)} of {match}");
+        //    string a = "addition";
+        //    string b = "removal";
+        //    Console.WriteLine($"Pulsing {(add ? a : b)} of {match}");
             foreach(PlayerController player in playerList)
             {
                 await Task.Run(() => player.PulseLobby(match, add));
+            }
+        }
+
+        public void SendAllGames(PlayerController player)
+        {
+            foreach(string game in gameListing.Keys)
+            {
+                NotifyLobbyUpdate(game, true);
             }
         }
     }

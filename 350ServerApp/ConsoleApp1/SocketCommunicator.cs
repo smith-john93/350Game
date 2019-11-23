@@ -6,6 +6,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
+using Multicast;
 
 namespace GameServer
 {
@@ -24,7 +25,7 @@ namespace GameServer
         private const int commandPort = 12345;
         public TcpListener listener;
         private GameController gController;
-
+        private Multicast.Multicast multi;
         public bool RequestShutdown;
         public SocketCommunicator(GameController gameController)
         {
@@ -39,15 +40,22 @@ namespace GameServer
             */
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
+
+            multi = new Multicast.Multicast();
             //PrimarySocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             //_playerThreadPool = new 
         }
 
-        public void listen()
+
+        async public void listen()
         {
 
             try
             {
+                Console.WriteLine("Starting Multicast Broadcast...");
+                Task.Run(() => SendMulticast("o"));
+                Console.WriteLine("Broadcast Started");                
+
                 listener = new TcpListener(localEndPoint);
                 listener.Start();               
 
@@ -81,6 +89,15 @@ namespace GameServer
             catch(SocketException e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        async public void SendMulticast(string message)
+        {
+            while(!RequestShutdown)
+            {
+                multi.send(message);
+                Thread.Sleep(new TimeSpan(0, 0, 10));
             }
         }
 
