@@ -13,8 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
 
 /**
@@ -31,7 +29,7 @@ public abstract class PlayerCharacter extends MatchObject {
     private long lastFrameTime = 0;
     private int droppedFrames = 0;
     private int stateCode;
-    private final short objectID;
+    private final int objectID;
     public static final int FRAME_DELAY = 200;
     private final HashMap<Integer,Timer> attackTimers;
     private final int[] attackStates;
@@ -39,7 +37,7 @@ public abstract class PlayerCharacter extends MatchObject {
     private final int movementStateMask;
     private int attackStateCode;
     
-    public PlayerCharacter(short objectID, int defaultStateCode) {
+    public PlayerCharacter(int objectID, int defaultStateCode) {
         this.objectID = objectID;
         characterResourceManager = new CharacterResourceManager(defaultStateCode);
         direction = 1;
@@ -75,7 +73,7 @@ public abstract class PlayerCharacter extends MatchObject {
         }
     }
 
-    public short getObjectID() {
+    public int getObjectID() {
         return objectID;
     }
     
@@ -189,7 +187,7 @@ public abstract class PlayerCharacter extends MatchObject {
     // This method may require synchronization
     @Override
     public void receiveData(DataInputStream dataInputStream) throws IOException {
-        int newStateCode = dataInputStream.readShort();
+        int newStateCode = dataInputStream.readByte();
         if((newStateCode | attackStateCode) != stateCode) {
             int newAttackStateCode = newStateCode & attackStateMask;
             System.out.println("new state code: " + newStateCode);
@@ -218,6 +216,8 @@ public abstract class PlayerCharacter extends MatchObject {
         }
         short x = dataInputStream.readShort();
         short y = dataInputStream.readShort();
+        System.out.println("x: " + x);
+        System.out.println("y: " + y);
         //System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
         setLocation(x,y);
     }

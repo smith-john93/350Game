@@ -10,7 +10,7 @@ package cs350project.characters;
  * @author Mark Masone
  */
 public class Coffman extends PlayerCharacter {
-    public Coffman(short objectID) {
+    public Coffman(int objectID) {
         super(objectID, CharacterState.IDLE);
     }
 

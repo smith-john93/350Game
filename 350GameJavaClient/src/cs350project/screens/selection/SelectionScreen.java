@@ -71,7 +71,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
         //comm.addIncomingCommandListener(this);
         //music.stop();
         comm.addIncomingCommandListener(MatchObjectManager.getInstance());
-        comm.addIncomingCommandListener(this);
+        //comm.addIncomingCommandListener(this);
         comm.characterSelected(player1.getCharacterType());
         System.out.println("waiting for other player to select");
     }

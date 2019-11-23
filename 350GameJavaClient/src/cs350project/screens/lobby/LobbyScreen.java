@@ -69,7 +69,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println(serverCommand);
+        System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case UPDATE_LOBBY:
                 try {
@@ -79,16 +79,21 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                     dataInputStream.read(matchNameBytes);
                     String matchName = new String(matchNameBytes);
                     System.out.println("match name received: " + matchName);
-                    if(action == 0) {
-                        lobbyPanel.removeMatch(matchName);
-                    } else if(action == 1) {
-                        lobbyPanel.addMatch(matchName);
-                    } else {
-                        System.err.println("update lobby action not recognized");
+                    switch (action) {
+                        case 0:
+                            lobbyPanel.removeMatch(matchName);
+                            break;
+                        case 1:
+                            lobbyPanel.addMatch(matchName);
+                            break;
+                        default:
+                            System.err.println("update lobby action not recognized");
+                            break;
                     }
                 } catch(IOException e) {
                     System.err.println(e.getMessage());
                 }
+                break;
             case SELECT_CHARACTER:
                 try {
                     comm.removeIncomingCommandListener(this);

@@ -11,7 +11,7 @@ package cs350project.characters;
  */
 public class LegoMan extends PlayerCharacter {
     
-    public LegoMan(short objectID) {
+    public LegoMan(int objectID) {
         super(objectID, CharacterState.IDLE);
         
         

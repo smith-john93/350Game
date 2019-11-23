@@ -150,7 +150,7 @@ public class CharacterResourceManager {
                     characterResource.loadResource();
                     setResource(stateCode, characterResource);
                 } catch(IOException e) {
-                    System.err.println(e);
+                    //System.err.println(e);
                 }
             }
         }

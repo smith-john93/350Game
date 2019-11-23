@@ -5,8 +5,13 @@
  */
 package cs350project.screens.match;
 
+import cs350project.characters.CharacterType;
+import cs350project.characters.Coffman;
+import cs350project.characters.Ganchev;
+import cs350project.characters.LegoMan;
 import cs350project.screens.MessageDialog;
 import cs350project.characters.PlayerCharacter;
+import cs350project.characters.Trump;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import java.io.DataInputStream;
@@ -61,7 +66,7 @@ public class MatchObjectManager implements IncomingCommandListener {
     
     public void setPlayerCharacters(PlayerCharacter player, PlayerCharacter opponent) {
         set(0,player);
-        set(1,opponent);
+        //set(1,opponent);
     }
 
     @Override
@@ -94,11 +99,32 @@ public class MatchObjectManager implements IncomingCommandListener {
             MatchObjectType type = MatchObjectType.parse(dataInputStream.readByte());
             int id = dataInputStream.readShort();
             MatchObject matchObject = null;
+            System.out.println("match object type received: " + type + " with ID: " + id);
             switch (type) {
                 case PLATFORM:
-                    System.out.println("got match object type platform");
                     matchObject = new Platform();
-                    matchObject.receiveData(dataInputStream);
+                    break;
+                case PLAYER_CHARACTER:
+                    CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
+                    System.out.println("character type received: " + characterType);
+                    switch(characterType) {
+                        case GANCHEV:
+                            matchObject = new Ganchev((short)id);
+                            break;
+                        case COFFMAN:
+                            matchObject = new Coffman((short)id);
+                            break;
+                        case TRUMP:
+                            matchObject = new Trump((short)id);
+                            break;
+                        case LEGOMAN:
+                            matchObject = new LegoMan((short)id);
+                            break;
+                    }
+                    break;
+            }
+            if(matchObject != null) {
+                matchObject.receiveData(dataInputStream);
             }
             set(id, matchObject);
         } catch(IOException e) {

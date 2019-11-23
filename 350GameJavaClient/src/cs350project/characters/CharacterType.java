@@ -5,6 +5,8 @@
  */
 package cs350project.characters;
 
+import java.util.NoSuchElementException;
+
 /**
  *
  * @author Mark Masone
@@ -23,5 +25,14 @@ public enum CharacterType {
     
     public int getValue() {
         return value;
+    }
+    
+    public static CharacterType parse(byte value) {
+        for(CharacterType characterType : CharacterType.values()) {
+            if(characterType.getValue() == value) {
+                return characterType;
+            }
+        }
+        throw new NoSuchElementException("Character type not found.");
     }
 }

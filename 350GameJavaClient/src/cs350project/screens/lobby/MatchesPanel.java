@@ -38,9 +38,6 @@ class MatchesPanel extends JPanel {
         System.out.println("add match");
         DefaultListModel<String> defaultListModel = (DefaultListModel<String>)matchesList.getModel();
         defaultListModel.addElement(matchName);
-        for(LobbyInputListener lobbyInputListener : inputListeners) {
-            lobbyInputListener.createMatch(matchName);
-        }
     }
     
     void removeMatch(String matchName) {
@@ -82,6 +79,9 @@ class MatchesPanel extends JPanel {
                             lobbyInputListener.createMatch();
                         }*/
                         addMatch(matchName);
+                        for(LobbyInputListener lobbyInputListener : inputListeners) {
+                            lobbyInputListener.createMatch(matchName);
+                        }
                         break;
                     }
                 }
