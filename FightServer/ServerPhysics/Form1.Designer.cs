@@ -1,101 +1,59 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-
-
-namespace WindowsFormsApplication1
+﻿namespace WindowsFormsApplication1
 {
-    public partial class Form1 : Form
+    partial class Form1
     {
-        object_manager obj_man;
-        public System.Net.Sockets.NetworkStream player1_stream;
-        public System.Net.Sockets.NetworkStream player2_stream;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-
-        public Form1(System.Net.Sockets.NetworkStream player1_stream, Fighter PlayerOneFighter, System.Net.Sockets.NetworkStream player2_stream, Fighter PlayerTwoFighter)
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            InitializeComponent();
-
-            obj_man = new object_manager(player1_stream, PlayerOneFighter, player2_stream, PlayerTwoFighter);
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
-        public Form1()
-        {
-            InitializeComponent();
+        #region Windows Form Designer generated code
 
-            obj_man = new object_manager();
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.SuspendLayout();
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 20;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1243, 579);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load_1);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+            this.ResumeLayout(false);
+
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            System.Drawing.Graphics graphicsObj;
-            graphicsObj = this.CreateGraphics();
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-
-
-            obj_man.draw(graphicsObj);
-           
-        }
-
-        private void Form1_Load_1(object sender, EventArgs e)
-        {
-            timer1.Start();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            
-
-            System.Drawing.Graphics graphicsObj;
-            graphicsObj = this.CreateGraphics();
-            //draw event
-            obj_man.draw(graphicsObj);
-
-            
-            //gametick event
-            obj_man.game_tick();
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            this.KeyPreview = true;
-
-            
-        }
-
-
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-//            obj_man.key_down(e.KeyChar);
-        }
-
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            KeysConverter kc = new KeysConverter();
-            string keyChar = kc.ConvertToString(e.KeyData);
-
-            obj_man.key_down(keyChar[0]);
-        }
-
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
-            KeysConverter kc = new KeysConverter();
-            string keyChar = kc.ConvertToString(e.KeyData);
-
-            obj_man.key_up(keyChar[0]);
-        }
-
+        #endregion
+        private System.Windows.Forms.Timer timer1;
     }
 }
+

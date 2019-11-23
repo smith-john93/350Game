@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,12 +14,23 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
+        object_manager obj_man;
+        public System.Net.Sockets.NetworkStream player1_stream;
+        public System.Net.Sockets.NetworkStream player2_stream;
 
-        object_manager obj_man = new object_manager();
+
+        public Form1(System.Net.Sockets.NetworkStream player1_stream, Fighter PlayerOneFighter, System.Net.Sockets.NetworkStream player2_stream, Fighter PlayerTwoFighter)
+        {
+            InitializeComponent();
+
+            obj_man = new object_manager(player1_stream, PlayerOneFighter, player2_stream, PlayerTwoFighter);
+        }
 
         public Form1()
         {
             InitializeComponent();
+
+            obj_man = new object_manager();
         }
 
         private void Form1_Load(object sender, EventArgs e)
