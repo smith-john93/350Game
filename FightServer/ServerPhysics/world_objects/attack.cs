@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 namespace WindowsFormsApplication1
@@ -13,6 +13,7 @@ namespace WindowsFormsApplication1
 
         public attack(int x, int y, player owner, object_manager o)
         {
+            id = o.world_object_count++;
             this.x = x;
             this.y = y;
             this.owner = owner;
@@ -35,7 +36,6 @@ namespace WindowsFormsApplication1
 
             if(lifetime<0)
             {
-                this.manager.world_object_list.Remove(this);
                 this.manager.attack_list.Remove(this);
             }
             else
