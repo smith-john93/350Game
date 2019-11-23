@@ -51,9 +51,9 @@ namespace WindowsFormsApplication1
             platform_list.Add(p);
         }
 
-        public player create_player(Fighter f, int x, int y)
+        public player create_player(Fighter f, int x, int y, System.Net.Sockets.NetworkStream strm)
         {
-            player p = new player(f, this, x, y);
+            player p = new player(f, this, x, y, strm);
 
             control_list.Add(p);
 
