@@ -6,6 +6,7 @@
 package cs350project.screens.match;
 
 import cs350project.GameFrame;
+import cs350project.Settings;
 import cs350project.screens.lobby.LobbyScreen;
 import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
@@ -45,7 +46,7 @@ public class MatchScreen extends Screen implements
     public MatchScreen(PlayerCharacter player, PlayerCharacter opponent) {
         this.player = player;
         player.setState(CharacterState.IDLE);
-        matchKeyMap = new MatchKeyMap();
+        matchKeyMap = new MatchKeyMap(Settings.getSettings().getKeyMappings());
         matchPanel = new MatchPanel(player,opponent);
         comm = Communication.getInstance();
         combat = new Combat(player);

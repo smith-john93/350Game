@@ -5,11 +5,13 @@
  */
 package cs350project.screens.selection;
 
+import cs350project.screens.InputListener;
+
 /**
  *
  * @author Mark Masone
  */
-public interface SelectionInputListener {
+public interface SelectionInputListener extends InputListener {
     void characterSelected();
     void highlightNextRight();
     void highlightNextLeft();

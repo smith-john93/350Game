@@ -5,6 +5,7 @@
  */
 package cs350project.screens.match;
 import cs350project.screens.KeyMap;
+import java.util.HashMap;
 
 /**
  *
@@ -21,9 +22,9 @@ public class MatchKeyMap extends KeyMap<MatchInputListener> {
     private final MatchMenuKeyMap menuKeyMap;
     private final AttackKeyMap attackKeyMap;
     
-    public MatchKeyMap() {
+    public MatchKeyMap(HashMap<Integer, Integer> keyMappings) {
         chatKeyMap = new ChatKeyMap();
-        movementKeyMap = new MovementKeyMap();
+        movementKeyMap = new MovementKeyMap(keyMappings);
         menuKeyMap = new MatchMenuKeyMap();
         attackKeyMap = new AttackKeyMap();
         addKeyMap(chatKeyMap);

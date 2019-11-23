@@ -5,10 +5,12 @@
  */
 package cs350project.screens.match;
 
+import cs350project.screens.InputListener;
+
 /**
  *
  * @author Mark Masone
  */
-public interface MatchInputListener {
+public interface MatchInputListener extends InputListener {
     
 }
