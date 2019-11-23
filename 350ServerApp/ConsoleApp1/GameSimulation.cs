@@ -16,15 +16,25 @@ namespace GameServer
 
         public GameSimulation(PlayerController player)
         {
+            Run();
+        }
+
+        public bool PlayerOneJoined()
+        {
+            return player1 != null ? true : false;
+        }
+
+        public void AddPlayer1(PlayerController player)
+        {
             player1 = player;
         }
 
-        public void Player2Join(PlayerController player)
+        public void AddPlayer2(PlayerController player)
         {
             player2 = player;
         }
 
-        public void Run()
+        private void Run()
         {
             while (true && !RequestShutdown)
             {
@@ -73,16 +83,13 @@ namespace GameServer
             //player2Thread.Start();
         }
 
-        public void SelectCharacter()
+        async public void SelectCharacter()
         {
             player1.SendMessage(ServerCommands.SELECT_CHARACTER);
             player2.SendMessage(ServerCommands.SELECT_CHARACTER);
-            player1.GetCharacter();
-            player2.GetCharacter();
+            await Task.Run(() => player1.GetCharacter());
+            await Task.Run(() => player2.GetCharacter());
 
-
-
-            string a = "not picked";
             while (player1.CharacterPicked == false || player2.CharacterPicked == false)
             {
                 Console.WriteLine($"Player1: {(player1.CharacterPicked == true  ? GetEnumName(player1.selectedCharacter) : "Not Selected" )}, Player2: {(player2.CharacterPicked == true ? GetEnumName(player2.selectedCharacter) : "Not Selected")}");

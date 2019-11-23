@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Net.Sockets;
 using GameServer.Enumerations;
 
@@ -52,6 +53,7 @@ namespace GameServer
                     case (int)ClientCommands.CREATE_MATCH:
                         Console.WriteLine("Creating Match");
                         CreateGame();
+                        
                         Console.WriteLine("Exiting Creating Match");
                         break;
 
@@ -69,6 +71,9 @@ namespace GameServer
         }
 
         #region Player Options
+        /// <summary>
+        /// Called when a client joins a game, rather than creating a game
+        /// </summary>
         private void JoinGame()
         {
             Console.WriteLine("Join Match");
@@ -90,11 +95,7 @@ namespace GameServer
             {
                 continue;
             }
-        }
-        private void JoinGame(string gameName)
-        {
-            //Add the player to the match
-            gController.AddPlayer(gameName, this);
+            //write a method to handle cleanup after the game ends
         }
 
         private void CreateGame()
@@ -111,16 +112,19 @@ namespace GameServer
                     matchMake.Append(u);
                 }
                 while (clientInterface.DataAvailable);
-                Console.WriteLine($"Match to make: {matchMake}");
+                //Console.WriteLine($"Match to make: {matchMake}");
+                
+                //Turn the name into a string
                 string gameName = matchMake.ToString();
 
                 if (gController.CreateGame(gameName, this))
                 {
-                    byte[] responseByte = new byte[1] { (byte)ServerCommands.VALID_MATCH_NAME};
-                    ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
-                    clientInterface.Write(response);
                     inGame = true;
-                    JoinGame(gameName);
+                    while(inGame)
+                    {
+                        continue;
+                    }
+                    //this needs to handle cleanup after the game ends
                 }
                 else
                 {
@@ -137,7 +141,7 @@ namespace GameServer
         async public void PulseLobby(string match, bool addMatch)
         {
             if (!inGame)
-                SendMatchList(match, addMatch);
+                await Task.Run(() => SendMatchList(match, addMatch));
         }
 
         async public void SendMatchList(string match, bool addMatch)
@@ -199,6 +203,11 @@ namespace GameServer
             clientInterface.Write(responseMessage);
         }
         
+        public void SendMessage(ReadOnlySpan<byte> byteSpan)
+        {
+            clientInterface.Write(byteSpan);
+        }
+
         public void SendPlatform(MatchObjectType command, byte MatchObjectId, byte x, byte y, byte w, byte h)
         {
 
