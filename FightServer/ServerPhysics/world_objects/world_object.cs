@@ -1,16 +1,19 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 namespace WindowsFormsApplication1
 {
     public class world_object
     {
+        public int id = -1;
         public int x = 150;
         public int y = 200;
         public int width = 20;
         public int height = 5;
         public System.Drawing.Color clr = System.Drawing.Color.Red;
         public object_manager manager;
+
+      
 
         public virtual void draw_tick(System.Drawing.Graphics g)
         {
