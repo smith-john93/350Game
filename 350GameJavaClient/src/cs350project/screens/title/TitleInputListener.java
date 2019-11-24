@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.match;
+package cs350project.screens.title;
 
 import cs350project.screens.InputListener;
 
@@ -11,6 +11,6 @@ import cs350project.screens.InputListener;
  *
  * @author Mark Masone
  */
-public interface MatchInputListener extends InputListener {
-    
+public interface TitleInputListener extends InputListener {
+    void start();
 }

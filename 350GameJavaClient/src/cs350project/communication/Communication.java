@@ -13,11 +13,9 @@ import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -64,7 +62,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             connected = false;
             try {
                 // use ipv6 address here
-                InetAddress host = InetAddress.getByName("fe80::ac5b:3b2e:ff5f:3b59");
+                InetAddress host = InetAddress.getByName("fe80:0:0:0:f43b:412f:78c1:65f7");
                 //System.out.println(host);
                 dataSocket = new Socket(host, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());

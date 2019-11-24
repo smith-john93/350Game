@@ -5,6 +5,8 @@
  */
 package cs350project.characters;
 
+import cs350project.GameResource;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -14,7 +16,7 @@ import java.util.HashMap;
  */
 public class CharacterResourceManager {
     
-    private final HashMap<Integer,CharacterResource> resources;
+    private final HashMap<Integer,GameResource> resources;
     private final int defaultStateCode;
     
     public CharacterResourceManager(int defaultStateCode) {
@@ -22,77 +24,94 @@ public class CharacterResourceManager {
         resources = new HashMap<>();
     }
     
-    public void setResource(int stateCode, CharacterResource characterResource) {
+    public void setResource(int stateCode, GameResource characterResource) {
         System.out.println(stateCode + " " + characterResource.getFileName());
         resources.put(stateCode, characterResource);
     }
     
-    public CharacterResource getResource(int stateCode) {
+    public GameResource getResource(int stateCode) {
         //System.out.println("get resource " + stateCode);
-        CharacterResource characterResource = resources.get(stateCode);
+        GameResource characterResource = resources.get(stateCode);
         if(characterResource == null) {
             characterResource = resources.get(defaultStateCode);
         }
         return characterResource;
     }
+    
+    private class CharacterResourceData {
+        
+        private String fileName;
+        private GameResource.Type type;
+        private int[] stateCodes;
+        
+        private CharacterResourceData(String fileName, GameResource.Type type, int stateCode) {
+            this(fileName, type, new int[]{stateCode});
+        }
+        
+        private CharacterResourceData(String fileName, GameResource.Type type, int[] stateCodes) {
+            this.fileName = fileName;
+            this.type = type;
+            this.stateCodes = stateCodes;
+        }
+    }
 
-    public void loadResources(Class<? extends PlayerCharacter> c) {
-        String name = c.getSimpleName();
+    void loadResources(PlayerCharacter character) {
+        String name = character.getClass().getSimpleName();
         String characterFolder = "characters/" + name + "/";
-        CharacterResource[] characterResources = {
-                new CharacterResource(
+        CharacterResourceData[] characterResourcesData = {
+                new CharacterResourceData(
                         characterFolder + "Idle.gif",
-                        CharacterResource.Type.LOOPS,
+                        GameResource.Type.LOOPS,
                         CharacterState.IDLE
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "Block.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         new int[]{
                                 CharacterState.BLOCKING,
                                 CharacterState.BLOCKING | CharacterState.MOVING_LEFT,
                                 CharacterState.BLOCKING | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "Crouch.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         new int[]{
                                 CharacterState.CROUCHING,
                                 CharacterState.CROUCHING | CharacterState.MOVING_LEFT,
                                 CharacterState.CROUCHING | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "HighKick.gif",
-                        CharacterResource.Type.PLAYS_ONCE,
+                        GameResource.Type.PLAYS_ONCE,
                         new int[]{
                                 CharacterState.HIGH_KICK,
                                 CharacterState.HIGH_KICK | CharacterState.MOVING_LEFT,
                                 CharacterState.HIGH_KICK | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "Jump.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         new int[]{
                                 CharacterState.JUMPING,
                                 CharacterState.JUMPING | CharacterState.MOVING_LEFT,
                                 CharacterState.JUMPING | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "LowKick.png",
-                        CharacterResource.Type.PLAYS_ONCE,
+                        GameResource.Type.PLAYS_ONCE,
                         new int[]{
                                 CharacterState.LOW_KICK,
                                 CharacterState.LOW_KICK | CharacterState.MOVING_LEFT,
                                 CharacterState.LOW_KICK | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "Punch.gif",
-                        CharacterResource.Type.PLAYS_ONCE,
+                        GameResource.Type.PLAYS_ONCE,
                         new int[]{
                                 CharacterState.PUNCH,
                                 CharacterState.PUNCH | CharacterState.MOVING_LEFT,
@@ -102,53 +121,58 @@ public class CharacterResourceManager {
                                 CharacterState.PUNCH | CharacterState.MOVING_RIGHT | CharacterState.JUMPING,
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "Walk.gif",
-                        CharacterResource.Type.LOOPS,
+                        GameResource.Type.LOOPS,
                         new int[]{
                                 CharacterState.MOVING_LEFT,
                                 CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "LowBlock.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         new int[]{
                                 CharacterState.CROUCHING | CharacterState.BLOCKING,
                                 CharacterState.CROUCHING | CharacterState.BLOCKING | CharacterState.MOVING_LEFT,
                                 CharacterState.CROUCHING | CharacterState.BLOCKING | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "LowKick.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         new int[]{
                                 CharacterState.CROUCHING | CharacterState.LOW_KICK,
                                 CharacterState.CROUCHING | CharacterState.LOW_KICK | CharacterState.MOVING_LEFT,
                                 CharacterState.CROUCHING | CharacterState.LOW_KICK | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         characterFolder + "LowPunch.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         new int[]{
                                 CharacterState.CROUCHING | CharacterState.PUNCH,
                                 CharacterState.CROUCHING | CharacterState.PUNCH | CharacterState.MOVING_LEFT,
                                 CharacterState.CROUCHING | CharacterState.PUNCH | CharacterState.MOVING_RIGHT
                         }
                 ),
-                new CharacterResource(
+                new CharacterResourceData(
                         "charSelectThumbs/" + name + "Thumb.png",
-                        CharacterResource.Type.STILL,
+                        GameResource.Type.STILL,
                         CharacterState.THUMBNAIL
                 )
         };
 
-        for(CharacterResource characterResource : characterResources) {
-            for(int stateCode : characterResource.getStateCodes()) {
+        for(CharacterResourceData characterResourceData : characterResourcesData) {
+            for(int stateCode : characterResourceData.stateCodes) {
                 try {
-                    characterResource.loadResource();
-                    setResource(stateCode, characterResource);
+                    Rectangle bounds = character.getBounds();
+                    setResource(stateCode, new GameResource(
+                            characterResourceData.fileName,
+                            characterResourceData.type,
+                            bounds.width,
+                            bounds.height
+                    ));
                 } catch(IOException e) {
                     System.err.println(e);
                 }
