@@ -13,11 +13,9 @@ import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,9 +33,18 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private final CopyOnWriteArrayList<IncomingCommandListener> incomingCommandListeners;
     private static Communication communication;
     private boolean connected = false;
+    private InetAddress serverAddr;
+    private final Thread detectServerThread;
 
     private Communication() {
         incomingCommandListeners = new CopyOnWriteArrayList<>();
+        detectServerThread = new Thread() {
+            @Override
+            public void run() {
+                serverAddr = Multicast.getServerAddress();
+                System.out.println("got server address: " + serverAddr.getHostAddress());
+            }
+        };
     }
 
     public static Communication getInstance() {
@@ -58,15 +65,27 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public boolean isConnected() {
         return connected;
     }
+    
+    public void detectServer() {
+        detectServerThread.start();
+    }
 
     public boolean connect() {
+        try {
+            detectServerThread.join(5000);
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        if(serverAddr == null) {
+            MessageDialog.showErrorMessage("Could not detect server.", getClass());
+            return false;
+        }
+        
         if (dataSocket == null || !dataSocket.isConnected()) {
             connected = false;
             try {
-                // use ipv6 address here
-                InetAddress host = InetAddress.getByName("fe80::ac5b:3b2e:ff5f:3b59");
-                //System.out.println(host);
-                dataSocket = new Socket(host, commandPort);
+                dataSocket = new Socket(serverAddr, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());
                 dataInputStream = new DataInputStream(dataSocket.getInputStream());
                 return listen();
