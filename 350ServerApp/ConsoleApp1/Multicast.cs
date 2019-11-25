@@ -6,7 +6,7 @@ namespace Multicast
 {
     class Multicast
     {
-        private readonly string groupIP = "ff01::1";
+        private readonly string groupIP = "ff01::6";
         private readonly int groupPort = 12340;
         
         public Multicast() { }
@@ -24,7 +24,7 @@ namespace Multicast
 
             udpClient.JoinMulticastGroup(group);
 
-            Console.WriteLine("multicast group: " + groupIP + " port: " + groupPort);
+            //Console.WriteLine("multicast group: " + groupIP + " port: " + groupPort);
 
             try
             {
@@ -36,7 +36,7 @@ namespace Multicast
                     data[i++] = (byte)c;
                 }
                 udpClient.SendAsync(data,data.Length,ipEndPoint);
-                Console.WriteLine("sent multicast message: " + multicastMessage);
+               // Console.WriteLine("sent multicast message: " + multicastMessage);
             } catch(SocketException e)
             {
                 Console.WriteLine(e.Message);
