@@ -30,8 +30,9 @@ public class GameResource {
     public GameResource(String fileName, Type type, int width, int height) throws IOException {
         this.once = type == Type.PLAYS_ONCE;
         this.loop = type == Type.LOOPS;
+        fileName = "/resources/" + fileName;
         this.fileName = fileName;
-        URL url = getClass().getResource("/resources/" + fileName);
+        URL url = getClass().getResource(fileName);
         if(url != null) {
             String contentType = url.openConnection().getContentType();
             if (contentType.equals("image/gif")) {

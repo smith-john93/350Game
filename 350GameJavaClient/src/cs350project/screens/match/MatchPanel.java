@@ -25,19 +25,14 @@ public class MatchPanel extends Panel implements
     private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
     private final ArrayList<OutgoingMessageListener> outgoingMessageListeners;
-    private String background;
-    private final PlayerCharacter playerCharacter;
-    private final PlayerCharacter opponent;
     private final ArrayList<OutgoingCommandListener> outgoingCommandListeners;
     
-    public MatchPanel(PlayerCharacter playerCharacter, PlayerCharacter opponent) {
+    public MatchPanel() {
         outgoingCommandListeners = new ArrayList<>();
         outgoingMessageListeners = new ArrayList<>();
         chatMessageQueue = new ChatMessageQueue();
         chatMessageField = new ChatMessageField();
         chatMessageField.setVisible(false);
-        this.playerCharacter = playerCharacter;
-        this.opponent = opponent;
     }
     
     @Override
@@ -90,9 +85,5 @@ public class MatchPanel extends Panel implements
             repaint();
         }
         messageCancel();
-    }
-    
-    public void setBackground(String background) {
-        this.background = background;
     }
 }

@@ -147,6 +147,7 @@ public abstract class PlayerCharacter extends MatchObject {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        //System.out.println("repaint player character");
         Graphics2D g2d = (Graphics2D)g;
         
         boolean movingRight = (stateCode & CharacterState.MOVING_RIGHT) == CharacterState.MOVING_RIGHT;

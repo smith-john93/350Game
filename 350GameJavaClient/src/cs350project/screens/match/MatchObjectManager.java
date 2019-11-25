@@ -5,6 +5,7 @@
  */
 package cs350project.screens.match;
 
+import cs350project.characters.CharacterState;
 import cs350project.characters.CharacterType;
 import cs350project.characters.Coffman;
 import cs350project.characters.Ganchev;
@@ -107,19 +108,26 @@ public class MatchObjectManager implements IncomingCommandListener {
                 case PLAYER_CHARACTER:
                     CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
                     System.out.println("character type received: " + characterType);
+                    PlayerCharacter playerCharacter = null;
                     switch(characterType) {
                         case GANCHEV:
-                            matchObject = new Ganchev((short)id);
+                            playerCharacter = new Ganchev((short)id);
                             break;
                         case COFFMAN:
-                            matchObject = new Coffman((short)id);
+                            playerCharacter = new Coffman((short)id);
                             break;
                         case TRUMP:
-                            matchObject = new Trump((short)id);
+                            playerCharacter = new Trump((short)id);
                             break;
                         case LEGOMAN:
-                            matchObject = new LegoMan((short)id);
+                            playerCharacter = new LegoMan((short)id);
                             break;
+                    }
+                    if(playerCharacter != null) {
+                        playerCharacter.setBounds(0, 0, 100, 100);
+                        playerCharacter.loadResources();
+                        playerCharacter.setState(CharacterState.THUMBNAIL);
+                        matchObject = playerCharacter;
                     }
                     break;
             }
