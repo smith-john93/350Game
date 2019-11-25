@@ -1,0 +1,15 @@
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\DatabaseTesting.exe.config
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\DatabaseTesting.exe
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\DatabaseTesting.pdb
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\EntityFramework.dll
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\System.Data.SQLite.dll
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\EntityFramework.xml
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\System.Data.SQLite.xml
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\obj\Debug\DatabaseTesting.csproj.CopyComplete
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\obj\Debug\DatabaseTesting.exe
+C:\Users\tcahi\source\repos\DatabaseTesting\DatabaseTesting\obj\Debug\DatabaseTesting.pdb
