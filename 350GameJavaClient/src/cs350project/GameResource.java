@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.characters;
+package cs350project;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -18,30 +21,16 @@ import javax.swing.ImageIcon;
  *
  * @author Mark Masone
  */
-public class CharacterResource {
-    
+public class GameResource {
     private final String fileName;
     private final boolean loop;
     private final boolean once;
-    private Image[] frames;
-    private int[] stateCodes;
+    private final Image[] frames;
     
-    public CharacterResource(String fileName, Type type, int[] stateCodes) {
+    public GameResource(String fileName, Type type, int width, int height) throws IOException {
         this.once = type == Type.PLAYS_ONCE;
         this.loop = type == Type.LOOPS;
         this.fileName = fileName;
-        this.stateCodes = stateCodes;
-    }
-
-    public CharacterResource(String fileName, Type type, int stateCode) {
-        this(fileName,type,new int[]{stateCode});
-    }
-
-    public int[] getStateCodes() {
-        return stateCodes;
-    }
-
-    public void loadResource() throws IOException {
         URL url = getClass().getResource("/resources/" + fileName);
         if(url != null) {
             String contentType = url.openConnection().getContentType();
@@ -52,18 +41,32 @@ public class CharacterResource {
                 int frameCount = reader.getNumImages(true);
                 frames = new Image[frameCount];
                 for (int i = 0; i < frameCount; i++) {
-                    frames[i] = reader.read(i);
+                    frames[i] = getScaledImage(reader.read(i),width,height);
                 }
             } else {
                 ImageIcon characterImageIcon = new ImageIcon(url);
                 frames = new Image[1];
-                frames[0] = characterImageIcon.getImage();
+                frames[0] = getScaledImage(characterImageIcon.getImage(),width,height);
             }
         } else {
             throw new FileNotFoundException(fileName);
         }
     }
     
+    private Image getScaledImage(Image srcImg, int width, int height){
+        
+        BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        int scaledImageX = 0;
+        
+        g2.drawImage(srcImg, scaledImageX, 0, width, height, null);
+        g2.dispose();
+
+        return resizedImg;
+    }
+
     public enum Type {
         STILL,
         PLAYS_ONCE,
@@ -72,13 +75,6 @@ public class CharacterResource {
     
     public Image[] getFrames() {
         return frames;
-    }
-    
-    public int getFramesCount() {
-        if(frames == null) {
-            return 0;
-        }
-        return frames.length;
     }
     
     public boolean loops() {

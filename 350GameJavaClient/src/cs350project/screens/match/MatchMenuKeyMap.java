@@ -7,7 +7,6 @@ package cs350project.screens.match;
 
 import cs350project.screens.KeyMap;
 import java.awt.event.KeyEvent;
-import cs350project.screens.match.MatchMenuInputListener;
 
 /**
  *

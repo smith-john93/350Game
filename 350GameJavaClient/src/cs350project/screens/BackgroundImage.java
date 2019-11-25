@@ -10,14 +10,12 @@ import cs350project.screens.selection.SelectionPanel;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,7 +30,7 @@ public class BackgroundImage extends JComponent {
     }
     
     private BufferedImage getBackgroundImage(String backgroundFile) {
-        URL url = SelectionPanel.class.getResource(backgroundFile);
+        URL url = SelectionPanel.class.getResource("/resources/" + backgroundFile);
         if(url != null) {
             try {
                 Dimension screenDimension = Settings.getSettings().getScreenDimension();

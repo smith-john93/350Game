@@ -6,7 +6,6 @@
 package cs350project.screens;
 
 import cs350project.Settings;
-import java.awt.Color;
 import java.awt.Rectangle;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -24,14 +23,16 @@ public abstract class Screen extends JComponent {
         Settings settings = Settings.getSettings();
         Rectangle bounds = settings.getScreenBounds();
         
-        BackgroundImage backgroundImage = getBackgroundImage();
-        backgroundImage.setBounds(bounds);
-        
         JPanel jPanel = getJPanel();
         jPanel.setBounds(bounds);
         
         add(jPanel);
-        add(backgroundImage);
+        
+        BackgroundImage backgroundImage = getBackgroundImage();
+        if(backgroundImage != null) {
+            backgroundImage.setBounds(bounds);
+            add(backgroundImage);
+        }
     }
     
     public abstract BackgroundImage getBackgroundImage();
