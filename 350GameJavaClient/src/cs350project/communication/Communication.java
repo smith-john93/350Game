@@ -62,7 +62,11 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             connected = false;
             try {
                 // use ipv6 address here
+<<<<<<< HEAD
                 InetAddress host = InetAddress.getByName("fe80:0:0:0:ac5b:3b2e:ff5f:3b59");
+=======
+                InetAddress host = InetAddress.getByName("fe80:0:0:0:f43b:412f:78c1:65f7");
+>>>>>>> f4d69072d58b3d52bbe3804a614459e1ab82feb8
                 //System.out.println(host);
                 dataSocket = new Socket(host, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());

@@ -28,7 +28,9 @@ public class Settings {
         new Dimension(1920,1080)
     };
     
-    public static final String MENU_BACKGROUND_FILE = "/resources/menu/background.jpg";
+    public static final String MENU_BACKGROUND_FILE = "menu/background.jpg";
+    public static final String TITLE_IMAGE_FILE = "menu/welcomeAfter.png";
+    public static final String TITLE_ANIMATION_FILE = "menu/welcome.gif";
     
     public static final Font BUTTON_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
     public static final Font BUTTON_FONT_MEDIUM = new Font(Font.MONOSPACED,Font.BOLD,24);

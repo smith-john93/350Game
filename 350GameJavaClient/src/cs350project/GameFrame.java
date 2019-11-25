@@ -6,7 +6,7 @@
 package cs350project;
 import cs350project.screens.KeyMap;
 import cs350project.screens.Screen;
-import cs350project.screens.mainmenu.MainMenuScreen;
+import cs350project.screens.title.TitleScreen;
 import java.awt.Dimension;
 import java.awt.Insets;
 import javax.swing.JFrame;
@@ -30,7 +30,7 @@ public class GameFrame extends JFrame {
         if(gameFrame == null) {
             gameFrame = new GameFrame();
             gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            gameFrame.setTitle("CS350 Project");
+            gameFrame.setTitle("Intergalactic Fighting League");
             gameFrame.pack();
             Settings settings = Settings.getSettings();
             Dimension screenDimension = settings.getScreenDimension();
@@ -72,6 +72,6 @@ public class GameFrame extends JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        GameFrame.getInstance().showScreen(new MainMenuScreen());
+        GameFrame.getInstance().showScreen(new TitleScreen());
     }
 }

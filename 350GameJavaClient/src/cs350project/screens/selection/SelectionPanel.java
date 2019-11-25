@@ -37,6 +37,7 @@ public class SelectionPanel extends Panel {
             int h = 100;
             PlayerCharacter character = characters[i];
             character.setBounds(x, y, w, h);
+            character.loadResources();
             character.setState(CharacterState.THUMBNAIL);
             characterBorders[i] = character.getBounds();
         }

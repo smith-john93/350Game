@@ -8,7 +8,6 @@ package cs350project.screens.match;
 import cs350project.characters.CharacterState;
 import cs350project.screens.CustomizableKeyMap;
 import cs350project.screens.KeyMap;
-import cs350project.screens.match.MovementInputListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 

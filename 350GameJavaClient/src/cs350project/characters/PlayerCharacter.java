@@ -5,6 +5,7 @@
  */
 package cs350project.characters;
 
+import cs350project.GameResource;
 import cs350project.screens.match.MatchObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +42,6 @@ public abstract class PlayerCharacter extends MatchObject {
         this.objectID = objectID;
         characterResourceManager = new CharacterResourceManager(defaultStateCode);
         direction = 1;
-        characterResourceManager.loadResources(getClass());
         attackTimers = new HashMap<>();
         attackStates = new int[]{
             CharacterState.PUNCH,
@@ -50,6 +50,10 @@ public abstract class PlayerCharacter extends MatchObject {
         };
         attackStateMask = CharacterState.PUNCH | CharacterState.HIGH_KICK | CharacterState.LOW_KICK;
         movementStateMask = attackStateMask ^ 0xffff;
+    }
+    
+    public void loadResources() {
+        characterResourceManager.loadResources(this);
     }
     
     @Override
@@ -99,7 +103,7 @@ public abstract class PlayerCharacter extends MatchObject {
     public void setState(int stateCode) {
         System.out.println("setting state: " + stateCode);
         this.stateCode = stateCode;
-        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        GameResource characterResource = characterResourceManager.getResource(stateCode);
         setFrames(characterResource.getFrames());
     }
     
@@ -111,11 +115,11 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     public int getFramesCount(int stateCode) {
-        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        GameResource characterResource = characterResourceManager.getResource(stateCode);
         if(characterResource == null) {
             return 0;
         }
-        return characterResource.getFramesCount();
+        return characterResource.getFrames().length;
     }
 
     public void setDirection(int direction) {
@@ -154,7 +158,7 @@ public abstract class PlayerCharacter extends MatchObject {
             setDirection(-1);
         }
         
-        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        GameResource characterResource = characterResourceManager.getResource(stateCode);
         long currentTime = System.currentTimeMillis();
         long diff = currentTime - lastFrameTime;
         if(diff >= FRAME_DELAY) {
