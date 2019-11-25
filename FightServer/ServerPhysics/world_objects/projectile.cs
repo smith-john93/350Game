@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Drawing;
 
-namespace WindowsFormsApplication1
+namespace ServerPhysics.World_Objects
 {
-    public class projectile : attack
+    public class Projectile : Attack
     {
         public int speed = 10;
 
-        public projectile(int x, int y, player owner, object_manager o)
+        public Projectile(int x, int y, Player owner, ObjectManager o)
         {
             id = o.world_object_count++;
             this.x = x;
@@ -44,7 +44,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public override void hit(player p)
+        public override void hit(Player p)
         {
             if (owner != p)
             {

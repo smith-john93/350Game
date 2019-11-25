@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 
-namespace WindowsFormsApplication1
+namespace ServerPhysics.World_Objects
 {
-    public class platform : world_object
+    public class Platform : WorldObject
     {
-        public platform(int x, int y, int width, int height, object_manager o)
+        public Platform(int x, int y, int width, int height, ObjectManager o)
         {
             id = o.world_object_count++;
             this.x = x;

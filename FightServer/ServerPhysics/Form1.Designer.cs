@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace ServerPhysics
 {
     partial class Form1
     {

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Drawing;
 
-namespace WindowsFormsApplication1
+namespace ServerPhysics.World_Objects
 {
-    public class attack : world_object
+    public class Attack : WorldObject
     {
         public int lifetime = 60;
         public int damage = 10;
-        public player owner;
+        public Player owner;
         public int xoffset = 45;
         public int yoffset = 15;
 
-        public attack(int x, int y, player owner, object_manager o)
+        public Attack(int x, int y, Player owner, ObjectManager o)
         {
             id = o.world_object_count++;
             this.x = x;
@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
             o.attack_list.Add(this);
         }
-        public attack()
+        public Attack()
         {
            
         }
@@ -46,7 +46,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public virtual void hit(player p)
+        public virtual void hit(Player p)
         {
             if(owner != p)
             { 

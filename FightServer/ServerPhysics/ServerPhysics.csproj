@@ -7,8 +7,8 @@
     <ProjectGuid>{1E6E5015-4EA9-470E-A44C-351ED1009911}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsFormsApplication1</RootNamespace>
-    <AssemblyName>WindowsFormsApplication1</AssemblyName>
+    <RootNamespace>ServerPhysics</RootNamespace>
+    <AssemblyName>ServerPhysics</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,18 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="world_objects\attack.cs" />
-    <Compile Include="world_objects\projectile.cs" />
-    <Compile Include="world_objects\world_object.cs" />
-    <Compile Include="world_objects\player.cs" />
+    <Compile Include="world_objects\Attack.cs" />
+    <Compile Include="world_objects\Projectile.cs" />
+    <Compile Include="world_objects\WorldObject.cs" />
+    <Compile Include="world_objects\Player.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="object_manager.cs" />
-    <Compile Include="world_objects\platform.cs" />
+    <Compile Include="ObjectManager.cs" />
+    <Compile Include="world_objects\Platform.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -69,6 +69,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

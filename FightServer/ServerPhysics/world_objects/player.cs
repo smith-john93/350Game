@@ -23,9 +23,9 @@ public enum Control
     movingright = 0x80,
 }
 
-namespace WindowsFormsApplication1
+namespace ServerPhysics.World_Objects
 {
-    public class player : world_object
+    public class Player : WorldObject
     {
         public bool isactive = true;
 
@@ -53,7 +53,7 @@ namespace WindowsFormsApplication1
         public System.Net.Sockets.NetworkStream player_stream;
  
         
-        public player(Fighter f, object_manager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
+        public Player(Fighter f, ObjectManager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
         {
             id = o.world_object_count++;
             type = f;
@@ -72,7 +72,7 @@ namespace WindowsFormsApplication1
         }
         
 
-        public player(Fighter f, object_manager o, int xx, int yy)
+        public Player(Fighter f, ObjectManager o, int xx, int yy)
         {
             id = o.world_object_count++;
             type = f;
@@ -348,7 +348,7 @@ namespace WindowsFormsApplication1
         {
             for (int i = manager.attack_list.Count - 1; i >= 0; i--)///must be a for loop because it is changing the list inside of it
             {
-                attack atk = (attack)manager.attack_list[i];
+                Attack atk = (Attack)manager.attack_list[i];
                 if (isTouching(atk))
                 {
                     atk.hit(this);
