@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GameServer.Enumerations;
-using WindowsFormsApplication1;
 
 namespace GameServer
 {
@@ -60,6 +59,7 @@ namespace GameServer
 
             SelectCharacter();
 
+            Thread.Sleep(new TimeSpan(0, 0, 1));
             //command byte is CreateMatchObject
             //byte for platform (matchObjectType)
             //5 2bytes for matchobjectId, 2 for x, 2 for y, 2 for height
@@ -95,7 +95,10 @@ namespace GameServer
             player1.SendMessage(ServerCommands.START_MATCH);
             player2.SendMessage(ServerCommands.START_MATCH);
             Console.WriteLine("Sent start match");
-            
+
+            Task.Run(() => player1.EchoCommand(player2));
+            Task.Run(() => player2.EchoCommand(player1));
+
             while(true)
             {
                 continue;

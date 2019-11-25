@@ -72,6 +72,59 @@ namespace GameServer
                 }
             }
         }
+        async private void UpdateMatchCommand(PlayerController controller, bool local)
+        {
+            controller.clientInterface.WriteByte((byte)ServerCommands.UPDATE_MATCH);
+
+            //send 2 byte ID, 0 for this, 1 for opponent
+            controller.clientInterface.WriteByte(0);
+            if(local)
+                controller.clientInterface.WriteByte(0);
+            else
+                controller.clientInterface.WriteByte(1);
+
+            //send 1 byte character state
+            controller.clientInterface.WriteByte((byte)CharacterState.LOW_KICK);
+
+            //send 2 byte x-cord
+            controller.clientInterface.WriteByte(0);
+
+            if(local)
+                controller.clientInterface.WriteByte(0);
+            else
+                controller.clientInterface.WriteByte(50);
+                    
+            //send 2 byte y-cord
+            controller.clientInterface.WriteByte(0);
+            if(local)
+                controller.clientInterface.WriteByte(255);
+            else
+                controller.clientInterface.WriteByte(255);
+            //send health
+            controller.clientInterface.WriteByte(100);
+
+        }
+
+        async public void EchoCommand(PlayerController opponent)
+        {
+            while(true)
+            {
+                Console.WriteLine($"{playername} awaiting command");
+
+                byte b1 = (byte)clientInterface.ReadByte();
+                Console.WriteLine($"{b1} from {playername}");
+                byte b2 = (byte)clientInterface.ReadByte();
+                Console.WriteLine($"{b2} from {playername}");
+
+                Console.WriteLine("Received Command");
+
+                Task.Run(() => UpdateMatchCommand(this, true));
+                Task.Run(() => UpdateMatchCommand(opponent, false));
+
+                
+                Console.WriteLine("Sent to both");
+            }
+        }
 
         #region Player Options
         /// <summary>
@@ -224,7 +277,7 @@ namespace GameServer
             // State send 0                         ---- 1 byte
             // x                                    ---- 2 bytes
             // y                                    ---- 2 bytes
-
+            //health                                ---- 1 byte
 
             //create match object
             clientInterface.WriteByte((byte)ServerCommands.CREATE_MATCH_OBJECT);
@@ -248,7 +301,9 @@ namespace GameServer
 
             //send 256
             clientInterface.WriteByte(1);
-            clientInterface.WriteByte(0);          
+            clientInterface.WriteByte(0);
+
+            clientInterface.WriteByte(100);
         }
 
         public void SendPlatform(MatchObjectType command, byte MatchObjectId, int x, int y, int w, int h)
