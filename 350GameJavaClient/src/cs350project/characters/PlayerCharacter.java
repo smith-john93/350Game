@@ -40,7 +40,7 @@ public abstract class PlayerCharacter extends MatchObject {
     
     public PlayerCharacter(int objectID, int defaultStateCode) {
         this.objectID = objectID;
-        characterResourceManager = new CharacterResourceManager(defaultStateCode);
+        characterResourceManager = new CharacterResourceManager(getClass(), defaultStateCode);
         direction = 1;
         attackTimers = new HashMap<>();
         attackStates = new int[]{
@@ -51,9 +51,10 @@ public abstract class PlayerCharacter extends MatchObject {
         attackStateMask = CharacterState.PUNCH | CharacterState.HIGH_KICK | CharacterState.LOW_KICK;
         movementStateMask = attackStateMask ^ 0xffff;
     }
-    
-    public void loadResources() {
-        characterResourceManager.loadResources(this);
+
+    public void loadAllGameResources() {
+        Rectangle bounds = getBounds();
+        characterResourceManager.loadAllGameResources(bounds.height,bounds.width);
     }
     
     @Override
@@ -79,10 +80,6 @@ public abstract class PlayerCharacter extends MatchObject {
 
     public int getObjectID() {
         return objectID;
-    }
-    
-    public CharacterResourceManager getCharacterResources() {
-        return characterResourceManager;
     }
     
     private void enableState(int stateCode) {
@@ -221,8 +218,10 @@ public abstract class PlayerCharacter extends MatchObject {
         }
         short x = dataInputStream.readShort();
         short y = dataInputStream.readShort();
+        short health = dataInputStream.readByte();
         System.out.println("x: " + x);
         System.out.println("y: " + y);
+        System.out.println("health: " + health);
         //System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
         setLocation(x,y);
     }

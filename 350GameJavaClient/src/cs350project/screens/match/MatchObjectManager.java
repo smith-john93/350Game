@@ -85,7 +85,7 @@ public class MatchObjectManager implements IncomingCommandListener {
     private void updateMatch(DataInputStream dataInputStream) {
         try {
             int id = dataInputStream.readShort();
-            //System.out.println("receive data: " + id);
+            System.out.println("update match object with ID: " + id);
             MatchObject matchObject = matchObjects.get(id);
             matchObject.receiveData(dataInputStream);
             fireMatchObjectChanged();
@@ -125,7 +125,7 @@ public class MatchObjectManager implements IncomingCommandListener {
                     }
                     if(playerCharacter != null) {
                         playerCharacter.setBounds(0, 0, 100, 100);
-                        playerCharacter.loadResources();
+                        playerCharacter.loadAllGameResources();
                         playerCharacter.setState(CharacterState.THUMBNAIL);
                         matchObject = playerCharacter;
                     }
