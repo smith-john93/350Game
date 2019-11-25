@@ -3,3 +3,7 @@
 ################################################################################
 
 /350ServerApp/ConsoleApp1/bin/Debug/netcoreapp2.1
+/.vs
+/350ServerApp/.vs/Server
+/350ServerApp/ConsoleApp1/obj
+/FightServer/WindowsFormsApplication1/obj/Debug/WindowsFormsApplication1.csprojAssemblyReference.cache
