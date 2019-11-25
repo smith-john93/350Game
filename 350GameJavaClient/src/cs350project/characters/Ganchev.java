@@ -1,7 +1,7 @@
 package cs350project.characters;
 
 public class Ganchev extends PlayerCharacter {
-    public Ganchev(short objectID) {
+    public Ganchev(int objectID) {
         super(objectID, CharacterState.IDLE);
     }
 

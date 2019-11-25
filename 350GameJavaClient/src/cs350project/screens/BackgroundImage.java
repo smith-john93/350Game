@@ -30,7 +30,8 @@ public class BackgroundImage extends JComponent {
     }
     
     private BufferedImage getBackgroundImage(String backgroundFile) {
-        URL url = SelectionPanel.class.getResource("/resources/" + backgroundFile);
+        backgroundFile = "/resources/" + backgroundFile;
+        URL url = SelectionPanel.class.getResource(backgroundFile);
         if(url != null) {
             try {
                 Dimension screenDimension = Settings.getSettings().getScreenDimension();

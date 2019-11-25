@@ -52,20 +52,14 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void createMatch(String matchName) {
-        if(comm.connect()) {
-            comm.sendCommand(ClientCommand.CREATE_MATCH);
-            comm.sendMatchName(matchName);
-        }
+        comm.createMatch(matchName);
     }
     
     @Override
     public void joinMatch(String matchName) {
         
         //comm.addIncomingCommandListener(matchObjectManager);
-        if(comm.connect()) {
-            comm.sendCommand(ClientCommand.JOIN_MATCH);
-            comm.sendMatchName("match1");
-        }
+        comm.joinMatch("match1");
     }
     
     @Override
@@ -75,7 +69,31 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
+        System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
+            case UPDATE_LOBBY:
+                try {
+                    int action = dataInputStream.readByte();
+                    System.out.println("action byte received: " + action);
+                    byte[] matchNameBytes = new byte[10];
+                    dataInputStream.read(matchNameBytes);
+                    String matchName = new String(matchNameBytes);
+                    System.out.println("match name received: " + matchName);
+                    switch (action) {
+                        case 0:
+                            lobbyPanel.removeMatch(matchName);
+                            break;
+                        case 1:
+                            lobbyPanel.addMatch(matchName);
+                            break;
+                        default:
+                            System.err.println("update lobby action not recognized");
+                            break;
+                    }
+                } catch(IOException e) {
+                    System.err.println(e.getMessage());
+                }
+                break;
             case SELECT_CHARACTER:
                 try {
                     comm.removeIncomingCommandListener(this);

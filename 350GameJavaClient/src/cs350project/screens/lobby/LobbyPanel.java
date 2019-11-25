@@ -33,6 +33,7 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
     final GridBagConstraints gbc;
     private final EmptyBorder lobbyBorder;
     private final int buttonHeight;
+    private final MatchesPanel matchesPanel;
     
     public LobbyPanel() {
         
@@ -44,6 +45,8 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         gbc.weightx = 0.5;
         
         buttonHeight = 100;
+        
+        matchesPanel = new MatchesPanel(this,inputListeners);
     }
     
     @Override
@@ -55,7 +58,7 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         setBorder(lobbyBorder);
         setBackground(Settings.TRANSPARENT);
         
-        add(new MatchesPanel(this,inputListeners),BorderLayout.LINE_START);
+        add(matchesPanel,BorderLayout.LINE_START);
         add(new FriendsPanel(this,inputListeners),BorderLayout.LINE_END);
         add(new BackButtonPanel(new ActionListener() {
             @Override
@@ -65,6 +68,14 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
                 }
             }
         }),BorderLayout.PAGE_END);
+    }
+    
+    public void addMatch(String matchName) {
+        matchesPanel.addMatch(matchName);
+    }
+    
+    public void removeMatch(String matchName) {
+        matchesPanel.removeMatch(matchName);
     }
     
     JButton buildJButton(String label) {

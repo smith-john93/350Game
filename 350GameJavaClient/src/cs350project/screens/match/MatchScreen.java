@@ -6,6 +6,7 @@
 package cs350project.screens.match;
 
 import cs350project.GameFrame;
+import cs350project.Settings;
 import cs350project.screens.lobby.LobbyScreen;
 import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
@@ -15,6 +16,8 @@ import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -45,13 +48,27 @@ public class MatchScreen extends Screen implements
     public MatchScreen(PlayerCharacter player, PlayerCharacter opponent) {
         this.player = player;
         player.setState(CharacterState.IDLE);
-        matchKeyMap = new MatchKeyMap();
-        matchPanel = new MatchPanel(player,opponent);
+        matchKeyMap = new MatchKeyMap(Settings.getSettings().getKeyMappings());
+        matchPanel = new MatchPanel();
         comm = Communication.getInstance();
         combat = new Combat(player);
         matchObjectManager = MatchObjectManager.getInstance();
         matchObjectManager.setPlayerCharacters(player, opponent);
-        backgroundImage = new BackgroundImage("/resources/maps/whitehouse.png");
+        backgroundImage = new BackgroundImage("maps/whitehouse.png");
+        Thread repaintThread = new Thread() {
+            @Override
+            public void run() {
+                while(true) {
+                    repaint();
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MatchScreen.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
+        repaintThread.start();
     }
     
     @Override
@@ -71,6 +88,7 @@ public class MatchScreen extends Screen implements
         for(MatchObject matchObject : matchObjectManager.getMatchObjects()) {
             if(matchObject != null) {
                 matchPanel.add(matchObject);
+                System.out.println("match object added to match panel: " + matchObject.getClass().getSimpleName());
             }
         }
     }
