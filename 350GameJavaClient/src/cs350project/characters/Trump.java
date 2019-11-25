@@ -1,7 +1,7 @@
 package cs350project.characters;
 
 public class Trump extends PlayerCharacter {
-    public Trump(short objectID) {
+    public Trump(int objectID) {
         super(objectID, CharacterState.IDLE);
     }
 

@@ -5,72 +5,77 @@
  */
 package cs350project.screens.match;
 
+import cs350project.characters.CharacterState;
+import cs350project.screens.CustomizableKeyMap;
 import cs350project.screens.KeyMap;
-import cs350project.screens.match.MovementInputListener;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 
 /**
  *
  * @author Mark Masone
  */
-public class MovementKeyMap extends KeyMap<MovementInputListener> {
+public class MovementKeyMap extends CustomizableKeyMap<MovementInputListener> {
+    
+    public MovementKeyMap(HashMap<Integer, Integer> keyMappings) {
+        super(keyMappings);
+    }
+
     @Override
-    public void keyPressed(KeyEvent ke) {
-        switch(ke.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_SPACE:
+    protected void mappedKeyPressed(int mapCode) {
+        switch(mapCode) {
+            case CharacterState.JUMPING:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.startJump();
                 }
                 break;
-            case KeyEvent.VK_A:
+            case CharacterState.MOVING_LEFT:
                 for(MovementInputListener movementInputListener : inputListeners) {
                     movementInputListener.startMoveLeft();
                 }
                 break;
-            case KeyEvent.VK_S:
+            case CharacterState.CROUCHING:
                 for(MovementInputListener movementInputListener : inputListeners) {
                     movementInputListener.startCrouch();
                 }
                 break;
-            case KeyEvent.VK_D:
+            case CharacterState.MOVING_RIGHT:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.startMoveRight();
                 }
                 break;
-            case KeyEvent.VK_B:
+            case CharacterState.BLOCKING:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.startBlock();
                 }
                 break;
         }
     }
-    
+
     @Override
-    public void keyReleased(KeyEvent ke) {
-        switch(ke.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_SPACE:
+    protected void mappedKeyReleased(int mapCode) {
+        switch(mapCode) {
+            case CharacterState.JUMPING:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endJump();
                 }
                 break;
-            case KeyEvent.VK_A:
+            case CharacterState.MOVING_LEFT:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endMoveLeft();
                 }
                 break;
-            case KeyEvent.VK_S:
+            case CharacterState.CROUCHING:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endCrouch();
                 }
                 break;
-            case KeyEvent.VK_D:
+            case CharacterState.MOVING_RIGHT:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endMoveRight();
                 }
                 break;
-            case KeyEvent.VK_B:
+            case CharacterState.BLOCKING:
                 for(MovementInputListener movementKeyListener : inputListeners) {
                     movementKeyListener.endBlock();
                 }

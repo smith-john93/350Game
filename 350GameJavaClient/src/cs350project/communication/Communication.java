@@ -5,7 +5,6 @@
  */
 package cs350project.communication;
 import cs350project.screens.MessageDialog;
-import cs350project.characters.CharacterClass;
 import cs350project.characters.CharacterType;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,11 +12,10 @@ import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,9 +33,18 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private final CopyOnWriteArrayList<IncomingCommandListener> incomingCommandListeners;
     private static Communication communication;
     private boolean connected = false;
+    private InetAddress serverAddr;
+    private final Thread detectServerThread;
 
     private Communication() {
         incomingCommandListeners = new CopyOnWriteArrayList<>();
+        detectServerThread = new Thread() {
+            @Override
+            public void run() {
+                serverAddr = Multicast.getServerAddress();
+                System.out.println("got server address: " + serverAddr.getHostAddress());
+            }
+        };
     }
 
     public static Communication getInstance() {
@@ -58,15 +65,27 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public boolean isConnected() {
         return connected;
     }
+    
+    public void detectServer() {
+        detectServerThread.start();
+    }
 
     public boolean connect() {
+        try {
+            detectServerThread.join(5000);
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        if(serverAddr == null) {
+            MessageDialog.showErrorMessage("Could not detect server.", getClass());
+            return false;
+        }
+        
         if (dataSocket == null || !dataSocket.isConnected()) {
             connected = false;
             try {
-                // use ipv6 address here
-                InetAddress host = InetAddress.getByName("fe80::ac5b:3b2e:ff5f:3b59");
-                //System.out.println(host);
-                dataSocket = new Socket(host, commandPort);
+                dataSocket = new Socket(serverAddr, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());
                 dataInputStream = new DataInputStream(dataSocket.getInputStream());
                 return listen();
@@ -126,36 +145,6 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         throw new NoSuchElementException("Invalid command received.");
     }
     
-    public void sendCredentials(String username, char[] password) {
-        if (dataOutputStream != null) {
-            try {
-                dataOutputStream.writeBytes(username);
-                dataOutputStream.write(0);
-                for(char c : password) {
-                    dataOutputStream.write(c);
-                }
-                //dataOutputStream.writeChar;
-            } catch (IOException e) {
-                System.out.println("Failed to write command to stream.");
-            }
-        } else {
-            System.out.println("Unable to send command.");
-        }
-    }
-    
-    public void sendMatchName(String matchName) {
-        System.out.println("send match name: " + matchName);
-        if (dataOutputStream != null) {
-            try {
-                dataOutputStream.writeBytes(matchName);
-            } catch (IOException e) {
-                System.out.println("Failed to write match name to stream.");
-            }
-        } else {
-            System.out.println("Unable to send match name.");
-        }
-    }
-    
     @Override
     public void sendMessage(String message) {
         if (messageWriter != null) {
@@ -169,34 +158,99 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     }
 
     @Override
-    public void sendCommand(ClientCommand clientCommand) {
-        System.out.println("send command: " + clientCommand);
+    public void sendClientCommand(ClientCommand clientCommand) throws IOException {
+        dataOutputStream.writeByte(clientCommand.getValue());
+        System.out.println("sent command: " + clientCommand + " " + clientCommand.getValue());
+    }
 
-        //System.out.println("");
+    private void sendCredentials(String username, char[] password) throws IOException {
+        dataOutputStream.writeBytes(username);
+        dataOutputStream.write(0);
+        for(char c : password) {
+            dataOutputStream.write(c);
+        }
+        Arrays.fill(password,'0'); // Clear the password array for security.
+        System.out.println("sent credentials");
+    }
 
-        if (dataOutputStream != null) {
+    private void sendString(String s) throws IOException {
+        dataOutputStream.writeBytes(s);
+        System.out.println("sent string: " + s);
+    }
+
+    private void sendCharacterState(int stateCode) throws IOException {
+        dataOutputStream.writeByte(stateCode);
+        System.out.println("sent character state: " + stateCode);
+    }
+
+    private void sendCharacterType(CharacterType characterType) throws IOException {
+        dataOutputStream.writeByte(characterType.getValue());
+        System.out.println("sent character type: " + characterType + " " + characterType.getValue());
+    }
+
+    public void createAccount(String username, char[] password) {
+        if(connect()) {
             try {
-                dataOutputStream.writeByte(clientCommand.getValue());
+                sendClientCommand(ClientCommand.CREATE_ACCOUNT);
+                sendCredentials(username, password);
             } catch (IOException e) {
-                System.out.println("Failed to write command to stream.");
+                MessageDialog.showErrorMessage("Unable to create account.", getClass());
             }
-        } else {
-            System.out.println("Unable to send command.");
+        }
+    }
+
+    public void login(String username, char[] password) {
+        if(connect()) {
+            try {
+                sendClientCommand(ClientCommand.LOGIN);
+                sendCredentials(username, password);
+            } catch (IOException e) {
+                MessageDialog.showErrorMessage("Unable to log in.", getClass());
+            }
+        }
+    }
+
+    public void createMatch(String matchName) {
+        if(connect()) {
+            try {
+                sendClientCommand(ClientCommand.CREATE_MATCH);
+                sendString(matchName);
+            } catch (IOException e) {
+                MessageDialog.showErrorMessage("Unable to create match.", getClass());
+            }
+        }
+    }
+
+    public void joinMatch(String matchName) {
+        if(connect()) {
+            try {
+                sendClientCommand(ClientCommand.JOIN_MATCH);
+                sendString(matchName);
+            } catch (IOException e) {
+                MessageDialog.showErrorMessage("Unable to join match.", getClass());
+            }
         }
     }
     
-    public void joinMatch(CharacterClass characterClass) throws IOException {
-        dataOutputStream.writeByte(ClientCommand.JOIN_MATCH.getValue());
-        dataOutputStream.writeByte(characterClass.getValue());
-    }
-    
     public void updateMatch(int stateCode) throws IOException {
-        dataOutputStream.writeByte(ClientCommand.UPDATE_MATCH.getValue());
-        dataOutputStream.writeShort(stateCode);
+        if(connect()) {
+            try {
+                sendClientCommand(ClientCommand.UPDATE_MATCH);
+                sendCharacterState(stateCode);
+            } catch (IOException e) {
+                MessageDialog.showErrorMessage("Unable to update match.", getClass());
+            }
+        }
     }
     
-    public void characterSelected(CharacterType characterType) throws IOException {
-        dataOutputStream.writeByte(ClientCommand.CHARACTER_SELECTED.getValue());
-        dataOutputStream.writeByte(characterType.getValue());
+    public void characterSelected(CharacterType characterType) {
+        if(connect()) {
+            try {
+                sendClientCommand(ClientCommand.CHARACTER_SELECTED);
+                sendCharacterType(characterType);
+            } catch (IOException e) {
+                MessageDialog.showErrorMessage("Unable to send character selection.", getClass());
+            }
+        }
     }
 }

@@ -5,8 +5,14 @@
  */
 package cs350project.screens.match;
 
+import cs350project.characters.CharacterState;
+import cs350project.characters.CharacterType;
+import cs350project.characters.Coffman;
+import cs350project.characters.Ganchev;
+import cs350project.characters.LegoMan;
 import cs350project.screens.MessageDialog;
 import cs350project.characters.PlayerCharacter;
+import cs350project.characters.Trump;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import java.io.DataInputStream;
@@ -61,11 +67,12 @@ public class MatchObjectManager implements IncomingCommandListener {
     
     public void setPlayerCharacters(PlayerCharacter player, PlayerCharacter opponent) {
         set(0,player);
-        set(1,opponent);
+        //set(1,opponent);
     }
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
+        System.out.println("match object manager received command " + serverCommand);
         switch(serverCommand) {
             case CREATE_MATCH_OBJECT:
                 createMatchObject(dataInputStream);
@@ -78,7 +85,7 @@ public class MatchObjectManager implements IncomingCommandListener {
     private void updateMatch(DataInputStream dataInputStream) {
         try {
             int id = dataInputStream.readShort();
-            //System.out.println("receive data: " + id);
+            System.out.println("update match object with ID: " + id);
             MatchObject matchObject = matchObjects.get(id);
             matchObject.receiveData(dataInputStream);
             fireMatchObjectChanged();
@@ -93,10 +100,39 @@ public class MatchObjectManager implements IncomingCommandListener {
             MatchObjectType type = MatchObjectType.parse(dataInputStream.readByte());
             int id = dataInputStream.readShort();
             MatchObject matchObject = null;
+            System.out.println("match object type received: " + type + " with ID: " + id);
             switch (type) {
                 case PLATFORM:
                     matchObject = new Platform();
-                    matchObject.receiveData(dataInputStream);
+                    break;
+                case PLAYER_CHARACTER:
+                    CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
+                    System.out.println("character type received: " + characterType);
+                    PlayerCharacter playerCharacter = null;
+                    switch(characterType) {
+                        case GANCHEV:
+                            playerCharacter = new Ganchev((short)id);
+                            break;
+                        case COFFMAN:
+                            playerCharacter = new Coffman((short)id);
+                            break;
+                        case TRUMP:
+                            playerCharacter = new Trump((short)id);
+                            break;
+                        case LEGOMAN:
+                            playerCharacter = new LegoMan((short)id);
+                            break;
+                    }
+                    if(playerCharacter != null) {
+                        playerCharacter.setBounds(0, 0, 100, 100);
+                        playerCharacter.loadAllGameResources();
+                        playerCharacter.setState(CharacterState.THUMBNAIL);
+                        matchObject = playerCharacter;
+                    }
+                    break;
+            }
+            if(matchObject != null) {
+                matchObject.receiveData(dataInputStream);
             }
             set(id, matchObject);
         } catch(IOException e) {

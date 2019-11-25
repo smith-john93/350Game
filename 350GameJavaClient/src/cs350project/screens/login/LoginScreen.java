@@ -33,13 +33,10 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public void login(String username, char[] password) {
-        if(comm.connect()) {
-            comm.sendCommand(ClientCommand.LOGIN);
-            this.username = username;
-            //comm.sendCredentials("username", "password".toCharArray()); // for testing
-            comm.sendCredentials(username, password);
-            Arrays.fill(password,'0'); // Clear the password array for security.
-        }
+        this.username = username;
+        comm.login(username, password);
+        //this.username = "username";
+        //comm.login(this.username, "password".toCharArray()); // for testing
     }
 
     @Override
@@ -64,6 +61,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
+        System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case USER_AUTH_PASS:
                 comm.removeIncomingCommandListener(this);

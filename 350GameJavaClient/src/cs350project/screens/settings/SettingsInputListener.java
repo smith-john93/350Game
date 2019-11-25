@@ -12,5 +12,5 @@ import cs350project.menu.BackButtonListener;
  * @author Mark Masone
  */
 public interface SettingsInputListener extends BackButtonListener {
-    
+    void save();
 }

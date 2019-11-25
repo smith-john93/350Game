@@ -6,15 +6,15 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
+using Multicast;
 
-namespace GameSevrer
+namespace GameServer
 {
     public class SocketCommunicator
     {
         
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
-        private AsyncCallback onConnect;
         //private ThreadPool _playerThreadPool;
         // 0x100007F is 127.0.0.1 in big-endian.
         /*
@@ -24,15 +24,14 @@ namespace GameSevrer
         private IPHostEntry ipHost;
         private const int commandPort = 12345;
         public TcpListener listener;
-
-
+        private GameController gController;
+        private Multicast.Multicast multi;
         public bool RequestShutdown;
-        public GameQueue Queue;
-        public SocketCommunicator(GameQueue masterQueue)
+        public SocketCommunicator(GameController gameController)
         {
-            RequestShutdown = false;
-            Queue = masterQueue;
+            gController = gameController;
 
+            RequestShutdown = false;
 
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
             ipAddr = ipHost.AddressList[0];
@@ -41,18 +40,22 @@ namespace GameSevrer
             */
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
+
+            multi = new Multicast.Multicast();
             //PrimarySocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             //_playerThreadPool = new 
         }
 
-        public void listen()
+
+        async public void listen()
         {
 
             try
             {
-                //PrimarySocket.Bind(localEndPoint);
-                //PrimarySocket.Listen(100);
-                //PrimarySocket.BeginAccept(onConnect, PrimarySocket);
+                Console.WriteLine("Starting Multicast Broadcast...");
+                Task.Run(() => SendMulticast("o"));
+                Console.WriteLine("Broadcast Started");                
+
                 listener = new TcpListener(localEndPoint);
                 listener.Start();               
 
@@ -61,16 +64,14 @@ namespace GameSevrer
                 //used for debugging
                 DisplayInfo(socketInfo);
 
-                int i = 0;
                 while(!RequestShutdown)
                 {
                     try
                     {
-
-                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient());
+                        //Get a new TCPClient and hand it off to a PlayerSocketCOntroller, then spawn a new thread
+                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient(), gController);
                         Thread playerThread = new Thread(p.Start);
-                        ThreadPool.QueueUserWorkItem(playerThread.Start);
-                        
+                        playerThread.Start();                  
                     }
                     catch(Exception e)
                     {
@@ -84,12 +85,19 @@ namespace GameSevrer
                     Console.WriteLine("Shutdown Request Received. Shutting down server...");
                 }
 
-                //PrimarySocket.Close();
-
             }
             catch(SocketException e)
             {
                 Console.WriteLine(e);
+            }
+        }
+
+        async public void SendMulticast(string message)
+        {
+            while(!RequestShutdown)
+            {
+                multi.send(message);
+                Thread.Sleep(new TimeSpan(0, 0, 10));
             }
         }
 
@@ -102,8 +110,7 @@ namespace GameSevrer
             string[] info = information.Split("]:");
             info[0] = info[0].ToString().Replace("[", string.Empty);
             string[] IpV6 = info[0].ToString().Split("%");
-            Console.WriteLine($"Server IP: {IpV6[0]}. \nServer Socket: {info[1]}");
+            Console.WriteLine($"Server Information: \nServer IP: {IpV6[0]}. \nServer Socket: {info[1]}");
         }
-
     }
 }

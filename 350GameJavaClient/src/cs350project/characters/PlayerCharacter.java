@@ -5,6 +5,7 @@
  */
 package cs350project.characters;
 
+import cs350project.GameResource;
 import cs350project.screens.match.MatchObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,8 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
 
 /**
@@ -31,7 +30,7 @@ public abstract class PlayerCharacter extends MatchObject {
     private long lastFrameTime = 0;
     private int droppedFrames = 0;
     private int stateCode;
-    private final short objectID;
+    private final int objectID;
     public static final int FRAME_DELAY = 200;
     private final HashMap<Integer,Timer> attackTimers;
     private final int[] attackStates;
@@ -39,11 +38,10 @@ public abstract class PlayerCharacter extends MatchObject {
     private final int movementStateMask;
     private int attackStateCode;
     
-    public PlayerCharacter(short objectID, int defaultStateCode) {
+    public PlayerCharacter(int objectID, int defaultStateCode) {
         this.objectID = objectID;
-        characterResourceManager = new CharacterResourceManager(defaultStateCode);
+        characterResourceManager = new CharacterResourceManager(getClass(), defaultStateCode);
         direction = 1;
-        characterResourceManager.loadResources(getClass());
         attackTimers = new HashMap<>();
         attackStates = new int[]{
             CharacterState.PUNCH,
@@ -52,6 +50,11 @@ public abstract class PlayerCharacter extends MatchObject {
         };
         attackStateMask = CharacterState.PUNCH | CharacterState.HIGH_KICK | CharacterState.LOW_KICK;
         movementStateMask = attackStateMask ^ 0xffff;
+    }
+
+    public void loadAllGameResources() {
+        Rectangle bounds = getBounds();
+        characterResourceManager.loadAllGameResources(bounds.height,bounds.width);
     }
     
     @Override
@@ -75,12 +78,8 @@ public abstract class PlayerCharacter extends MatchObject {
         }
     }
 
-    public short getObjectID() {
+    public int getObjectID() {
         return objectID;
-    }
-    
-    public CharacterResourceManager getCharacterResources() {
-        return characterResourceManager;
     }
     
     private void enableState(int stateCode) {
@@ -101,7 +100,7 @@ public abstract class PlayerCharacter extends MatchObject {
     public void setState(int stateCode) {
         System.out.println("setting state: " + stateCode);
         this.stateCode = stateCode;
-        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        GameResource characterResource = characterResourceManager.getResource(stateCode);
         setFrames(characterResource.getFrames());
     }
     
@@ -113,11 +112,11 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     public int getFramesCount(int stateCode) {
-        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        GameResource characterResource = characterResourceManager.getResource(stateCode);
         if(characterResource == null) {
             return 0;
         }
-        return characterResource.getFramesCount();
+        return characterResource.getFrames().length;
     }
 
     public void setDirection(int direction) {
@@ -145,6 +144,7 @@ public abstract class PlayerCharacter extends MatchObject {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        //System.out.println("repaint player character");
         Graphics2D g2d = (Graphics2D)g;
         
         boolean movingRight = (stateCode & CharacterState.MOVING_RIGHT) == CharacterState.MOVING_RIGHT;
@@ -156,7 +156,7 @@ public abstract class PlayerCharacter extends MatchObject {
             setDirection(-1);
         }
         
-        CharacterResource characterResource = characterResourceManager.getResource(stateCode);
+        GameResource characterResource = characterResourceManager.getResource(stateCode);
         long currentTime = System.currentTimeMillis();
         long diff = currentTime - lastFrameTime;
         if(diff >= FRAME_DELAY) {
@@ -189,7 +189,7 @@ public abstract class PlayerCharacter extends MatchObject {
     // This method may require synchronization
     @Override
     public void receiveData(DataInputStream dataInputStream) throws IOException {
-        int newStateCode = dataInputStream.readShort();
+        int newStateCode = dataInputStream.readByte();
         if((newStateCode | attackStateCode) != stateCode) {
             int newAttackStateCode = newStateCode & attackStateMask;
             System.out.println("new state code: " + newStateCode);
@@ -218,6 +218,10 @@ public abstract class PlayerCharacter extends MatchObject {
         }
         short x = dataInputStream.readShort();
         short y = dataInputStream.readShort();
+        short health = dataInputStream.readByte();
+        System.out.println("x: " + x);
+        System.out.println("y: " + y);
+        System.out.println("health: " + health);
         //System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
         setLocation(x,y);
     }

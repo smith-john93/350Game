@@ -4,13 +4,13 @@
 
 /350ServerApp/ConsoleApp1/bin/Debug/netcoreapp2.1
 /.vs/350Game/v16
-/.vs/slnx.sqlite
-/.vs/ProjectSettings.json
-/350ServerApp/ConsoleApp1/obj/Debug/netcoreapp2.1
-/350ServerApp/ConsoleApp1/obj/Release/netcoreapp2.1
-/FightServer/ServerPhysics/obj/Release
 /.vs
 /350ServerApp/.vs/Server
+/350ServerApp/ConsoleApp1/obj/Debug/netcoreapp2.1
 /350ServerApp/ConsoleApp1/obj
-/FightServer/WindowsFormsApplication1/obj/Debug
-/FightServer/WindowsFormsApplication1/obj/Release
+/FightServer/.vs/WindowsFormsApplication1/v16/Server/sqlite3
+/FightServer/.vs/WindowsFormsApplication1/v16
+/FightServer/WindowsFormsApplication1/obj/Debug/WindowsFormsApplication1.csprojAssemblyReference.cache
+/FightServer/.vs/ServerPhysics/v16/Server/sqlite3
+/FightServer/.vs/ServerPhysics/v16
+/FightServer/ServerPhysics/obj/Debug

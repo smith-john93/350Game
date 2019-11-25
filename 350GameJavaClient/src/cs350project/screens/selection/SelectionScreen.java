@@ -4,14 +4,23 @@
  * and open the template in the editor.
  */
 package cs350project.screens.selection;
-import cs350project.screens.MessageDialog;
+
+import cs350project.GameFrame;
 import cs350project.Music;
+import cs350project.Settings;
 import cs350project.characters.CharacterType;
 import cs350project.characters.PlayerCharacter;
 import cs350project.communication.Communication;
+import cs350project.communication.IncomingCommandListener;
+import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
+import cs350project.screens.MessageDialog;
+import cs350project.screens.lobby.LobbyScreen;
+import cs350project.screens.match.MatchObjectManager;
+import cs350project.screens.match.MatchScreen;
+import java.io.DataInputStream;
 import java.io.IOException;
 import javax.swing.JPanel;
 
@@ -19,7 +28,7 @@ import javax.swing.JPanel;
  *
  * @author Mark Masone
  */
-public class SelectionScreen extends Screen implements SelectionInputListener {
+public class SelectionScreen extends Screen implements SelectionInputListener, IncomingCommandListener {
     
     private final SelectionKeyMap selectionKeyMap;
     private final SelectionPanel selectionPanel;
@@ -61,14 +70,10 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
         //comm.connect();
         //comm.addIncomingCommandListener(this);
         //music.stop();
-        if(comm.connect()) {
-            try {
-                comm.characterSelected(CharacterType.COFFMAN);
-                //CS350Project.showScreen(new MatchScreen(player1,player2));
-            } catch(IOException e) {
-                MessageDialog.showErrorMessage("Unable to join match.", getClass());
-            }
-        }
+        comm.addIncomingCommandListener(MatchObjectManager.getInstance());
+        //comm.addIncomingCommandListener(this);
+        comm.characterSelected(player1.getCharacterType());
+        System.out.println("waiting for other player to select");
     }
 
     @Override
@@ -83,11 +88,22 @@ public class SelectionScreen extends Screen implements SelectionInputListener {
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/menu/background.jpg");
+        return new BackgroundImage(Settings.MENU_BACKGROUND_FILE);
     }
 
     @Override
     public JPanel getJPanel() {
+        comm.addIncomingCommandListener(this);
         return selectionPanel;
+    }
+
+    @Override
+    public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
+        System.out.println("selection screen received command: " + serverCommand);
+        if(serverCommand == ServerCommand.START_MATCH) {
+            comm.removeIncomingCommandListener(this);
+            //comm.removeIncomingCommandListener(MatchObjectManager.getInstance());
+            GameFrame.getInstance().showScreen(new MatchScreen(player1,player2));
+        }
     }
 }

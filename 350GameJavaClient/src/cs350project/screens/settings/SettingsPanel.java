@@ -13,6 +13,13 @@ import cs350project.menu.MenuPanel;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +31,7 @@ import javax.swing.JPanel;
 public class SettingsPanel extends MenuPanel<SettingsInputListener> {
     
     private final Settings settings = Settings.getSettings();
+    private HashMap<Integer,Integer> keyMappings = new HashMap<>();
     
     private int screenDimensionsIndex = 0;
     private final int screenDimensionsLength = Settings.SCREEN_DIMENSIONS.length;
@@ -40,11 +48,14 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
     private IncrementalSetting screenDimensionSetting;
     private IncrementalSetting musicVolumeSetting;
     
-    void finiteSettingClicked(String label) {
-        switch(label) {
-            case moveLeft:
-                
-        }
+    private KeyMapSettingPanel[] keyMapSettingPanels;
+    
+    public void setKeyMappings(HashMap<Integer,Integer> keyMappings) {
+        this.keyMappings = keyMappings;
+    }
+    
+    public HashMap<Integer, Integer> getKeyMappings() {
+        return keyMappings;
     }
     
     private void updateScreenDimension() {
@@ -84,14 +95,16 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
         screenDimensionSetting = new IncrementalSetting(this);
         musicVolumeSetting = new IncrementalSetting(this);
 
-        FiniteSetting moveLeftSetting = new FiniteSetting(this,CharacterState.MOVING_LEFT,moveLeft);
-        FiniteSetting moveRightSetting = new FiniteSetting(this,CharacterState.MOVING_RIGHT,moveRight);
-        FiniteSetting crouchSetting = new FiniteSetting(this,CharacterState.CROUCHING,crouch);
-        FiniteSetting punchSetting = new FiniteSetting(this,CharacterState.PUNCH,punch);
-        FiniteSetting lowKickSetting = new FiniteSetting(this,CharacterState.LOW_KICK,lowKick);
-        FiniteSetting blockSetting = new FiniteSetting(this,CharacterState.BLOCKING,block);
-        FiniteSetting jumpSetting = new FiniteSetting(this,CharacterState.JUMPING,jump);
-        FiniteSetting highKickSetting = new FiniteSetting(this,CharacterState.HIGH_KICK,highKick);
+        keyMapSettingPanels = new KeyMapSettingPanel[]{
+            new KeyMapSettingPanel(this,CharacterState.MOVING_LEFT,moveLeft),
+            new KeyMapSettingPanel(this,CharacterState.MOVING_RIGHT,moveRight),
+            new KeyMapSettingPanel(this,CharacterState.CROUCHING,crouch),
+            new KeyMapSettingPanel(this,CharacterState.PUNCH,punch),
+            new KeyMapSettingPanel(this,CharacterState.LOW_KICK,lowKick),
+            new KeyMapSettingPanel(this,CharacterState.BLOCKING,block),
+            new KeyMapSettingPanel(this,CharacterState.JUMPING,jump),
+            new KeyMapSettingPanel(this,CharacterState.HIGH_KICK,highKick)
+        };
         
         JPanel settingsGridPanel = new JPanel();
         settingsGridPanel.setLayout(new GridBagLayout());
@@ -104,17 +117,17 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
         gbc.gridy = 0;
         
         JPanel[][] gridPanels = {
-            {screenDimensionSetting, moveLeftSetting, moveRightSetting},
-            {musicVolumeSetting, crouchSetting, punchSetting},
-            {null, lowKickSetting, blockSetting},
-            {null, jumpSetting, highKickSetting}
+            {screenDimensionSetting, keyMapSettingPanels[0], keyMapSettingPanels[1]},
+            {musicVolumeSetting, keyMapSettingPanels[2], keyMapSettingPanels[3]},
+            {null, keyMapSettingPanels[4], keyMapSettingPanels[5]},
+            {null, keyMapSettingPanels[6], keyMapSettingPanels[7]}
         };
         
         for(int row = 0; row < gridPanels.length; row++) {
             gbc.gridx = 0;
             for(int col = 0; col < gridPanels[row].length; col++) {
-                JPanel settingPanel = gridPanels[row][col];
-                if(settingPanel != null) {
+                JPanel gridPanel = gridPanels[row][col];
+                if(gridPanel != null) {
                     if(row == 0 && col == 0) {
                         gbc.insets = Settings.INSETS_NONE;
                     } else if(row == 0) {
@@ -124,7 +137,7 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
                     } else {
                         gbc.insets = Settings.INSETS_MENU_TOP_LEFT;
                     }
-                    settingsGridPanel.add(settingPanel,gbc);
+                    settingsGridPanel.add(gridPanel,gbc);
                 }
                 gbc.gridx++;
             }
@@ -134,7 +147,54 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
         JLabel settingsLabel = MenuItemFactory.createLabel("SETTINGS");
         
         updateScreenDimension();
+        updateKeyMapSettings();
         
-        return new JComponent[]{settingsLabel,settingsGridPanel};
+        JButton saveButton = MenuItemFactory.createButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for(SettingsInputListener settingsInputListener : inputListeners) {
+                    System.out.println("save");
+                    settingsInputListener.save();
+                }
+            }
+        });
+        
+        return new JComponent[]{settingsLabel,settingsGridPanel,saveButton};
+    }
+    
+    public void changeKeyMapping(int keyCode, int actionCode) {
+        keyMappings.put(keyCode, actionCode);
+        updateKeyMapSettings();
+    }
+    
+    private void updateKeyMapSettings() {
+        System.out.println("update key map settings");
+        HashMap<Integer, ArrayList<String>> actionMappings = new HashMap<>();
+        for(Entry<Integer, Integer> entry : keyMappings.entrySet()) {
+            int value = entry.getValue();
+            ArrayList<String> keyCodes = actionMappings.get(value);
+            if(keyCodes == null) {
+                keyCodes = new ArrayList<>();
+            }
+            keyCodes.add(KeyEvent.getKeyText(entry.getKey()));
+            actionMappings.put(value, keyCodes);
+        }
+        
+        for(KeyMapSettingPanel keyMapSettingPanel : keyMapSettingPanels) {
+            ArrayList<String> keyCharsList = actionMappings.get(keyMapSettingPanel.getMapCode());
+            String[] keyChars;
+            if(keyCharsList == null) {
+                keyChars = new String[0];
+            } else {
+                keyChars = new String[keyCharsList.size()];
+                int i = 0;
+                for(String keyChar : keyCharsList) {
+                    keyChars[i++] = keyChar;
+                    System.out.println(keyChar);
+                }
+            }
+            keyMapSettingPanel.setKeyChars(keyChars);
+        }
     }
 }

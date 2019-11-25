@@ -12,12 +12,22 @@ import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import javax.swing.JPanel;
+import java.util.HashMap;
 
 /**
  *
  * @author Mark Masone
  */
 public class SettingsScreen extends Screen implements SettingsInputListener {
+
+    private final SettingsPanel settingsPanel;
+    private final HashMap<Integer, Integer> keyMappings;
+
+    public SettingsScreen() {
+        settingsPanel = new SettingsPanel();
+        keyMappings = new HashMap<>();
+        keyMappings.putAll(Settings.getSettings().getKeyMappings());
+    }
 
     @Override
     public KeyMap getKeyMap() {
@@ -31,10 +41,8 @@ public class SettingsScreen extends Screen implements SettingsInputListener {
 
     @Override
     public JPanel getJPanel() {
-        
-        SettingsPanel settingsPanel = new SettingsPanel();
         settingsPanel.addInputListener(this);
-        
+        settingsPanel.setKeyMappings(keyMappings);
         return settingsPanel;
     }
 
@@ -42,5 +50,9 @@ public class SettingsScreen extends Screen implements SettingsInputListener {
     public void back() {
         GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
-    
+
+    @Override
+    public void save() {
+        Settings.getSettings().setKeyMappings(keyMappings);
+    }
 }

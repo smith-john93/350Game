@@ -6,7 +6,6 @@
 package cs350project.screens.match;
 
 import cs350project.screens.KeyMap;
-import cs350project.screens.match.ChatInputListener;
 import java.awt.event.KeyEvent;
 
 /**

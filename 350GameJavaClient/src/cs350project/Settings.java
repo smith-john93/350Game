@@ -5,6 +5,7 @@
  */
 package cs350project;
 
+import cs350project.characters.CharacterState;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Settings {
     
     private static Settings settings;
     private Dimension screenDimension;
-    private final HashMap<Integer,KeyEvent[]> keyMappings;
+    private HashMap<Integer, Integer> keyMappings;
 
     public static final Dimension[] SCREEN_DIMENSIONS = {
         new Dimension(1366,768),
@@ -27,7 +28,9 @@ public class Settings {
         new Dimension(1920,1080)
     };
     
-    public static final String MENU_BACKGROUND_FILE = "/resources/menu/background.jpg";
+    public static final String MENU_BACKGROUND_FILE = "menu/background.jpg";
+    public static final String TITLE_IMAGE_FILE = "menu/welcomeAfter.png";
+    public static final String TITLE_ANIMATION_FILE = "menu/welcome.gif";
     
     public static final Font BUTTON_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
     public static final Font BUTTON_FONT_MEDIUM = new Font(Font.MONOSPACED,Font.BOLD,24);
@@ -61,6 +64,10 @@ public class Settings {
     private Settings() {
         screenDimension = new Dimension(1366,768);
         keyMappings = new HashMap<>();
+        keyMappings.put(KeyEvent.VK_W,CharacterState.JUMPING);
+        keyMappings.put(KeyEvent.VK_D,CharacterState.MOVING_RIGHT);
+        keyMappings.put(KeyEvent.VK_A,CharacterState.MOVING_LEFT);
+        keyMappings.put(KeyEvent.VK_S,CharacterState.CROUCHING);
     }
     
     public static Settings getSettings() {
@@ -82,11 +89,11 @@ public class Settings {
         return new Rectangle(0,0,screenDimension.width,screenDimension.height);
     }
     
-    public void setKeyMappings(int characterState, KeyEvent[] keys) {
-        keyMappings.put(characterState, keys);
+    public void setKeyMappings(HashMap<Integer, Integer> keyMappings) {
+        this.keyMappings = keyMappings;
     }
     
-    public KeyEvent[] getKeyMappings(int characterState) {
-        return keyMappings.get(characterState);
+    public HashMap<Integer, Integer> getKeyMappings() {
+        return keyMappings;
     }
 }
