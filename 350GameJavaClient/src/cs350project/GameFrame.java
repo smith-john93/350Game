@@ -7,6 +7,7 @@ package cs350project;
 import cs350project.communication.Communication;
 import cs350project.screens.KeyMap;
 import cs350project.screens.Screen;
+import cs350project.screens.mainmenu.MainMenuScreen;
 import cs350project.screens.title.TitleScreen;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -74,6 +75,7 @@ public class GameFrame extends JFrame {
      */
     public static void main(String[] args) {
         Communication.getInstance().detectServer();
-        GameFrame.getInstance().showScreen(new TitleScreen());
+        //GameFrame.getInstance().showScreen(new TitleScreen());
+        GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 }

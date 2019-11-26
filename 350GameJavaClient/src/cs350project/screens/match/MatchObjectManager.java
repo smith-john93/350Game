@@ -15,7 +15,6 @@ import cs350project.characters.PlayerCharacter;
 import cs350project.characters.Trump;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
-import java.awt.Dimension;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,7 +122,7 @@ public class MatchObjectManager implements IncomingCommandListener {
                 case PLAYER_CHARACTER:
                     CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
                     System.out.println("character type received: " + characterType);
-                    PlayerCharacter playerCharacter = null;
+                    PlayerCharacter playerCharacter;
                     switch(characterType) {
                         case GANCHEV:
                             playerCharacter = new Ganchev((short)id);
