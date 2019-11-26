@@ -36,10 +36,8 @@ namespace ServerPhysics
             create_platform(700, 100, 50, 400);
             create_platform(550, 100, 50, 250);
             create_platform(300, 150, 100, 25);
-            create_platform(150, 150, 100, 25);
-
-            
-    
+            create_platform(150, 150, 100, 25);           
+   
 
             new Player(Fighter.lego, this, 150, 30);
             Player p = new Player(Fighter.lego, this, 500, 30);

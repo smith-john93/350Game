@@ -15,7 +15,8 @@ namespace GameServer.Enumerations
         USER_AUTH_FAIL = 6,
         USER_AUTH_BLOCKED = 7,
         VALID_MATCH_NAME = 8,
-        INVALID_MATCH_NAME = 9
+        INVALID_MATCH_NAME = 9,
+        DELETE_MATCH_OBJECT = 10
 
     }
 }

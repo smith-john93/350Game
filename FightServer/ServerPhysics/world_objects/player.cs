@@ -64,11 +64,9 @@ namespace ServerPhysics.World_Objects
             width = 30;
             height = 30;
 
-
             player_stream = strm;
 
             o.player_list.Add(this);
-
         }
         
 
@@ -83,9 +81,7 @@ namespace ServerPhysics.World_Objects
             width = 30;
             height = 30;
 
-
             o.player_list.Add(this);
-
         }
 
         //------------------------------byte manipulators------------------------------------
