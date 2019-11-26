@@ -45,7 +45,7 @@ namespace ServerPhysics
             System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
 
 
-            obj_man.draw(graphicsObj);
+            //obj_man.draw(graphicsObj);
            
         }
 
@@ -61,7 +61,7 @@ namespace ServerPhysics
             System.Drawing.Graphics graphicsObj;
             graphicsObj = this.CreateGraphics();
             //draw event
-            obj_man.draw(graphicsObj);
+            //obj_man.draw(graphicsObj);
 
             
             //gametick event

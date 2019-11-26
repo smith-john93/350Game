@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 using ServerPhysics.World_Objects;
+using System.Threading;
 
 
 namespace ServerPhysics
@@ -44,6 +45,7 @@ namespace ServerPhysics
             Player p = new Player(Fighter.lego, this, 500, 30);
             p.isactive = false;
 
+            start_physics();
         }
 
         public ObjectManager(System.Net.Sockets.NetworkStream player1_stream,Fighter PlayerOneFighter, System.Net.Sockets.NetworkStream player2_stream, Fighter PlayerTwoFighter)
@@ -75,6 +77,17 @@ namespace ServerPhysics
 
         }
 
+        public void start_physics()
+        {
+            while(true)
+            {
+                Thread.Sleep(100);
+
+                game_tick();
+ 
+            }
+        }
+
         public void create_platform(int x, int y, int width, int height)
         {
             Platform p = new Platform(x, y, width, height, this);
@@ -102,7 +115,7 @@ namespace ServerPhysics
         }
 
  
-
+        /*
         public void draw(System.Drawing.Graphics g)
         {
             g.Clear(System.Drawing.Color.White);
@@ -115,6 +128,7 @@ namespace ServerPhysics
                 }
             }
         }
+        */
 
         public void game_tick()
         {

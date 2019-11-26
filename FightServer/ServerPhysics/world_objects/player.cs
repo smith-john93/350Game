@@ -117,6 +117,8 @@ namespace ServerPhysics.World_Objects
 
         public override void game_tick()
         {
+            Console.WriteLine("Tick");
+            Console.WriteLine(this.x);
 
             //control bits
             jumping = get_control_bit(Control.jump);
