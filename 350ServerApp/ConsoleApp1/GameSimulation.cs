@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GameServer.Enumerations;
+using ServerPhysics;
 
 namespace GameServer
 {
@@ -71,25 +72,19 @@ namespace GameServer
             player2.SendOpponentPlayer(player1.selectedCharacter);
 
 
-            player1.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
-            player2.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
+            //player1.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
+            //player2.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
 
+            ObjectManager GameObject = new ObjectManager();
 
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 50, 300, 150, 200);
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 150, 450, 450, 50);
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 600, 400, 100, 100);
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 700, 100, 50, 400);
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 550, 100, 50, 250);
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 300, 150, 100, 25);
-            //player1.SendPlatform(MatchObjectType.Platform, 4, 150, 150, 100, 25);
+            List<ServerPhysics.World_Objects.WorldObject> platformList = GameObject.platform_list;
+            
+            foreach(ServerPhysics.World_Objects.Platform platform in platformList)
+            {
+                player1.SendPlatform(MatchObjectType.Platform, platform.id, platform.x, platform.y, platform.width, platform.height);
+                player2.SendPlatform(MatchObjectType.Platform, platform.id, platform.x, platform.y, platform.width, platform.height);
+            }
 
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 50, 300, 150, 200);
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 150, 450, 450, 50);
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 600, 400, 100, 100);
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 700, 100, 50, 400);
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 550, 100, 50, 250);
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 300, 150, 100, 25);
-            //player2.SendPlatform(MatchObjectType.Platform, 4, 150, 150, 100, 25);
             Console.WriteLine("Sent Platform");
 
             player1.SendMessage(ServerCommands.START_MATCH);

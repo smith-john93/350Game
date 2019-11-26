@@ -10,7 +10,7 @@ namespace GameServer
 {
     public class PlayerController
     {
-        private NetworkStream clientInterface;
+        public NetworkStream clientInterface;
         private GameController gController;
         public string playername;
         public bool inGame;
@@ -107,7 +107,7 @@ namespace GameServer
 
         async public void EchoCommand(PlayerController opponent)
         {
-            while(true)
+            while (true)
             {
                 Console.WriteLine($"{playername} awaiting command");
 
@@ -121,7 +121,7 @@ namespace GameServer
                 Task.Run(() => UpdateMatchCommand(this, true));
                 Task.Run(() => UpdateMatchCommand(opponent, false));
 
-                
+
                 Console.WriteLine("Sent to both");
             }
         }
@@ -306,7 +306,7 @@ namespace GameServer
             clientInterface.WriteByte(100);
         }
 
-        public void SendPlatform(MatchObjectType command, byte MatchObjectId, int x, int y, int w, int h)
+        public void SendPlatform(MatchObjectType command, int MatchObjectId, int x, int y, int w, int h)
         {
             //create match object
             clientInterface.WriteByte((byte)ServerCommands.CREATE_MATCH_OBJECT);
@@ -318,12 +318,19 @@ namespace GameServer
 
             foreach (int i in response)
             {
-                //Console.WriteLine($"Sending {i}");
-                //byte[] buf = BitConverter.GetBytes(i);
-                //clientInterface.Write(buf, 0, buf.Length);
+                /*
+                Console.WriteLine($"Sending {i}");
+                byte[] buf = BitConverter.GetBytes(i);
+                clientInterface.Write(buf, 0, buf.Length);
+                */
 
+                clientInterface.WriteByte((byte)(i >>8));
+                clientInterface.WriteByte((byte)i)
+                
+                    /*
                 clientInterface.WriteByte(0);
-                clientInterface.WriteByte((byte)i);
+                clientInterface.WriteByte((byte)i)
+                */;
             }
         }
         #endregion

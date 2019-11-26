@@ -15,9 +15,9 @@ namespace ServerPhysics
         public List<WorldObject> player_list;// a list of objects that players control
         public List<WorldObject> attack_list;// a list of attacks
 
-        public int world_object_count = 0;
+        public int world_object_count = 2;
 
-
+        
         public  ObjectManager()
         {
             world_object_list = new List<List<WorldObject>>();
@@ -45,7 +45,7 @@ namespace ServerPhysics
             Player p = new Player(Fighter.lego, this, 500, 30);
             p.isactive = false;
 
-            start_physics();
+            //start_physics();
         }
 
         public ObjectManager(System.Net.Sockets.NetworkStream player1_stream,Fighter PlayerOneFighter, System.Net.Sockets.NetworkStream player2_stream, Fighter PlayerTwoFighter)
