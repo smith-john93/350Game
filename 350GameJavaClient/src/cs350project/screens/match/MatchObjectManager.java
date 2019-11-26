@@ -15,6 +15,7 @@ import cs350project.characters.PlayerCharacter;
 import cs350project.characters.Trump;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
+import java.awt.Dimension;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class MatchObjectManager implements IncomingCommandListener {
     private static MatchObjectManager matchObjectManager;
     private final HashMap<Integer,MatchObject> matchObjects;
     private final ArrayList<MatchObjectManagerListener> matchObjectManagerListeners;
+    private final int localPlayerCharacterID = 0;
     
     private MatchObjectManager() {
         matchObjects = new HashMap<>();
@@ -61,13 +63,18 @@ public class MatchObjectManager implements IncomingCommandListener {
         throw new IllegalArgumentException("Attempted to overwrite match object. ID: " + id);
     }
     
-    public void clear() {
+    public void unsetAll() {
         matchObjects.clear();
     }
     
-    public void setPlayerCharacters(PlayerCharacter player, PlayerCharacter opponent) {
-        set(0,player);
-        //set(1,opponent);
+    public void setLocalPlayerCharacter(PlayerCharacter playerCharacter) {
+        setPlayerCharacter(localPlayerCharacterID,playerCharacter);
+    }
+    
+    private void setPlayerCharacter(int id, PlayerCharacter playerCharacter) {
+        playerCharacter.loadAllImageResources();
+        playerCharacter.setState(CharacterState.IDLE);
+        set(id,playerCharacter);
     }
 
     @Override
@@ -87,10 +94,17 @@ public class MatchObjectManager implements IncomingCommandListener {
             int id = dataInputStream.readShort();
             System.out.println("update match object with ID: " + id);
             MatchObject matchObject = matchObjects.get(id);
-            matchObject.receiveData(dataInputStream);
-            fireMatchObjectChanged();
+            if(matchObject != null) {
+                matchObject.receiveData(dataInputStream);
+                fireMatchObjectChanged();
+            } else {
+                MessageDialog.showErrorMessage(
+                        "Update failed. Cannot find match object with ID " + id + ".", 
+                        getClass()
+                );
+            }
         } catch(IOException e) {
-            MessageDialog.showErrorMessage("Unable to update match object.", getClass());
+            MessageDialog.showErrorMessage("Update failed. I/O exception.", getClass());
         }
     }
 
@@ -99,11 +113,12 @@ public class MatchObjectManager implements IncomingCommandListener {
         try {
             MatchObjectType type = MatchObjectType.parse(dataInputStream.readByte());
             int id = dataInputStream.readShort();
-            MatchObject matchObject = null;
             System.out.println("match object type received: " + type + " with ID: " + id);
+            MatchObject matchObject = null;
             switch (type) {
                 case PLATFORM:
                     matchObject = new Platform();
+                    set(id, matchObject);
                     break;
                 case PLAYER_CHARACTER:
                     CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
@@ -122,19 +137,16 @@ public class MatchObjectManager implements IncomingCommandListener {
                         case LEGOMAN:
                             playerCharacter = new LegoMan((short)id);
                             break;
+                        default:
+                            return;
                     }
-                    if(playerCharacter != null) {
-                        playerCharacter.setBounds(0, 0, 100, 100);
-                        playerCharacter.loadAllGameResources();
-                        playerCharacter.setState(CharacterState.THUMBNAIL);
-                        matchObject = playerCharacter;
-                    }
+                    setPlayerCharacter(id,playerCharacter);
+                    matchObject = playerCharacter;
                     break;
             }
             if(matchObject != null) {
                 matchObject.receiveData(dataInputStream);
             }
-            set(id, matchObject);
         } catch(IOException e) {
             MessageDialog.showErrorMessage(error, getClass());
         } catch(NoSuchElementException e) {

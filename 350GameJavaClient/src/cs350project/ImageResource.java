@@ -21,13 +21,13 @@ import javax.swing.ImageIcon;
  *
  * @author Mark Masone
  */
-public class GameResource {
+public class ImageResource {
     private final String fileName;
     private final boolean loop;
     private final boolean once;
     private final Image[] frames;
     
-    public GameResource(String fileName, Type type, int width, int height) throws IOException {
+    public ImageResource(String fileName, Type type, int width, int height) throws IOException {
         this.once = type == Type.PLAYS_ONCE;
         this.loop = type == Type.LOOPS;
         fileName = "/resources/" + fileName;

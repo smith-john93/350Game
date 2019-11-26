@@ -62,16 +62,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     public void characterSelected() {
         player1 = selectionPanel.getPlayer1Selection();
         player2 = selectionPanel.getPlayer2Selection();
-        /*MatchScreen matchScreen = new MatchScreen(
-                selectionPanel.getPlayer1Selection(),
-                selectionPanel.getPlayer2Selection()
-        );
-        showScreen(matchScreen);*/
-        //comm.connect();
-        //comm.addIncomingCommandListener(this);
-        //music.stop();
         comm.addIncomingCommandListener(MatchObjectManager.getInstance());
-        //comm.addIncomingCommandListener(this);
         comm.characterSelected(player1.getCharacterType());
         System.out.println("waiting for other player to select");
     }
@@ -102,8 +93,8 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
         System.out.println("selection screen received command: " + serverCommand);
         if(serverCommand == ServerCommand.START_MATCH) {
             comm.removeIncomingCommandListener(this);
-            //comm.removeIncomingCommandListener(MatchObjectManager.getInstance());
             GameFrame.getInstance().showScreen(new MatchScreen(player1,player2));
+            music.stop();
         }
     }
 }

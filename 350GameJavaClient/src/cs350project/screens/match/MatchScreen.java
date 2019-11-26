@@ -35,7 +35,6 @@ public class MatchScreen extends Screen implements
     private final Combat combat;
     private final Communication comm;
     private final MatchObjectManager matchObjectManager;
-    private final PlayerCharacter player;
     private final BackgroundImage backgroundImage;
     
     /* It is important that this class keeps its own stateCode.
@@ -46,14 +45,12 @@ public class MatchScreen extends Screen implements
     private int stateCode;
     
     public MatchScreen(PlayerCharacter player, PlayerCharacter opponent) {
-        this.player = player;
-        player.setState(CharacterState.IDLE);
         matchKeyMap = new MatchKeyMap(Settings.getSettings().getKeyMappings());
         matchPanel = new MatchPanel();
         comm = Communication.getInstance();
         combat = new Combat(player);
         matchObjectManager = MatchObjectManager.getInstance();
-        matchObjectManager.setPlayerCharacters(player, opponent);
+        matchObjectManager.setLocalPlayerCharacter(player);
         backgroundImage = new BackgroundImage("maps/whitehouse.png");
         Thread repaintThread = new Thread() {
             @Override
@@ -95,7 +92,7 @@ public class MatchScreen extends Screen implements
     
     @Override
     public void endGame() {
-        MatchObjectManager.getInstance().clear();
+        MatchObjectManager.getInstance().unsetAll();
         GameFrame.getInstance().showScreen(new LobbyScreen());
     }
     

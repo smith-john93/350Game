@@ -4,7 +4,6 @@ import cs350project.GameFrame;
 import cs350project.Settings;
 import cs350project.screens.MessageDialog;
 import cs350project.screens.lobby.LobbyScreen;
-import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
@@ -13,7 +12,6 @@ import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import java.io.DataInputStream;
-import java.util.Arrays;
 import javax.swing.JPanel;
 
 public class LoginScreen extends Screen implements LoginInputListener, IncomingCommandListener {

@@ -2,7 +2,7 @@ package cs350project.characters;
 
 public class Ganchev extends PlayerCharacter {
     public Ganchev(int objectID) {
-        super(objectID, CharacterState.IDLE);
+        super(objectID);
     }
 
     @Override

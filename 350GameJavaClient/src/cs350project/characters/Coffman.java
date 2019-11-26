@@ -11,7 +11,7 @@ package cs350project.characters;
  */
 public class Coffman extends PlayerCharacter {
     public Coffman(int objectID) {
-        super(objectID, CharacterState.IDLE);
+        super(objectID);
     }
 
     @Override

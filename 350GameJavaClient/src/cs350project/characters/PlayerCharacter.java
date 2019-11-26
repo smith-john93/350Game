@@ -5,12 +5,11 @@
  */
 package cs350project.characters;
 
-import cs350project.GameResource;
+import cs350project.ImageResource;
 import cs350project.screens.match.MatchObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,10 +36,14 @@ public abstract class PlayerCharacter extends MatchObject {
     private final int attackStateMask;
     private final int movementStateMask;
     private int attackStateCode;
+    private final int matchWidth = 200;
+    private final int matchHeight = 200;
+    private final int thumbnailWidth = 100;
+    private final int thumbnailHeight = 100;
     
-    public PlayerCharacter(int objectID, int defaultStateCode) {
+    public PlayerCharacter(int objectID) {
         this.objectID = objectID;
-        characterResourceManager = new CharacterResourceManager(getClass(), defaultStateCode);
+        characterResourceManager = new CharacterResourceManager(getClass());
         direction = 1;
         attackTimers = new HashMap<>();
         attackStates = new int[]{
@@ -51,10 +54,19 @@ public abstract class PlayerCharacter extends MatchObject {
         attackStateMask = CharacterState.PUNCH | CharacterState.HIGH_KICK | CharacterState.LOW_KICK;
         movementStateMask = attackStateMask ^ 0xffff;
     }
-
-    public void loadAllGameResources() {
-        Rectangle bounds = getBounds();
-        characterResourceManager.loadAllGameResources(bounds.height,bounds.width);
+    
+    public void loadThumbnailResource() {
+        characterResourceManager.loadImageResource(
+                CharacterState.THUMBNAIL,
+                thumbnailWidth,
+                thumbnailHeight
+        );
+        setSize(thumbnailWidth, thumbnailHeight);
+    }
+    
+    public void loadAllImageResources() {
+        characterResourceManager.loadAllImageResources(matchWidth,matchHeight);
+        setSize(matchWidth, matchHeight);
     }
     
     @Override
@@ -62,19 +74,22 @@ public abstract class PlayerCharacter extends MatchObject {
         super.addNotify();
         
         for(int attackState : attackStates) {
-            int attackFramesCount = getFramesCount(attackState);
-            int attackTime = PlayerCharacter.FRAME_DELAY * (attackFramesCount + 1);
-            Timer attackTimer = new Timer(attackTime, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    disableState(attackState);
-                    
-                    // this fixed the stuck attack glitch
-                    attackStateCode = 0;
-                }
-            });
-            attackTimer.setRepeats(false);
-            attackTimers.put(attackState, attackTimer);
+            ImageResource characterResource = characterResourceManager.getImageResource(attackState);
+            if(characterResource != null) {
+                int attackFramesCount = characterResource.getFrames().length;
+                int attackTime = PlayerCharacter.FRAME_DELAY * (attackFramesCount + 1);
+                Timer attackTimer = new Timer(attackTime, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        disableState(attackState);
+
+                        // this fixed the stuck attack glitch
+                        attackStateCode = 0;
+                    }
+                });
+                attackTimer.setRepeats(false);
+                attackTimers.put(attackState, attackTimer);
+            }
         }
     }
 
@@ -100,45 +115,22 @@ public abstract class PlayerCharacter extends MatchObject {
     public void setState(int stateCode) {
         System.out.println("setting state: " + stateCode);
         this.stateCode = stateCode;
-        GameResource characterResource = characterResourceManager.getResource(stateCode);
-        setFrames(characterResource.getFrames());
+        ImageResource characterResource = characterResourceManager.getImageResource(stateCode);
+        if(characterResource != null) {
+            setFrames(characterResource.getFrames());
+        }
     }
     
     private void setFrames(Image[] frames) {
         this.frames = frames;
         frameIndex = 0;
-        currentFrame = getScaledImage(frames[frameIndex]);
+        currentFrame = frames[frameIndex];
         //lastFrameTime = 0;
-    }
-    
-    public int getFramesCount(int stateCode) {
-        GameResource characterResource = characterResourceManager.getResource(stateCode);
-        if(characterResource == null) {
-            return 0;
-        }
-        return characterResource.getFrames().length;
     }
 
     public void setDirection(int direction) {
         this.direction = direction;
         //lastFrameTime = 0;
-    }
-
-    private Image getScaledImage(Image srcImg){
-        Rectangle bounds = getBounds();
-        int width = bounds.width;
-        int height = bounds.height;
-        BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = resizedImg.createGraphics();
-
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        int scaledImageX = 0;
-        if(direction < 0)
-            scaledImageX = width;
-        g2.drawImage(srcImg, scaledImageX, 0, width * direction, height, null);
-        g2.dispose();
-
-        return resizedImg;
     }
 
     @Override
@@ -156,34 +148,39 @@ public abstract class PlayerCharacter extends MatchObject {
             setDirection(-1);
         }
         
-        GameResource characterResource = characterResourceManager.getResource(stateCode);
         long currentTime = System.currentTimeMillis();
         long diff = currentTime - lastFrameTime;
         if(diff >= FRAME_DELAY) {
-            //if(frameIndex == frames.length) {
-                //setState(defaultStateCode);
-            //}
-            if(diff != currentTime && diff >= FRAME_DELAY * 2) {
-                int fastForward = (int)((diff - FRAME_DELAY) / FRAME_DELAY);
-                frameIndex += fastForward;
-                droppedFrames += fastForward;
-                System.out.println("dropped frames " + droppedFrames);
-                if(frameIndex < frames.length || characterResource.loops()) {
-                    frameIndex %= frames.length;
-                } else {
-                    frameIndex = frames.length - 1;
+            
+            ImageResource characterResource = characterResourceManager.getImageResource(stateCode);
+            
+            if(characterResource != null && frames != null) {
+                if(diff != currentTime && diff >= FRAME_DELAY * 2) {
+                    int fastForward = (int)((diff - FRAME_DELAY) / FRAME_DELAY);
+                    frameIndex += fastForward;
+                    droppedFrames += fastForward;
+                    //System.out.println("dropped frames " + droppedFrames);
+                    if(frameIndex < frames.length || characterResource.loops()) {
+                        frameIndex %= frames.length;
+                    } else {
+                        frameIndex = frames.length - 1;
+                    }
+                }
+
+                currentFrame = frames[frameIndex];
+                lastFrameTime = System.currentTimeMillis();
+
+                if(frameIndex < frames.length - 1) {
+                    frameIndex++;
+                } else if(characterResource.loops()) {
+                    frameIndex = 0;
                 }
             }
-            currentFrame = getScaledImage(frames[frameIndex]);
-            lastFrameTime = System.currentTimeMillis();
-            if(frameIndex < frames.length - 1) {
-                frameIndex++;
-            } else if(characterResource.loops()) {
-                frameIndex = 0;
-                //System.out.println("reset");
-            }
         }
-        g2d.drawImage(currentFrame,0,0,null);
+        
+        if(currentFrame != null) {
+            g2d.drawImage(currentFrame,0,0,null);
+        }
     }
     
     // This method may require synchronization
