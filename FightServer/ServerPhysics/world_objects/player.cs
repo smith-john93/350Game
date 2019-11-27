@@ -131,8 +131,8 @@ namespace ServerPhysics.World_Objects
         async public void UpdatePlayer()
         {
             PlayerStats s = new PlayerStats(x, y, control_byte, (byte)health);
-            Task.Run(() => SendGameUpdate(s, true));
-            Task.Run(() => SendGameUpdate(Opponent.GetPlayerStats(), false));
+            await Task.Run(() => SendGameUpdate(s, true));
+            await Task.Run(() => SendGameUpdate(Opponent.GetPlayerStats(), false));
 
         }
         async public void SendGameUpdate(PlayerStats stats, bool local)
