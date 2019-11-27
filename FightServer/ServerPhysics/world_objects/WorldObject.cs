@@ -14,7 +14,7 @@ namespace ServerPhysics.World_Objects
         public ObjectManager manager;
 
 
-        public virtual void SendGameUpdate() { }
+        public virtual void UpdatePlayer() { }
 
         public virtual void draw_tick(System.Drawing.Graphics g)
         {

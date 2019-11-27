@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Net;
+using ServerPhysics.DataTransferObject;
 
 public enum Fighter
 {
@@ -47,12 +48,21 @@ namespace ServerPhysics.World_Objects
         private bool attacking = false;
 
         private byte control_byte = (byte)0;
-
+        private Player Opponent;
         private Fighter type;
 
         public System.Net.Sockets.NetworkStream player_stream;
  
+        public void AddOpponent(Player p)
+        {
+            Opponent = p;
+        }
         
+        public PlayerStats GetPlayerStats()
+        {
+            return new PlayerStats(x, y, control_byte, (byte)health);
+        }
+
         public Player(Fighter f, ObjectManager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
         {
             Console.WriteLine("O");
@@ -118,29 +128,42 @@ namespace ServerPhysics.World_Objects
             }
         }
 
-        async public void SendGameUpdate()
+        async public void UpdatePlayer()
         {
-            Console.WriteLine("Sending update");
+            PlayerStats s = new PlayerStats(x, y, control_byte, (byte)health);
+            Task.Run(() => SendGameUpdate(s, true));
+            Task.Run(() => SendGameUpdate(Opponent.GetPlayerStats(), false));
+
+        }
+        async public void SendGameUpdate(PlayerStats stats, bool local)
+        {
+
+            //Console.WriteLine("Sending update");
             player_stream.WriteByte((byte)2);
 
             //send 2 byte ID, 0 for this, 1 for opponent
             player_stream.WriteByte(0);
-            player_stream.WriteByte(0);
+            if (local)
+                player_stream.WriteByte(0);
+            else
+                player_stream.WriteByte(1);
+
+
             
             //send 1 byte character state
-            player_stream.WriteByte((byte)control_byte);
+            player_stream.WriteByte(stats.controlByte);
 
             //send 2 byte x-cord
-            player_stream.WriteByte((byte)(x >>8));
-            player_stream.WriteByte((byte)x);
+            player_stream.WriteByte((byte)(stats.x >>8));
+            player_stream.WriteByte((byte)stats.x);
 
 
             //send 2 byte y-cord
-            player_stream.WriteByte((byte)(y >> 8));
-            player_stream.WriteByte((byte)y);
+            player_stream.WriteByte((byte)(stats.y >> 8));
+            player_stream.WriteByte((byte)stats.y);
             
             //send health
-            player_stream.WriteByte((byte)health);
+            player_stream.WriteByte((byte)stats.health);
         }
 
         //---------------------------------------------------------------------------------

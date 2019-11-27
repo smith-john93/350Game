@@ -70,6 +70,9 @@ namespace ServerPhysics
             Player player1 = new Player(PlayerOneFighter, this, 150, 30, player1_stream);
             //player_list.Add(player1);
             Player player2 = new Player(PlayerTwoFighter, this, 500, 30, player2_stream);
+
+            player1.AddOpponent(player2);
+            player2.AddOpponent(player1);
             //player_list.Add(player2);            
         }
 
@@ -98,7 +101,7 @@ namespace ServerPhysics
         {
             foreach(Player p in player_list)
             {
-                Task.Run(() => p.SendGameUpdate());
+                Task.Run(() => p.UpdatePlayer());
             }
             // Task.Run(() => player_list[0].SendGameUpdate(player_list[1].x, player_list[1].y, player_list[1].control_byte, (byte)player_list[1].health));
             //Task.Run(() => player_list[1].SendGameUpdate(player_list[0].x, player_list[0].y, player_list[0].control_byte, (byte)player_list[0].health));
