@@ -55,6 +55,7 @@ namespace ServerPhysics.World_Objects
         
         public Player(Fighter f, ObjectManager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
         {
+            Console.WriteLine("O");
             id = o.world_object_count++;
             type = f;
             manager = o;
@@ -108,13 +109,47 @@ namespace ServerPhysics.World_Objects
             this.control_byte = b;
         }
 
+        async public void GetPlayerByte()
+        {
+            while(true)
+            {
+                byte i = (byte)player_stream.ReadByte();
+                this.control_byte = (byte)player_stream.ReadByte();
+            }
+        }
+
+        async public void SendGameUpdate()
+        {
+            Console.WriteLine("Sending update");
+            player_stream.WriteByte((byte)2);
+
+            //send 2 byte ID, 0 for this, 1 for opponent
+            player_stream.WriteByte(0);
+            player_stream.WriteByte(0);
+            
+            //send 1 byte character state
+            player_stream.WriteByte((byte)control_byte);
+
+            //send 2 byte x-cord
+            player_stream.WriteByte((byte)(x >>8));
+            player_stream.WriteByte((byte)x);
+
+
+            //send 2 byte y-cord
+            player_stream.WriteByte((byte)(y >> 8));
+            player_stream.WriteByte((byte)y);
+            
+            //send health
+            player_stream.WriteByte((byte)health);
+        }
+
         //---------------------------------------------------------------------------------
 
 
         public override void game_tick()
         {
-            Console.WriteLine("Tick");
-            Console.WriteLine(this.x);
+            //Console.WriteLine("Tick");
+            //Console.WriteLine(this.x);
 
             //control bits
             jumping = get_control_bit(Control.jump);
@@ -122,10 +157,7 @@ namespace ServerPhysics.World_Objects
             movingRight = get_control_bit(Control.movingright);
             attacking = get_control_bit(Control.attack);
 
-
-
-
-
+            #region physics
             if (attacking && move_cooldown <= 0)
             {
                 if (type == Fighter.ganchev)
@@ -262,6 +294,8 @@ namespace ServerPhysics.World_Objects
             }
 
             jumpingLastTick = jumping;
+            #endregion
+
         }
 
         public override void draw(System.Drawing.Graphics g)

@@ -75,7 +75,7 @@ namespace GameServer
             //player1.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
             //player2.SendPlatform(MatchObjectType.Platform, 4, 53, 65, 45, 70);
 
-            ObjectManager GameObject = new ObjectManager();
+            ObjectManager GameObject = new ObjectManager(player1.clientInterface, (Fighter)player1.selectedCharacter, player2.clientInterface, (Fighter)player2.selectedCharacter);
 
             List<ServerPhysics.World_Objects.WorldObject> platformList = GameObject.platform_list;
             
@@ -91,8 +91,11 @@ namespace GameServer
             player2.SendMessage(ServerCommands.START_MATCH);
             Console.WriteLine("Sent start match");
 
-            Task.Run(() => player1.EchoCommand(player2));
-            Task.Run(() => player2.EchoCommand(player1));
+            Console.WriteLine("Starting physics");
+            GameObject.start_physics();
+
+            //Task.Run(() => player1.EchoCommand(player2));
+            //Task.Run(() => player2.EchoCommand(player1));
 
             while(true)
             {

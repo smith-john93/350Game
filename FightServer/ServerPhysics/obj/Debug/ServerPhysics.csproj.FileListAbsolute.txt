@@ -18,3 +18,12 @@ C:\Users\giuliano011\Desktop\FightServer\ServerPhysics\obj\Debug\ServerPhysics.c
 C:\Users\giuliano011\Desktop\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.CoreCompileInputs.cache
 C:\Users\giuliano011\Desktop\FightServer\ServerPhysics\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\giuliano011\Desktop\FightServer\ServerPhysics\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\bin\Debug\ServerPhysics.exe.config
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\bin\Debug\ServerPhysics.exe
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\bin\Debug\ServerPhysics.pdb
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csprojAssemblyReference.cache
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.Form1.resources
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.Properties.Resources.resources
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.GenerateResource.cache
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.exe
+C:\Users\smim1\source\repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.pdb

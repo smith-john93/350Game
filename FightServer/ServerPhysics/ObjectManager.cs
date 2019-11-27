@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using ServerPhysics.World_Objects;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace ServerPhysics
@@ -39,9 +40,9 @@ namespace ServerPhysics
             create_platform(150, 150, 100, 25);           
    
 
-            new Player(Fighter.lego, this, 150, 30);
-            Player p = new Player(Fighter.lego, this, 500, 30);
-            p.isactive = false;
+            //new Player(Fighter.lego, this, 150, 30);
+            //Player p = new Player(Fighter.lego, this, 500, 30);
+            //p.isactive = false;
 
             //start_physics();
         }
@@ -66,31 +67,46 @@ namespace ServerPhysics
             create_platform(300, 150, 100, 25);
             create_platform(150, 150, 100, 25);
 
-
-
-
-            new Player(PlayerOneFighter, this, 150, 30, player1_stream);
-            Player p = new Player(PlayerTwoFighter, this, 500, 30, player2_stream);
-            p.isactive = false;
-
+            Player player1 = new Player(PlayerOneFighter, this, 150, 30, player1_stream);
+            //player_list.Add(player1);
+            Player player2 = new Player(PlayerTwoFighter, this, 500, 30, player2_stream);
+            //player_list.Add(player2);            
         }
 
         public void start_physics()
         {
+            Console.WriteLine($"player count in game: {player_list.Count}");
+            Console.WriteLine($"platform count in game: {platform_list.Count}");
+            foreach (Player p in player_list)
+            {
+                Console.WriteLine("in for each");
+                Task.Run(() => p.GetPlayerByte());
+            }
+
+            Console.WriteLine("out of for loop");
             while(true)
             {
-                Thread.Sleep(100);
-
+                //Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
+                Thread.Sleep(50);
+                //Console.WriteLine("ticking...");
                 game_tick();
- 
+                UpdatePlayers();
             }
         }
 
+        async private void UpdatePlayers()
+        {
+            foreach(Player p in player_list)
+            {
+                Task.Run(() => p.SendGameUpdate());
+            }
+            // Task.Run(() => player_list[0].SendGameUpdate(player_list[1].x, player_list[1].y, player_list[1].control_byte, (byte)player_list[1].health));
+            //Task.Run(() => player_list[1].SendGameUpdate(player_list[0].x, player_list[0].y, player_list[0].control_byte, (byte)player_list[0].health));
+
+        }
         public void create_platform(int x, int y, int width, int height)
         {
-            Platform p = new Platform(x, y, width, height, this);
-            
-            
+            Platform p = new Platform(x, y, width, height, this);                     
         }
 
         public void create_attack(int x, int y, Player owner)
