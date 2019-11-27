@@ -44,7 +44,7 @@ public class MatchScreen extends Screen implements
     */
     private int stateCode;
     
-    public MatchScreen(PlayerCharacter player, PlayerCharacter opponent) {
+    public MatchScreen(PlayerCharacter player) {
         matchKeyMap = new MatchKeyMap(Settings.getSettings().getKeyMappings());
         matchPanel = new MatchPanel();
         comm = Communication.getInstance();

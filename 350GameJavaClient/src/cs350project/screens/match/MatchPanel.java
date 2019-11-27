@@ -41,6 +41,12 @@ public class MatchPanel extends Panel implements
         
         setLayout(null);
         setBackground(Settings.TRANSPARENT);
+        
+        MatchOverlay matchOverlay = new MatchOverlay();
+        //matchOverlay.setHealth(0, 40);
+        //matchOverlay.setHealth(1, 75);
+        add(matchOverlay);
+        //setComponentZOrder(matchOverlay,0);
 
         add(chatMessageQueue);
         add(chatMessageField);

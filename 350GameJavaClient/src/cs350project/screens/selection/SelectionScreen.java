@@ -35,7 +35,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     private final Music music;
     private final Communication comm;
     private PlayerCharacter player1;
-    private PlayerCharacter player2;
+    //private PlayerCharacter player2;
     
     public SelectionScreen() throws IOException {
         selectionPanel = new SelectionPanel((short)1);
@@ -61,7 +61,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     @Override
     public void characterSelected() {
         player1 = selectionPanel.getPlayer1Selection();
-        player2 = selectionPanel.getPlayer2Selection();
+        //player2 = selectionPanel.getPlayer2Selection();
         comm.addIncomingCommandListener(MatchObjectManager.getInstance());
         comm.characterSelected(player1.getCharacterType());
         System.out.println("waiting for other player to select");
@@ -93,7 +93,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
         System.out.println("selection screen received command: " + serverCommand);
         if(serverCommand == ServerCommand.START_MATCH) {
             comm.removeIncomingCommandListener(this);
-            GameFrame.getInstance().showScreen(new MatchScreen(player1,player2));
+            GameFrame.getInstance().showScreen(new MatchScreen(player1));
             music.stop();
         }
     }
