@@ -48,7 +48,7 @@ namespace ServerPhysics.World_Objects
         private bool attacking = false;
 
         private static int MOVEMENTSPEED = 20;
-        private static int WALLJUMPSPEED = 40;
+        private static int WALLJUMPSPEED = -40;
         private static int JUMPSPEED = -13;
         private static int MAXFUEL = 100;
         private static int HOVERSPEED = 5;
@@ -221,27 +221,39 @@ namespace ServerPhysics.World_Objects
 
             if(movingLeft && movingRight)
             {
+                /*
                 if(xSpeed>1) xSpeed--;
                 else if(xSpeed<-1) xSpeed++;
                 else xSpeed=0;
+                */
+                xSpeed = 0;
             }
             else if(movingRight)
             {
+                /*
                 if(xSpeed>6) xSpeed--;
                 else if(xSpeed<4) xSpeed++;
                 else xSpeed=MOVEMENTSPEED;
+                */
+                xSpeed = MOVEMENTSPEED;
             }
             else if(movingLeft)
             {
+                /*
                 if(xSpeed>-4) xSpeed--;
                 else if(xSpeed<-4) xSpeed++;
                 else xSpeed=-MOVEMENTSPEED;
+                */
+                xSpeed = -MOVEMENTSPEED;
             }
             else
             {
+                /*
                 if(xSpeed>1) xSpeed--;
                 else if(xSpeed<-1) xSpeed++;
                 else xSpeed=0;
+                */
+                xSpeed = 0;
             }
 
             x = x + (int)Math.Ceiling(xSpeed);
@@ -309,7 +321,7 @@ namespace ServerPhysics.World_Objects
                 if (touchingWall) {
                     if (jumpPressed && ySpeed > 0) {
                         ySpeed = JUMPSPEED;
-                        xSpeed = MOVEMENTSPEED * xsign * -2;
+                        xSpeed = WALLJUMPSPEED * xsign;
 
                     } else if (ySpeed > 0) {
                         ySpeed = 1;
