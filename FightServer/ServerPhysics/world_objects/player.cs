@@ -52,6 +52,7 @@ namespace ServerPhysics.World_Objects
         private static int JUMPSPEED = -13;
         private static int MAXFUEL = 100;
         private static int HOVERSPEED = 5;
+        private static int ACCELERATION = 5;
 
         private byte control_byte = (byte)0;
         private Player Opponent;
@@ -221,39 +222,35 @@ namespace ServerPhysics.World_Objects
 
             if(movingLeft && movingRight)
             {
-                /*
-                if(xSpeed>1) xSpeed--;
-                else if(xSpeed<-1) xSpeed++;
+                
+                if(xSpeed>1) xSpeed-=ACCELERATION;
+                else if(xSpeed<-1) xSpeed+= ACCELERATION;
                 else xSpeed=0;
-                */
-                xSpeed = 0;
+                
             }
             else if(movingRight)
             {
-                /*
-                if(xSpeed>6) xSpeed--;
-                else if(xSpeed<4) xSpeed++;
+                
+                if(xSpeed>(MOVEMENTSPEED+1)) xSpeed-= ACCELERATION;
+                else if(xSpeed<(MOVEMENTSPEED-1)) xSpeed+= ACCELERATION;
                 else xSpeed=MOVEMENTSPEED;
-                */
-                xSpeed = MOVEMENTSPEED;
+                
             }
             else if(movingLeft)
             {
-                /*
-                if(xSpeed>-4) xSpeed--;
-                else if(xSpeed<-4) xSpeed++;
+                
+                if(xSpeed>-(MOVEMENTSPEED-1)) xSpeed-= ACCELERATION;
+                else if(xSpeed<-(MOVEMENTSPEED+1)) xSpeed+= ACCELERATION;
                 else xSpeed=-MOVEMENTSPEED;
-                */
-                xSpeed = -MOVEMENTSPEED;
+                
             }
             else
             {
-                /*
-                if(xSpeed>1) xSpeed--;
-                else if(xSpeed<-1) xSpeed++;
+                
+                if(xSpeed>1) xSpeed-= ACCELERATION;
+                else if(xSpeed<-1) xSpeed+= ACCELERATION;
                 else xSpeed=0;
-                */
-                xSpeed = 0;
+
             }
 
             x = x + (int)Math.Ceiling(xSpeed);
@@ -305,9 +302,9 @@ namespace ServerPhysics.World_Objects
             {
                 if(fuel>0 && jumping)
                 {
-                    if(ySpeed > -2)
+                    if(ySpeed > -HOVERSPEED)
                     {
-                        ySpeed = -2;
+                        ySpeed = -HOVERSPEED;
                         fuel-=1;
 
                         if(xSpeed>HOVERSPEED) xSpeed=HOVERSPEED;
@@ -324,7 +321,7 @@ namespace ServerPhysics.World_Objects
                         xSpeed = WALLJUMPSPEED * xsign;
 
                     } else if (ySpeed > 0) {
-                        ySpeed = 1;
+                        ySpeed = HOVERSPEED;
                     }
                 }
                 else if(fuel>0 && jumpPressed && !touchingGround)
