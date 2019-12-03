@@ -13,7 +13,8 @@ namespace ServerPhysics.World_Objects
         public System.Drawing.Color clr = System.Drawing.Color.Red;
         public ObjectManager manager;
 
-      
+
+        public virtual void UpdatePlayer() { }
 
         public virtual void draw_tick(System.Drawing.Graphics g)
         {

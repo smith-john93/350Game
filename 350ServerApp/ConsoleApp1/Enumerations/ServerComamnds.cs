@@ -17,6 +17,5 @@ namespace GameServer.Enumerations
         VALID_MATCH_NAME = 8,
         INVALID_MATCH_NAME = 9,
         DELETE_MATCH_OBJECT = 10
-
     }
 }
