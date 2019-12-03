@@ -58,6 +58,7 @@ namespace ServerPhysics
             attack_list = new List<WorldObject>();
             world_object_list.Add(attack_list);
 
+            /*
             create_platform(50, 300, 150, 200);
             create_platform(150, 450, 450, 50);
             create_platform(600, 400, 100, 100);
@@ -65,6 +66,9 @@ namespace ServerPhysics
             create_platform(550, 100, 50, 250);
             create_platform(300, 150, 100, 25);
             create_platform(150, 150, 100, 25);
+            */
+
+            create_platform(0, 500, 1366, 550);
 
 
 

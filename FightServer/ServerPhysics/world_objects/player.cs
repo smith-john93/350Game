@@ -67,8 +67,8 @@ namespace ServerPhysics.World_Objects
 
             x = xx;
             y = yy;
-            width = 30;
-            height = 30;
+            width = 200;
+            height = 200;
 
             player_stream = strm;
 
@@ -84,8 +84,8 @@ namespace ServerPhysics.World_Objects
 
             x = xx;
             y = yy;
-            width = 30;
-            height = 30;
+            width = 200;
+            height = 200;
 
             o.player_list.Add(this);
         }
