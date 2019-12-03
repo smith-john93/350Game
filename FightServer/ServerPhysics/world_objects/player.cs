@@ -46,6 +46,12 @@ namespace ServerPhysics.World_Objects
         private bool movingRight = false;
         private bool attacking = false;
 
+        private static int MOVEMENTSPEED = 100;
+        private static int WALLJUMPSPEED = 200;
+        private static int JUMPSPEED = -13;
+        private static int MAXFUEL = 100;
+        private static int HOVERSPEED = 20;
+
         private byte control_byte = (byte)0;
 
         private Fighter type;
@@ -168,13 +174,13 @@ namespace ServerPhysics.World_Objects
             {
                 if(xSpeed>6) xSpeed--;
                 else if(xSpeed<4) xSpeed++;
-                else xSpeed=5;
+                else xSpeed=MOVEMENTSPEED;
             }
             else if(movingLeft)
             {
                 if(xSpeed>-4) xSpeed--;
                 else if(xSpeed<-4) xSpeed++;
-                else xSpeed=-5;
+                else xSpeed=-MOVEMENTSPEED;
             }
             else
             {
@@ -210,7 +216,7 @@ namespace ServerPhysics.World_Objects
                     if(ysign==1)
                     {
                         touchingGround =true;
-                        fuel = 100;
+                        fuel = MAXFUEL;
                     }
                 }
             }
@@ -218,7 +224,7 @@ namespace ServerPhysics.World_Objects
             if(jumpPressed && touchingGround)
             {
 
-                 ySpeed = -13;
+                 ySpeed = JUMPSPEED;
                 
             }
 
@@ -237,8 +243,8 @@ namespace ServerPhysics.World_Objects
                         ySpeed = -2;
                         fuel-=1;
 
-                        if(xSpeed>.5) xSpeed=.5;
-                        else if(xSpeed<-.5)  xSpeed=-.5;
+                        if(xSpeed>HOVERSPEED) xSpeed=HOVERSPEED;
+                        else if(xSpeed<-HOVERSPEED)  xSpeed=-HOVERSPEED;
                     }
 
                 }
@@ -247,8 +253,8 @@ namespace ServerPhysics.World_Objects
             if(type == Fighter.ganchev) {
                 if (touchingWall) {
                     if (jumpPressed && ySpeed > 0) {
-                        ySpeed = -10;
-                        xSpeed = 10 * xsign * -1;
+                        ySpeed = JUMPSPEED;
+                        xSpeed = MOVEMENTSPEED * xsign * -2;
 
                     } else if (ySpeed > 0) {
                         ySpeed = 1;
@@ -256,7 +262,7 @@ namespace ServerPhysics.World_Objects
                 }
                 else if(fuel>0 && jumpPressed && !touchingGround)
                 {
-                    ySpeed = -10;
+                    ySpeed = JUMPSPEED;
                     fuel=0;
                 }
             }
