@@ -69,7 +69,9 @@ namespace ServerPhysics
             create_platform(150, 150, 100, 25);
             */
 
-            create_platform(0, 500, 1366, 550);
+            create_platform(-10, 700, 1400, 100);
+            create_platform(-10, 300, 50, 400);
+            create_platform(1300, 300, 50, 400);
 
             Player player1 = new Player(PlayerOneFighter, this, 150, 30, player1_stream);
             //player_list.Add(player1);

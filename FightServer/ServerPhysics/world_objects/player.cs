@@ -47,11 +47,11 @@ namespace ServerPhysics.World_Objects
         private bool movingRight = false;
         private bool attacking = false;
 
-        private static int MOVEMENTSPEED = 100;
-        private static int WALLJUMPSPEED = 200;
+        private static int MOVEMENTSPEED = 20;
+        private static int WALLJUMPSPEED = 40;
         private static int JUMPSPEED = -13;
         private static int MAXFUEL = 100;
-        private static int HOVERSPEED = 20;
+        private static int HOVERSPEED = 5;
 
         private byte control_byte = (byte)0;
         private Player Opponent;
