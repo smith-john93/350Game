@@ -3,3 +3,9 @@
 ################################################################################
 
 /350ServerApp/ConsoleApp1/bin/Debug/netcoreapp2.1
+/.vs
+/350ServerApp/ConsoleApp1/obj/Debug/netcoreapp2.1
+/350ServerApp/ConsoleApp1/obj/Release/netcoreapp2.1
+/350Database/DatabaseTesting/DatabaseTesting/obj/Debug
+/FightServer/ServerPhysics/obj/Debug
+/FightServer/WindowsFormsApplication1/obj/Debug
