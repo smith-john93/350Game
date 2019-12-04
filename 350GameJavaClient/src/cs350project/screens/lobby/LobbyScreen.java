@@ -65,16 +65,16 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("command received: " + serverCommand);
+        //System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case UPDATE_LOBBY:
                 try {
                     int action = dataInputStream.readByte();
-                    System.out.println("action byte received: " + action);
+                    //System.out.println("action byte received: " + action);
                     byte[] matchNameBytes = new byte[10];
                     dataInputStream.read(matchNameBytes);
                     String matchName = new String(matchNameBytes);
-                    System.out.println("match name received: " + matchName);
+                    //System.out.println("match name received: " + matchName);
                     switch (action) {
                         case 0:
                             lobbyPanel.removeMatch(matchName);
@@ -99,10 +99,10 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                 }
                 break;
             case VALID_MATCH_NAME:
-                System.out.println("valid match name");
+                //System.out.println("valid match name");
                 break;
             case INVALID_MATCH_NAME:
-                System.out.println("invalid match name");
+                //System.out.println("invalid match name");
                 break;
         }
     }

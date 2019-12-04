@@ -35,13 +35,13 @@ class MatchesPanel extends JPanel {
     }
     
     void addMatch(String matchName) {
-        System.out.println("add match");
+        //System.out.println("add match");
         DefaultListModel<String> defaultListModel = (DefaultListModel<String>)matchesList.getModel();
         defaultListModel.addElement(matchName);
     }
     
     void removeMatch(String matchName) {
-        System.out.println("remove match");
+        //System.out.println("remove match");
     }
     
     public void removeSelectedMatch() {

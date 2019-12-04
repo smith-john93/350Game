@@ -36,6 +36,7 @@ public class MatchScreen extends Screen implements
     private final Communication comm;
     private final MatchObjectManager matchObjectManager;
     private final BackgroundImage backgroundImage;
+    private final MatchOverlay matchOverlay;
     
     /* It is important that this class keeps its own stateCode.
     The stateCode in PlayerCharacter will not update quickly enough
@@ -50,12 +51,16 @@ public class MatchScreen extends Screen implements
         comm = Communication.getInstance();
         combat = new Combat(player);
         matchObjectManager = MatchObjectManager.getInstance();
-        matchObjectManager.setLocalPlayerCharacter(player);
+        matchObjectManager.setPlayer(player);
         backgroundImage = new BackgroundImage("maps/whitehouse.png");
+        matchOverlay = new MatchOverlay();
         Thread repaintThread = new Thread() {
             @Override
             public void run() {
                 while(true) {
+                    matchOverlay.setHealth(player.getPlayerID(),player.getHealth());
+                    PlayerCharacter opponent = matchObjectManager.getOpponent();
+                    matchOverlay.setHealth(opponent.getPlayerID(),opponent.getHealth());
                     repaint();
                     try {
                         Thread.sleep(200);
@@ -81,11 +86,12 @@ public class MatchScreen extends Screen implements
         matchKeyMap.addInputListener(combat);
         matchPanel.addOutgoingMessageListener(comm);
         matchPanel.addOutgoingCommandListener(comm);
+        matchPanel.add(matchOverlay);
         matchObjectManager.addMatchObjectManagerListener(this);
         for(MatchObject matchObject : matchObjectManager.getMatchObjects()) {
             if(matchObject != null) {
                 matchPanel.add(matchObject);
-                System.out.println("match object added to match panel: " + matchObject.getClass().getSimpleName());
+                //System.out.println("match object added to match panel: " + matchObject.getClass().getSimpleName());
             }
         }
     }

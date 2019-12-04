@@ -29,7 +29,6 @@ public abstract class PlayerCharacter extends MatchObject {
     private long lastFrameTime = 0;
     private int droppedFrames = 0;
     private int stateCode;
-    private final int objectID;
     public static final int FRAME_DELAY = 200;
     private final HashMap<Integer,Timer> attackTimers;
     private final int[] attackStates;
@@ -40,9 +39,10 @@ public abstract class PlayerCharacter extends MatchObject {
     private final int matchHeight = 200;
     private final int thumbnailWidth = 100;
     private final int thumbnailHeight = 100;
+    private int health;
+    private int playerID;
     
-    public PlayerCharacter(int objectID) {
-        this.objectID = objectID;
+    public PlayerCharacter() {
         characterResourceManager = new CharacterResourceManager(getClass());
         direction = 1;
         attackTimers = new HashMap<>();
@@ -53,6 +53,18 @@ public abstract class PlayerCharacter extends MatchObject {
         };
         attackStateMask = CharacterState.PUNCH | CharacterState.HIGH_KICK | CharacterState.LOW_KICK;
         movementStateMask = attackStateMask ^ 0xffff;
+    }
+    
+    public int getHealth() {
+        return health;
+    }
+    
+    public int getPlayerID() {
+        return playerID;
+    }
+    
+    public void setPlayerID(int playerID) {
+        this.playerID = playerID;
     }
     
     public void loadThumbnailResource() {
@@ -92,10 +104,6 @@ public abstract class PlayerCharacter extends MatchObject {
             }
         }
     }
-
-    public int getObjectID() {
-        return objectID;
-    }
     
     private void enableState(int stateCode) {
         // Make sure the bits are off before or.
@@ -105,7 +113,7 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     private void disableState(int stateCode) {
-        System.out.println("disabling state: " + stateCode);
+        //System.out.println("disabling state: " + stateCode);
         // Make sure the bits are on before xor.
         if((this.stateCode & stateCode) == stateCode) {
             setState(this.stateCode ^ stateCode);
@@ -113,7 +121,7 @@ public abstract class PlayerCharacter extends MatchObject {
     }
     
     public void setState(int stateCode) {
-        System.out.println("setting state: " + stateCode);
+        //System.out.println("setting state: " + stateCode);
         this.stateCode = stateCode;
         ImageResource characterResource = characterResourceManager.getImageResource(stateCode);
         if(characterResource != null) {
@@ -179,7 +187,11 @@ public abstract class PlayerCharacter extends MatchObject {
         }
         
         if(currentFrame != null) {
-            g2d.drawImage(currentFrame,0,0,null);
+            if(direction > 0) {
+                g2d.drawImage(currentFrame,0,0,null);
+            } else {
+                g2d.drawImage(currentFrame,200,0,-200,200,null);
+            }
         }
     }
     
@@ -187,11 +199,15 @@ public abstract class PlayerCharacter extends MatchObject {
     @Override
     public void receiveData(DataInputStream dataInputStream) throws IOException {
         int newStateCode = dataInputStream.readByte();
+        if(newStateCode < 0) {
+            newStateCode ^= 0xffffff00;
+        }
+        System.out.println("new state code " + newStateCode);
         if((newStateCode | attackStateCode) != stateCode) {
             int newAttackStateCode = newStateCode & attackStateMask;
-            System.out.println("new state code: " + newStateCode);
-            System.out.println("old attack state: " + attackStateCode);
-            System.out.println("new attack state: " + newAttackStateCode);
+            //System.out.println("new state code: " + newStateCode);
+            //System.out.println("old attack state: " + attackStateCode);
+            //System.out.println("new attack state: " + newAttackStateCode);
             Timer attackTimer = attackTimers.get(attackStateCode);
             Timer newAttackTimer = attackTimers.get(newAttackStateCode);
             
@@ -199,9 +215,9 @@ public abstract class PlayerCharacter extends MatchObject {
             if(newAttackTimer != null && newAttackTimer != attackTimer) {
                 if(attackTimer != null && attackTimer.isRunning()) {
                     attackTimer.stop();
-                    System.out.println("starting different attack timer");
+                    //System.out.println("starting different attack timer");
                 } else {
-                    System.out.println("starting new attack timer");
+                    //System.out.println("starting new attack timer");
                 }
                 newAttackTimer.start();
                 setState(newStateCode);
@@ -215,10 +231,10 @@ public abstract class PlayerCharacter extends MatchObject {
         }
         short x = dataInputStream.readShort();
         short y = dataInputStream.readShort();
-        short health = dataInputStream.readByte();
-        System.out.println("x: " + x);
-        System.out.println("y: " + y);
-        System.out.println("health: " + health);
+        health = dataInputStream.readByte();
+        //System.out.println("x: " + x);
+        //System.out.println("y: " + y);
+        //System.out.println("health: " + health);
         //System.out.println(" stateCode: " + stateCode + " x: " + x + " y: " + y);
         setLocation(x,y);
     }

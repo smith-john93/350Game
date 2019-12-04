@@ -38,7 +38,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     //private PlayerCharacter player2;
     
     public SelectionScreen() throws IOException {
-        selectionPanel = new SelectionPanel((short)1);
+        selectionPanel = new SelectionPanel();
         selectionKeyMap = new SelectionKeyMap();
         music = new Music();
         comm = Communication.getInstance();
@@ -61,10 +61,11 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     @Override
     public void characterSelected() {
         player1 = selectionPanel.getPlayer1Selection();
+        MatchObjectManager.getInstance().setPlayer(player1);
         //player2 = selectionPanel.getPlayer2Selection();
         comm.addIncomingCommandListener(MatchObjectManager.getInstance());
         comm.characterSelected(player1.getCharacterType());
-        System.out.println("waiting for other player to select");
+        //System.out.println("waiting for other player to select");
     }
 
     @Override
@@ -90,7 +91,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("selection screen received command: " + serverCommand);
+        //System.out.println("selection screen received command: " + serverCommand);
         if(serverCommand == ServerCommand.START_MATCH) {
             comm.removeIncomingCommandListener(this);
             GameFrame.getInstance().showScreen(new MatchScreen(player1));

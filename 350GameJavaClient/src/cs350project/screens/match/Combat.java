@@ -46,7 +46,7 @@ public class Combat implements AttackInputListener {
         Attack[] combo1 = {Attack.PUNCH,Attack.PUNCH,Attack.HIGH_KICK,Attack.BLOCK};
         if(compareCombos(attacksArray,combo1)) {
             attacks.clear();
-            System.out.println("HADOKEN!");
+            //System.out.println("HADOKEN!");
         }
     }
     

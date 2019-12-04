@@ -28,7 +28,7 @@ public class Platform extends MatchObject {
             for(short s : data) {
                 System.out.print("," + s);
             }
-            System.out.println();
+            //System.out.println();
             setBounds(data[0],data[1],data[2],data[3]);
         } catch(IOException e) {
             System.err.println(e.getMessage());

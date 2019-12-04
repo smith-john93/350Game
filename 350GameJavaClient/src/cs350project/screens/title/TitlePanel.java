@@ -90,7 +90,7 @@ public class TitlePanel extends Panel<TitleInputListener> {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("click");
+                //System.out.println("click");
                 for(TitleInputListener titleInputListener : inputListeners) {
                     titleInputListener.start();
                 }

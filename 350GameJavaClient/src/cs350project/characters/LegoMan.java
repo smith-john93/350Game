@@ -10,12 +10,6 @@ package cs350project.characters;
  * @author Mark Masone
  */
 public class LegoMan extends PlayerCharacter {
-    
-    public LegoMan(int objectID) {
-        super(objectID);
-        
-        
-    }
 
     @Override
     public CharacterClass getCharacterClass() {

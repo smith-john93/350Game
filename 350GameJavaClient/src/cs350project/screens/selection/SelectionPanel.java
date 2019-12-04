@@ -21,12 +21,12 @@ public class SelectionPanel extends Panel {
     private final PlayerCharacter[] characters;
     private final SelectionOverlay selectionOverlay;
 
-    public SelectionPanel(short objectID) throws IOException {
+    public SelectionPanel() throws IOException {
         characters = new PlayerCharacter[]{
-                new Ganchev(objectID),
-                new Coffman(objectID),
-                new Trump(objectID),
-                new LegoMan(objectID)
+                new Ganchev(),
+                new Coffman(),
+                new Trump(),
+                new LegoMan()
         };
         
         Rectangle[] characterBorders = new Rectangle[characters.length];

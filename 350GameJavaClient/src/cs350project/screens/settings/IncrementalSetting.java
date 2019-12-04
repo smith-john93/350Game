@@ -33,7 +33,7 @@ class IncrementalSetting extends JPanel {
     }
     
     public void setText(String text) {
-        System.out.println(text);
+        //System.out.println(text);
         settingText.setText(text);
     }
     

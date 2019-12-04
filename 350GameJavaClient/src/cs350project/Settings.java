@@ -68,6 +68,10 @@ public class Settings {
         keyMappings.put(KeyEvent.VK_D,CharacterState.MOVING_RIGHT);
         keyMappings.put(KeyEvent.VK_A,CharacterState.MOVING_LEFT);
         keyMappings.put(KeyEvent.VK_S,CharacterState.CROUCHING);
+        keyMappings.put(KeyEvent.VK_P,CharacterState.PUNCH);
+        keyMappings.put(KeyEvent.VK_K,CharacterState.HIGH_KICK);
+        keyMappings.put(KeyEvent.VK_L,CharacterState.LOW_KICK);
+        keyMappings.put(KeyEvent.VK_B,CharacterState.BLOCKING);
     }
     
     public static Settings getSettings() {

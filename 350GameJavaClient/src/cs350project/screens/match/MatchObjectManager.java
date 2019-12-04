@@ -31,7 +31,9 @@ public class MatchObjectManager implements IncomingCommandListener {
     private static MatchObjectManager matchObjectManager;
     private final HashMap<Integer,MatchObject> matchObjects;
     private final ArrayList<MatchObjectManagerListener> matchObjectManagerListeners;
-    private final int localPlayerCharacterID = 0;
+    private int playerID = 0;
+    private PlayerCharacter player;
+    private PlayerCharacter opponent;
     
     private MatchObjectManager() {
         matchObjects = new HashMap<>();
@@ -49,6 +51,14 @@ public class MatchObjectManager implements IncomingCommandListener {
         return matchObjects.values();
     }
     
+    public PlayerCharacter getPlayer() {
+        return player;
+    }
+    
+    public PlayerCharacter getOpponent() {
+        return opponent;
+    }
+    
     public void addMatchObjectManagerListener(MatchObjectManagerListener matchObjectManagerListener) {
         matchObjectManagerListeners.add(matchObjectManagerListener);
     }
@@ -56,7 +66,7 @@ public class MatchObjectManager implements IncomingCommandListener {
     private void set(int id, MatchObject matchObject) {
         if(!matchObjects.containsKey(id)) {
             matchObjects.put(id, matchObject);
-            System.out.println("match object added: " + id);
+            //System.out.println("match object added: " + id);
             return;
         }
         throw new IllegalArgumentException("Attempted to overwrite match object. ID: " + id);
@@ -66,8 +76,9 @@ public class MatchObjectManager implements IncomingCommandListener {
         matchObjects.clear();
     }
     
-    public void setLocalPlayerCharacter(PlayerCharacter playerCharacter) {
-        setPlayerCharacter(localPlayerCharacterID,playerCharacter);
+    public void setPlayer(PlayerCharacter player) {
+        this.player = player;
+        //setPlayerCharacter(playerID,player);
     }
     
     private void setPlayerCharacter(int id, PlayerCharacter playerCharacter) {
@@ -78,7 +89,7 @@ public class MatchObjectManager implements IncomingCommandListener {
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("match object manager received command " + serverCommand);
+        //System.out.println("match object manager received command " + serverCommand);
         switch(serverCommand) {
             case CREATE_MATCH_OBJECT:
                 createMatchObject(dataInputStream);
@@ -91,7 +102,7 @@ public class MatchObjectManager implements IncomingCommandListener {
     private void updateMatch(DataInputStream dataInputStream) {
         try {
             int id = dataInputStream.readShort();
-            System.out.println("update match object with ID: " + id);
+            //System.out.println("update match object with ID: " + id);
             MatchObject matchObject = matchObjects.get(id);
             if(matchObject != null) {
                 matchObject.receiveData(dataInputStream);
@@ -112,7 +123,7 @@ public class MatchObjectManager implements IncomingCommandListener {
         try {
             MatchObjectType type = MatchObjectType.parse(dataInputStream.readByte());
             int id = dataInputStream.readShort();
-            System.out.println("match object type received: " + type + " with ID: " + id);
+            //System.out.println("match object type received: " + type + " with ID: " + id);
             MatchObject matchObject = null;
             switch (type) {
                 case PLATFORM:
@@ -121,26 +132,31 @@ public class MatchObjectManager implements IncomingCommandListener {
                     break;
                 case PLAYER_CHARACTER:
                     CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
-                    System.out.println("character type received: " + characterType);
-                    PlayerCharacter playerCharacter;
+                    //System.out.println("character type received: " + characterType);
                     switch(characterType) {
                         case GANCHEV:
-                            playerCharacter = new Ganchev((short)id);
+                            opponent = new Ganchev();
                             break;
                         case COFFMAN:
-                            playerCharacter = new Coffman((short)id);
+                            opponent = new Coffman();
                             break;
                         case TRUMP:
-                            playerCharacter = new Trump((short)id);
+                            opponent = new Trump();
                             break;
                         case LEGOMAN:
-                            playerCharacter = new LegoMan((short)id);
+                            opponent = new LegoMan();
                             break;
                         default:
                             return;
                     }
-                    setPlayerCharacter(id,playerCharacter);
-                    matchObject = playerCharacter;
+                    opponent.setPlayerID(id);
+                    setPlayerCharacter(id,opponent);
+                    if(id == 0) {
+                        playerID = 1;
+                    }
+                    player.setPlayerID(playerID);
+                    setPlayerCharacter(playerID,player);
+                    matchObject = opponent;
                     break;
             }
             if(matchObject != null) {

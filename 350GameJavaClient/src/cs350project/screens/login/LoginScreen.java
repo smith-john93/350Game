@@ -59,7 +59,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("command received: " + serverCommand);
+        //System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case USER_AUTH_PASS:
                 comm.removeIncomingCommandListener(this);
