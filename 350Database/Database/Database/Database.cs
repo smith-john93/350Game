@@ -2,9 +2,9 @@
 using System.IO;
 using System;
 
-namespace DatabaseTesting
+namespace Database 
 {
-    class Database
+    public class Database
     {
         public SQLiteConnection connection;
         public const string MOVE_LEFT = "moveLeft";
@@ -15,6 +15,10 @@ namespace DatabaseTesting
         public const string HIGH_KICK = "highKick";
         public const string LOW_KICK = "lowKick";
 
+        /// <summary>
+        /// Default construvtor for the database. 
+        /// If a database does not exist, it builds one
+        /// </summary>
         public Database()
         {
             // Establish connection to the database
@@ -27,188 +31,197 @@ namespace DatabaseTesting
                 SQLiteConnection.CreateFile("database.sqlite3");
 
                 // Create LoginInformation table
-                string query = "CREATE TABLE \"UserInformation\" ( \"username\" TEXT NOT NULL UNIQUE, " +
-                    "\"password\" TEXT NOT NULL, \"moveLeft\" TEXT DEFAULT 'a', \"moveRight\" TEXT DEFAULT 'd', " +
-                    "\"crouch\" TEXT DEFAULT 's', \"jump\" TEXT DEFAULT 'w', \"block\" TEXT DEFAULT 'o', " +
-                    "\"punch\" TEXT DEFAULT 'p', \"highKick\" TEXT DEFAULT 'k', \"lowKick\" TEXT DEFAULT 'l', " +
-                    "PRIMARY KEY(\"username\"))";
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                OpenConnection();
-                command.ExecuteNonQuery();
-                CloseConnection();
+                string query = @"
+CREATE TABLE UserInformation 
+( 
+	username TEXT NOT NULL UNIQUE, 
+    password TEXT NOT NULL,
+	moveLeft TEXT DEFAULT 'a',
+	moveRight TEXT DEFAULT 'd',
+    crouch TEXT DEFAULT 's', 
+	jump TEXT DEFAULT 'w', 
+	block TEXT DEFAULT 'o',
+    punch TEXT DEFAULT 'p',
+	highKick TEXT DEFAULT 'k', 
+	lowKick TEXT DEFAULT 'l', 
+
+    PRIMARY KEY(username)
+)
+";
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                {
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
+                    command.Connection.Close();
+                }
             }
         }
 
-        private void OpenConnection()
-        {
-            if (connection.State != System.Data.ConnectionState.Open)
-            {
-                connection.Open();
-            }
-        }
-        private void CloseConnection()
-        {
-            if (connection.State != System.Data.ConnectionState.Closed)
-            {
-                connection.Close();
-            }
-        }
-
-        /*
-        * void AddNewUser(string username, string password)
-        * 
-        *   Adds a new user entry to the database with the given username and password. Must catch
-        * System.Data.SQLite.SQLiteException to handle the event of a username already being used in the database.
-        *   
-        * @param username: username to be added to the database
-        * @param password: password for given user
-        */
+        /// <summary>
+        /// Adds a new user entry to the database with the given username and password. 
+        /// Must catch System.Data.SQLite.SQLiteException to handle the event of a username already being used in the database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public bool AddNewUser(string username, string password)
         {
-            bool succeeded = true;
+            bool succeeded = false;
+            int i = 0;
 
-            try
+            // Insert entry into the LoginInformation and UserKeybinding tables
+            string insertQuery = "INSERT INTO UserInformation ('username', 'password') VALUES (@username, @password)";
+            string checkQuery = "SELECT 1 FROM UserInformation WHERE username = @username"; 
+            using (SQLiteCommand command = new SQLiteCommand(string.Empty, connection))
             {
-                // Insert entry into the LoginInformation and UserKeybinding tables
-                string query = "INSERT INTO UserInformation ('username', 'password') VALUES (@username, @password)";
-                SQLiteCommand command = new SQLiteCommand(query, connection);
-                OpenConnection();
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
-                command.ExecuteNonQuery();
-                CloseConnection();
+                command.Connection.Open();
+                command.CommandText = checkQuery;
+                using(SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        i = int.Parse(reader[0].ToString());
+                    }
+                }
+                if(i == 0)
+                {
+                    command.CommandText = insertQuery;
+                    succeeded = true;
+                    command.ExecuteNonQuery();
+                }
+                command.Connection.Close();
             }
-            catch (System.Data.SQLite.SQLiteException e)
-            {
-                Console.WriteLine("Username \"" + username + "\" already exists.");
-                succeeded = false;
-            }
-
-            Console.WriteLine("User " + username + " created.");
             return succeeded;
         }
 
-        /*
-        * void RemoveUser(string username, string password)
-        * 
-        *   Removes a user from the database with the given username.
-        *   
-        * @param username: username to be removed from the database
-        */
+        /// <summary>
+        /// Removes a user from the database with the given username.
+        /// </summary>
+        /// <param name="username"></param>
         public void RemoveUser(string username)
         {
-            string query = "DELETE FROM UserInformation WHERE username='" + username + "'";
-            SQLiteCommand command = new SQLiteCommand(query, connection);
-            OpenConnection();
-            command.ExecuteNonQuery();
-            CloseConnection();
-
+            string query = "DELETE FROM UserInformation WHERE username= @username";
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@username", username);
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+                command.Connection.Close();
+            }
             Console.WriteLine("User " + username + " removed.");
         }
 
-        /*
-        * void SetKeyBinding(string username, string command, string key)
-        * 
-        *   Changes the key binding for a given command for the given user.
-        *   
-        * @param username: user to have the key binding changed
-        * @param command: command key binding to be changed
-        * @param key: key that the key binding is to be changed to
-        */
+        /// <summary>
+        /// Changes the key binding for a given command for the given user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="command"></param>
+        /// <param name="key"></param>
         public void SetKeyBinding(string username, string command, string key)
         {
-
-            string query = "UPDATE UserInformation SET " + command + " = '" + key + "' WHERE username = '" + username + "'";
-            SQLiteCommand sqlCommand = new SQLiteCommand(query, connection);
-            OpenConnection();
-            sqlCommand.ExecuteNonQuery();
-            CloseConnection();
+            string query = "UPDATE UserInformation SET " + command + " = @key WHERE username = @username";
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            {
+                sqlCommand.Parameters.AddWithValue("@key", key);
+                sqlCommand.Parameters.AddWithValue("@username", username);
+                sqlCommand.Connection.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlCommand.Connection.Close();
+            }                
             Console.WriteLine(command + " key for user " + username + " set to " + key);
         }
 
-        /*
-        * void GetKeyBinding(string username, string command)
-        * 
-        *   Returns the key binding for a given command for the given user.
-        *   
-        * @param username: user key binding to be retrieved
-        * @param command: command key binding to be retrieved
-        *
-        * Return: string (current key bindings for given command)
-        */
+        /// <summary>
+        /// Returns the key binding for a given command for the given user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public string GetKeyBinding(string username, string command)
         {
-            string query = "SELECT " + command + " FROM UserInformation WHERE username = '" + username + "'";
-            SQLiteCommand sqlCommand = new SQLiteCommand(query, connection);
-            OpenConnection();
-            SQLiteDataReader reader = sqlCommand.ExecuteReader();
-            reader.Read();
-            string key = reader.GetString(0);
-            reader.Close();
-            CloseConnection();
+            string key = string.Empty; ;
+            string query = @"SELECT " + command + " FROM UserInformation WHERE username = @username";
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            {
+                sqlCommand.Parameters.AddWithValue("@username",command);
+                sqlCommand.Connection.Open();
+                using (SQLiteDataReader reader = sqlCommand.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        key = reader.GetString(0);
+                    }            
+                }
+                sqlCommand.Connection.Close();
+            }
 
             Console.WriteLine(command + " key binding for " + username + " is " + key);
             return key;
         }
 
-        /*
-        * void SetPassword(string username, string password)
-        * 
-        *   Changes the password for the given user.
-        *   
-        * @param username: user to have the key binding changed
-        * @param password: new password
-        */
+        /// <summary>
+        /// Changes the password for the given user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         public void SetPassword(string username, string password)
         {
-            string query = "UPDATE UserInformation SET password = '" + password + "' WHERE username = '" + username + "'";
-            SQLiteCommand sqlCommand = new SQLiteCommand(query, connection);
-            sqlCommand.Parameters.AddWithValue("@username", username);
-            sqlCommand.Parameters.AddWithValue("@password", password);
-            OpenConnection();
-            sqlCommand.ExecuteNonQuery();
-            CloseConnection();
+            string query = @"
+UPDATE UserInformation 
+SET password = @password 
+WHERE username = @username
+;
+";
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            {
+                sqlCommand.Parameters.AddWithValue("@username", username);
+                sqlCommand.Parameters.AddWithValue("@password", password);
+                sqlCommand.Connection.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlCommand.Connection.Close();
 
+            }
             Console.WriteLine("Password for " + username + " updated.");
         }
 
-        /*
-        * void GetKeyBinding(string username, string command)
-        * 
-        *   Returns the key binding for a given command for the given user.
-        *   
-        * @param username: user key binding to be retrieved
-        * @param command: command key binding to be retrieved
-        *
-        * Return: string (current key bindings for given command)
-        */
+        /// <summary>
+        /// Returns the key binding for a given command for the given user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         private string GetPassword(string username)
         {
-            string query = "SELECT password FROM UserInformation WHERE username = '" + username + "'";
-            SQLiteCommand sqlCommand = new SQLiteCommand(query, connection);
-            OpenConnection();
-            SQLiteDataReader reader = sqlCommand.ExecuteReader();
-            reader.Read();
-            string password = reader.GetString(0);
-            reader.Close();
-            CloseConnection();
+            string password;
+            string query = @"
+SELECT password 
+FROM UserInformation 
+WHERE username = @username
+;
+";
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            {                
+                sqlCommand.Parameters.AddWithValue("@username", username);
+                sqlCommand.Connection.Open();
+                using(SQLiteDataReader reader = sqlCommand.ExecuteReader())
+                {
+                    reader.Read();
+                    password = reader.GetString(0);
 
+                }
+                sqlCommand.Connection.Close();
+            }
             Console.WriteLine(username + "'s password retrieved");
             return password;
         }
 
-        /* 
-        * bool VerifyPassword(string submittedUsername, string submittedPassword)
-        * 
-        *   Checks to see if the submitted username/password combination matches the one
-        * stored in the database.
-        * 
-        * @param submittedUsername: username
-        * @param submittedPassword: password
-        * 
-        * Return true if passwords match, false if they do not match.
-        */
-
+         /// <summary>
+        /// Checks to see if the submitted username/password combination matches the one stored in the database.
+        /// </summary>
+        /// <param name="submittedUsername"></param>
+        /// <param name="submittedPassword"></param>
+        /// <returns></returns>
         public bool VerifyPassword(string submittedUsername, string submittedPassword)
         {
             string storedPassword = GetPassword(submittedUsername);

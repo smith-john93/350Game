@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Net;
-
+using Database;
 
 namespace GameServer
 {
@@ -16,6 +16,9 @@ namespace GameServer
         {
 
             Console.WriteLine("Server initialized");
+
+            Console.WriteLine("Initializing Database");
+            Database.Database dataBaseService = new Database.Database();
 
             Console.WriteLine("Generating Game Listing...");
             GameController gameController = new GameController();          

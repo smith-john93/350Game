@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\350Database\Database\Database\Database.csproj" />
     <ProjectReference Include="..\..\FightServer\ServerPhysics\ServerPhysics.csproj" />
   </ItemGroup>
 
