@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameServer.Enumerations
+﻿namespace GameServer.Enumerations
 {
     public enum ServerCommands
     {
@@ -15,7 +11,8 @@ namespace GameServer.Enumerations
         USER_AUTH_FAIL = 6,
         USER_AUTH_BLOCKED = 7,
         VALID_MATCH_NAME = 8,
-        INVALID_MATCH_NAME = 9
-
+        INVALID_MATCH_NAME = 9,
+        DELETE_MATCH_OBJECT = 10,
+        END_GAME_INSTANCE = 11
     }
 }

@@ -1,38 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using GameServer.Enumerations;
+using System.Linq;
 
 namespace GameServer
 {
     public class GameController
-    {
+    {        
+        //A dictionary to maintain games and references to the games
         public Dictionary<string, GameSimulation> gameListing;
+
+        //A list to maintain each player
         public List<PlayerController> playerList;
+
+        /// <summary>
+        /// Initializes the game controller
+        /// </summary>
         public GameController()
         {
             gameListing = new Dictionary<string, GameSimulation>();
             playerList = new List<PlayerController>();
         }
 
+        /// <summary>
+        /// Starts the specified game in the dictionary
+        /// </summary>
+        /// <param name="game"></param>
         public void StartGame(string game)
         {
             gameListing[game].Run();
         }
 
+        /// <summary>
+        /// Creates a game and adds it to the dictionary
+        /// </summary>
+        /// <param name="gameName"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public bool CreateGame(string gameName, PlayerController player)
         {
-
+            //verify the games does not exist in the dictionary yet
             if (gameListing.ContainsKey(gameName))
                 return false;
 
-            Console.WriteLine($"Creating Match {gameName}");
+            //respond to the client to inform them the name of the game is valid
             byte[] responseByte = new byte[1] { (byte)ServerCommands.VALID_MATCH_NAME };
             ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
             player.SendMessage(response);
-            player.inGame = true;
+
+
+            player.SetInGameState();
 
             //create the game
             GameSimulation game = new GameSimulation();
@@ -41,49 +59,46 @@ namespace GameServer
             //add the game to a dicitonary
             gameListing.Add(gameName, game);
             Console.WriteLine($"{gameListing.Count} games in wait");
-            StartGame(gameName);
             NotifyLobbyUpdate(gameName, true);
+            StartGame(gameName);
             return true;
         }
 
-        public void EndGame(string game, PlayerController player)
+        public void EndGame(string game)
         {
-            throw new NotImplementedException();
+            gameListing.Remove(game);
         }
 
         public bool AddPlayer(string game, PlayerController player)
         {
             if (!gameListing.ContainsKey(game))
             { 
-                Console.WriteLine("Game Not Preset");
                 return false;
             }
             else
             {
                 if(gameListing.GetValueOrDefault(game).PlayerOneJoined())
                 {
-                    Console.WriteLine("Adding player 2");
-                    player.inGame = true;
+                    player.SetInGameState();
                     NotifyLobbyUpdate(game, false);
                     gameListing.GetValueOrDefault(game).AddPlayer2(player);
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("Adding Player 1");
                     gameListing.GetValueOrDefault(game).AddPlayer1(player);
-                    return true;
-
-                    
+                    return true;                  
                 }
             }            
         }
 
+        public void RemovePlayer(PlayerController player)
+        {
+            playerList.Remove(player);
+        }
+
         async private void NotifyLobbyUpdate(string match, bool add)
         {
-        //    string a = "addition";
-        //    string b = "removal";
-        //    Console.WriteLine($"Pulsing {(add ? a : b)} of {match}");
             foreach(PlayerController player in playerList)
             {
                 await Task.Run(() => player.PulseLobby(match, add));
@@ -92,9 +107,9 @@ namespace GameServer
 
         public void SendAllGames(PlayerController player)
         {
-            foreach(string game in gameListing.Keys)
+            foreach(KeyValuePair<string, GameSimulation> game in gameListing.Where(a => a.Value.PlayerTwoJoined() == false))
             {
-                NotifyLobbyUpdate(game, true);
+                NotifyLobbyUpdate(game.Key, true);
             }
         }
     }

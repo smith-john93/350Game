@@ -7,16 +7,10 @@ namespace GameServer
         static void Main(string[] args)
         {
             Console.WriteLine("Initializing Server...");
-            ServerConfiguration _serverConfig = ConfigureServer(); ;
-            GameServer server = new GameServer(_serverConfig);
+            GameServer server = new GameServer();
             server.StartServer();
             Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
-        }
-
-        private static ServerConfiguration ConfigureServer()
-        {
-            return new ServerConfiguration();
         }
     }
 }

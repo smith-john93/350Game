@@ -15,18 +15,14 @@ namespace GameServer
         
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
-        //private ThreadPool _playerThreadPool;
-        // 0x100007F is 127.0.0.1 in big-endian.
-        /*
-        private const long localhost = 0x100007F;
-        private const long localhost = 0x1EAC840A;
-         */
+
         private IPHostEntry ipHost;
         private const int commandPort = 12345;
         public TcpListener listener;
         private GameController gController;
         private Multicast.Multicast multi;
         public bool RequestShutdown;
+        private const string MULTICAST_STRING = "o";
         public SocketCommunicator(GameController gameController)
         {
             gController = gameController;
@@ -35,25 +31,19 @@ namespace GameServer
 
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
             ipAddr = ipHost.AddressList[0];
-            /*
-            ipAddr = new IPAddress(localhost);
-            */
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
 
             multi = new Multicast.Multicast();
-            //PrimarySocket = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            //_playerThreadPool = new 
         }
 
 
         async public void listen()
         {
-
             try
             {
                 Console.WriteLine("Starting Multicast Broadcast...");
-                Task.Run(() => SendMulticast("o"));
+                Task.Run(() => SendMulticast(MULTICAST_STRING));
                 Console.WriteLine("Broadcast Started");                
 
                 listener = new TcpListener(localEndPoint);
@@ -77,7 +67,6 @@ namespace GameServer
                     {
                         Console.WriteLine(e);
                     }
-                    Console.WriteLine("connection yeeted");
 
                 }
                 if(RequestShutdown)

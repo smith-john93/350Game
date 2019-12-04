@@ -9,11 +9,8 @@ namespace GameServer
 {
     public class GameServer
     {
-        private ServerConfiguration _serverConfig;
-        public GameServer(ServerConfiguration _serverConfiguration)
-        {
-            _serverConfig = _serverConfiguration;
-        }
+
+        public GameServer() { }
 
         public void StartServer()
         {
@@ -42,7 +39,11 @@ namespace GameServer
                 string a = Console.ReadLine();
 
                 if (a == "1")
-                    Console.WriteLine($"Number of game threads: {gameController.gameListing.Count}");
+                {
+                    Console.WriteLine("Active Games:");
+                    foreach (string game in gameController.gameListing.Keys)
+                        Console.WriteLine(game);
+                }
                 else
                 {
                     //matchMaker.RequestShutdown = true;
@@ -56,37 +57,5 @@ namespace GameServer
                 }
             }
         }
-
-
-        /*
-        needs:
-            (for each new game: Thread) Class for simulating game
-            (ongoing thread) Class to detect new connections
-            Controller to pair up new players
-            Layer to interact with the DB
-            
-
-        Logical order:
-            Accept new connection from user
-            validate the user (authentication - check username for match, salt then hash password & check for match)
-            wait for user input:
-                1- Enter Lobby
-                2- Check stats
-                3- Edit information
-            Process user request
-                1- place into matchmaking queue
-                2- reply with user status
-                3- allow information editing
-
-
-        Player Controller:
-            Thread for each 
-
-        MATCHMAKING QUEUE:
-            Queue that matches two users
-            creates a new instance of GameSimulation(SocketStream1, SocketStream2)
-            queue will make sure two players who just played will not play together in new match
-
-        */
     }
 }

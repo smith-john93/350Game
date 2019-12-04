@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameServer.Enumerations
+﻿namespace GameServer.Enumerations
 {
     public enum CharacterEnum
     {

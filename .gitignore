@@ -14,3 +14,6 @@
 /FightServer/.vs/ServerPhysics/v16/Server/sqlite3
 /FightServer/.vs/ServerPhysics/v16
 /FightServer/ServerPhysics/obj/Debug
+/FightServer/ServerPhysics/obj/Release
+/FightServer/WindowsFormsApplication1/obj
+/FightServer/ServerPhysics/bin/Debug

@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 
 
-namespace WindowsFormsApplication1
+namespace ServerPhysics
 {
     public partial class Form1 : Form
     {
-        object_manager obj_man;
+        ObjectManager obj_man;
         public System.Net.Sockets.NetworkStream player1_stream;
         public System.Net.Sockets.NetworkStream player2_stream;
 
@@ -23,14 +23,14 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
 
-            obj_man = new object_manager(player1_stream, PlayerOneFighter, player2_stream, PlayerTwoFighter);
+            obj_man = new ObjectManager(player1_stream, PlayerOneFighter, player2_stream, PlayerTwoFighter);
         }
 
         public Form1()
         {
             InitializeComponent();
 
-            obj_man = new object_manager();
+            obj_man = new ObjectManager();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -45,7 +45,7 @@ namespace WindowsFormsApplication1
             System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
 
 
-            obj_man.draw(graphicsObj);
+            //obj_man.draw(graphicsObj);
            
         }
 
@@ -61,7 +61,7 @@ namespace WindowsFormsApplication1
             System.Drawing.Graphics graphicsObj;
             graphicsObj = this.CreateGraphics();
             //draw event
-            obj_man.draw(graphicsObj);
+            //obj_man.draw(graphicsObj);
 
             
             //gametick event

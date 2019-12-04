@@ -1,0 +1,1 @@
+This is the physics for the fighting game. The user input and graphics will be disabled when used in the proper context, they are only enabled for debugging purposes. 

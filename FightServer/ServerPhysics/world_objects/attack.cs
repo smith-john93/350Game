@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Drawing;
 
-namespace WindowsFormsApplication1
+namespace ServerPhysics.World_Objects
 {
-    public class attack : world_object
+    public class Attack : WorldObject
     {
         public int lifetime = 60;
         public int damage = 10;
-        public player owner;
+        public Player owner;
         public int xoffset = 45;
         public int yoffset = 15;
 
-        public attack(int x, int y, player owner, object_manager o)
+        public Attack(int x, int y, Player owner, ObjectManager o)
         {
+            id = o.world_object_count++;
             this.x = x;
             this.y = y;
             this.owner = owner;
@@ -21,8 +22,10 @@ namespace WindowsFormsApplication1
             this.owner.move_cooldown = lifetime;
 
             this.clr = System.Drawing.Color.Blue;
+
+            o.attack_list.Add(this);
         }
-        public attack()
+        public Attack()
         {
            
         }
@@ -35,7 +38,6 @@ namespace WindowsFormsApplication1
 
             if(lifetime<0)
             {
-                this.manager.world_object_list.Remove(this);
                 this.manager.attack_list.Remove(this);
             }
             else
@@ -44,7 +46,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public virtual void hit(player p)
+        public virtual void hit(Player p)
         {
             if(owner != p)
             { 
