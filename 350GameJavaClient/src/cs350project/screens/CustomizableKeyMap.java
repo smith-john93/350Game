@@ -24,8 +24,11 @@ public abstract class CustomizableKeyMap<E extends InputListener> extends KeyMap
     
     @Override
     public void keyPressed(KeyEvent ke) {
-        int mapCode = keyMappings.get(ke.getKeyCode());
-        mappedKeyPressed(mapCode);
+        int keyCode = ke.getKeyCode();
+        Integer mapCode = keyMappings.get(keyCode);
+        if(mapCode != null) {
+            mappedKeyPressed(mapCode);
+        }
     }
     
     @Override

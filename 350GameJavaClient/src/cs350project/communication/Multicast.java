@@ -39,7 +39,7 @@ public class Multicast {
                     serverAddr = packet.getAddress();
                     break;
                 } else {
-                    System.out.println("received unexpected multicast message");
+                    //System.out.println("received unexpected multicast message");
                 }
             }
             socket.leaveGroup(groupAddr);

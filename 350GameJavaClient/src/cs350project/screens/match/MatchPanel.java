@@ -8,7 +8,6 @@ package cs350project.screens.match;
 import cs350project.Settings;
 import cs350project.communication.OutgoingCommandListener;
 import cs350project.communication.OutgoingMessageListener;
-import cs350project.characters.PlayerCharacter;
 import cs350project.chat.*;
 import java.util.ArrayList;
 import cs350project.screens.Panel;
@@ -41,6 +40,12 @@ public class MatchPanel extends Panel implements
         
         setLayout(null);
         setBackground(Settings.TRANSPARENT);
+        
+        
+        //matchOverlay.setHealth(0, 40);
+        //matchOverlay.setHealth(1, 75);
+        //add(matchOverlay);
+        //setComponentZOrder(matchOverlay,0);
 
         add(chatMessageQueue);
         add(chatMessageField);

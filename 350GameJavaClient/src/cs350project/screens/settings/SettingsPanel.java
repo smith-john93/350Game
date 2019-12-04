@@ -154,7 +154,7 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for(SettingsInputListener settingsInputListener : inputListeners) {
-                    System.out.println("save");
+                    //System.out.println("save");
                     settingsInputListener.save();
                 }
             }
@@ -169,7 +169,7 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
     }
     
     private void updateKeyMapSettings() {
-        System.out.println("update key map settings");
+        //System.out.println("update key map settings");
         HashMap<Integer, ArrayList<String>> actionMappings = new HashMap<>();
         for(Entry<Integer, Integer> entry : keyMappings.entrySet()) {
             int value = entry.getValue();
@@ -191,7 +191,7 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
                 int i = 0;
                 for(String keyChar : keyCharsList) {
                     keyChars[i++] = keyChar;
-                    System.out.println(keyChar);
+                    //System.out.println(keyChar);
                 }
             }
             keyMapSettingPanel.setKeyChars(keyChars);

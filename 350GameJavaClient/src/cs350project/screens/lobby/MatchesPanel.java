@@ -35,13 +35,13 @@ class MatchesPanel extends JPanel {
     }
     
     void addMatch(String matchName) {
-        System.out.println("add match");
+        //System.out.println("add match");
         DefaultListModel<String> defaultListModel = (DefaultListModel<String>)matchesList.getModel();
         defaultListModel.addElement(matchName);
     }
     
     void removeMatch(String matchName) {
-        System.out.println("remove match");
+        //System.out.println("remove match");
     }
     
     public void removeSelectedMatch() {
@@ -63,7 +63,15 @@ class MatchesPanel extends JPanel {
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                while(true) {
+                
+                // delete the next 4 lines after testing is completed
+                addMatch("match1");
+                for(LobbyInputListener lobbyInputListener : inputListeners) {
+                    lobbyInputListener.createMatch("match1");
+                }
+                
+                // uncomment this block after testing is completed
+                /*while(true) {
                     String matchName = JOptionPane.showInputDialog(
                             matchesPanel, 
                             "Match Name", 
@@ -75,16 +83,13 @@ class MatchesPanel extends JPanel {
                     } else if(matchName.isBlank()) {
                         JOptionPane.showMessageDialog(matchesPanel, "Match name cannot be blank.");
                     } else {
-                        /*for(LobbyInputListener lobbyInputListener : inputListeners) {
-                            lobbyInputListener.createMatch();
-                        }*/
                         addMatch(matchName);
                         for(LobbyInputListener lobbyInputListener : inputListeners) {
                             lobbyInputListener.createMatch(matchName);
                         }
                         break;
                     }
-                }
+                }*/
             }
         });
         gbc.insets = Settings.INSETS_MENU_NO_RIGHT;

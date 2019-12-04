@@ -26,7 +26,7 @@ public class MatchKeyMap extends KeyMap<MatchInputListener> {
         chatKeyMap = new ChatKeyMap();
         movementKeyMap = new MovementKeyMap(keyMappings);
         menuKeyMap = new MatchMenuKeyMap();
-        attackKeyMap = new AttackKeyMap();
+        attackKeyMap = new AttackKeyMap(keyMappings);
         addKeyMap(chatKeyMap);
         addKeyMap(movementKeyMap);
         addKeyMap(menuKeyMap);

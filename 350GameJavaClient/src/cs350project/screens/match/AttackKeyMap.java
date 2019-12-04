@@ -5,31 +5,65 @@
  */
 package cs350project.screens.match;
 
-import cs350project.screens.KeyMap;
-import java.awt.event.KeyEvent;
+import cs350project.characters.CharacterState;
+import cs350project.screens.CustomizableKeyMap;
+import java.util.HashMap;
 
 /**
  *
  * @author Mark Masone
  */
-public class AttackKeyMap extends KeyMap<AttackInputListener> {
+public class AttackKeyMap extends CustomizableKeyMap<AttackInputListener> {
+    
+    private boolean punchDown = false;
+    private boolean highKickDown = false;
+    private boolean lowKickDown = false;
+    
+    public AttackKeyMap(HashMap<Integer, Integer> keyMappings) {
+        super(keyMappings);
+    }
+    
     @Override
-    public void keyPressed(KeyEvent ke) {
-        switch(ke.getKeyCode()) {
-            case KeyEvent.VK_P:
-                for(AttackInputListener attackInputListener : inputListeners) {
-                    attackInputListener.punch();
+    protected void mappedKeyPressed(int mapCode) {
+        switch(mapCode) {
+            case CharacterState.PUNCH:
+                if(!punchDown) {
+                    for(AttackInputListener attackInputListener : inputListeners) {
+                        attackInputListener.punch();
+                    }
+                    punchDown = true;
                 }
                 break;
-            case KeyEvent.VK_K:
-                for(AttackInputListener attackInputListener : inputListeners) {
-                    attackInputListener.highKick();
+            case CharacterState.HIGH_KICK:
+                if(!highKickDown) {
+                    for(AttackInputListener attackInputListener : inputListeners) {
+                        attackInputListener.highKick();
+                    }
+                    highKickDown = true;
                 }
                 break;
-            case KeyEvent.VK_L:
-                for(AttackInputListener attackInputListener : inputListeners) {
-                    attackInputListener.lowKick();
+            case CharacterState.LOW_KICK:
+                if(!lowKickDown) {
+                    for(AttackInputListener attackInputListener : inputListeners) {
+                        attackInputListener.lowKick();
+                    }
+                    lowKickDown = true;
                 }
+                break;
+        }
+    }
+
+    @Override
+    protected void mappedKeyReleased(int mapCode) {
+        switch(mapCode) {
+            case CharacterState.PUNCH:
+                punchDown = false;
+                break;
+            case CharacterState.HIGH_KICK:
+                highKickDown = false;
+                break;
+            case CharacterState.LOW_KICK:
+                lowKickDown = false;
                 break;
         }
     }

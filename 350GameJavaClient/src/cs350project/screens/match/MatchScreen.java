@@ -35,8 +35,8 @@ public class MatchScreen extends Screen implements
     private final Combat combat;
     private final Communication comm;
     private final MatchObjectManager matchObjectManager;
-    private final PlayerCharacter player;
     private final BackgroundImage backgroundImage;
+    private final MatchOverlay matchOverlay;
     
     /* It is important that this class keeps its own stateCode.
     The stateCode in PlayerCharacter will not update quickly enough
@@ -45,20 +45,22 @@ public class MatchScreen extends Screen implements
     */
     private int stateCode;
     
-    public MatchScreen(PlayerCharacter player, PlayerCharacter opponent) {
-        this.player = player;
-        player.setState(CharacterState.IDLE);
+    public MatchScreen(PlayerCharacter player) {
         matchKeyMap = new MatchKeyMap(Settings.getSettings().getKeyMappings());
         matchPanel = new MatchPanel();
         comm = Communication.getInstance();
         combat = new Combat(player);
         matchObjectManager = MatchObjectManager.getInstance();
-        matchObjectManager.setPlayerCharacters(player, opponent);
+        matchObjectManager.setPlayer(player);
         backgroundImage = new BackgroundImage("maps/whitehouse.png");
+        matchOverlay = new MatchOverlay();
         Thread repaintThread = new Thread() {
             @Override
             public void run() {
                 while(true) {
+                    matchOverlay.setHealth(player.getPlayerID(),player.getHealth());
+                    PlayerCharacter opponent = matchObjectManager.getOpponent();
+                    matchOverlay.setHealth(opponent.getPlayerID(),opponent.getHealth());
                     repaint();
                     try {
                         Thread.sleep(200);
@@ -84,18 +86,19 @@ public class MatchScreen extends Screen implements
         matchKeyMap.addInputListener(combat);
         matchPanel.addOutgoingMessageListener(comm);
         matchPanel.addOutgoingCommandListener(comm);
+        matchPanel.add(matchOverlay);
         matchObjectManager.addMatchObjectManagerListener(this);
         for(MatchObject matchObject : matchObjectManager.getMatchObjects()) {
             if(matchObject != null) {
                 matchPanel.add(matchObject);
-                System.out.println("match object added to match panel: " + matchObject.getClass().getSimpleName());
+                //System.out.println("match object added to match panel: " + matchObject.getClass().getSimpleName());
             }
         }
     }
     
     @Override
     public void endGame() {
-        MatchObjectManager.getInstance().clear();
+        MatchObjectManager.getInstance().unsetAll();
         GameFrame.getInstance().showScreen(new LobbyScreen());
     }
     

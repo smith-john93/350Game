@@ -8,13 +8,11 @@ package cs350project.screens.lobby;
 import cs350project.GameFrame;
 import cs350project.Settings;
 import cs350project.screens.MessageDialog;
-import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.KeyMap;
-import cs350project.screens.match.MatchObjectManager;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import cs350project.screens.Screen;
 import cs350project.screens.selection.SelectionScreen;
@@ -30,12 +28,10 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     
     private final LobbyPanel lobbyPanel;
     private final Communication comm;
-    private final MatchObjectManager matchObjectManager;
     
     public LobbyScreen() {
         lobbyPanel = new LobbyPanel();
         comm = Communication.getInstance();
-        matchObjectManager = MatchObjectManager.getInstance();
     }
 
     @Override
@@ -69,16 +65,16 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("command received: " + serverCommand);
+        //System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case UPDATE_LOBBY:
                 try {
                     int action = dataInputStream.readByte();
-                    System.out.println("action byte received: " + action);
+                    //System.out.println("action byte received: " + action);
                     byte[] matchNameBytes = new byte[10];
                     dataInputStream.read(matchNameBytes);
                     String matchName = new String(matchNameBytes);
-                    System.out.println("match name received: " + matchName);
+                    //System.out.println("match name received: " + matchName);
                     switch (action) {
                         case 0:
                             lobbyPanel.removeMatch(matchName);
@@ -103,10 +99,10 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                 }
                 break;
             case VALID_MATCH_NAME:
-                System.out.println("valid match name");
+                //System.out.println("valid match name");
                 break;
             case INVALID_MATCH_NAME:
-                System.out.println("invalid match name");
+                //System.out.println("invalid match name");
                 break;
         }
     }

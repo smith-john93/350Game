@@ -35,10 +35,10 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     private final Music music;
     private final Communication comm;
     private PlayerCharacter player1;
-    private PlayerCharacter player2;
+    //private PlayerCharacter player2;
     
     public SelectionScreen() throws IOException {
-        selectionPanel = new SelectionPanel((short)1);
+        selectionPanel = new SelectionPanel();
         selectionKeyMap = new SelectionKeyMap();
         music = new Music();
         comm = Communication.getInstance();
@@ -61,19 +61,11 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     @Override
     public void characterSelected() {
         player1 = selectionPanel.getPlayer1Selection();
-        player2 = selectionPanel.getPlayer2Selection();
-        /*MatchScreen matchScreen = new MatchScreen(
-                selectionPanel.getPlayer1Selection(),
-                selectionPanel.getPlayer2Selection()
-        );
-        showScreen(matchScreen);*/
-        //comm.connect();
-        //comm.addIncomingCommandListener(this);
-        //music.stop();
+        MatchObjectManager.getInstance().setPlayer(player1);
+        //player2 = selectionPanel.getPlayer2Selection();
         comm.addIncomingCommandListener(MatchObjectManager.getInstance());
-        //comm.addIncomingCommandListener(this);
         comm.characterSelected(player1.getCharacterType());
-        System.out.println("waiting for other player to select");
+        //System.out.println("waiting for other player to select");
     }
 
     @Override
@@ -99,11 +91,11 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("selection screen received command: " + serverCommand);
+        //System.out.println("selection screen received command: " + serverCommand);
         if(serverCommand == ServerCommand.START_MATCH) {
             comm.removeIncomingCommandListener(this);
-            //comm.removeIncomingCommandListener(MatchObjectManager.getInstance());
-            GameFrame.getInstance().showScreen(new MatchScreen(player1,player2));
+            GameFrame.getInstance().showScreen(new MatchScreen(player1));
+            music.stop();
         }
     }
 }

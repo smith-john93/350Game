@@ -21,23 +21,21 @@ public class SelectionPanel extends Panel {
     private final PlayerCharacter[] characters;
     private final SelectionOverlay selectionOverlay;
 
-    public SelectionPanel(short objectID) throws IOException {
+    public SelectionPanel() throws IOException {
         characters = new PlayerCharacter[]{
-                new Ganchev(objectID),
-                new Coffman(objectID),
-                new Trump(objectID),
-                new LegoMan(objectID)
+                new Ganchev(),
+                new Coffman(),
+                new Trump(),
+                new LegoMan()
         };
         
         Rectangle[] characterBorders = new Rectangle[characters.length];
         for(int i = 0; i < characters.length; i++) {
             int x = 300 + (i * 140);
             int y = 300;
-            int w = 100;
-            int h = 100;
             PlayerCharacter character = characters[i];
-            character.setBounds(x, y, w, h);
-            character.loadAllGameResources();
+            character.setLocation(x, y);
+            character.loadThumbnailResource();
             character.setState(CharacterState.THUMBNAIL);
             characterBorders[i] = character.getBounds();
         }

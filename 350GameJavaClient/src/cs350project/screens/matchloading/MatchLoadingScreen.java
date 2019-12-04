@@ -38,7 +38,7 @@ public class MatchLoadingScreen extends Screen {
     public void addNotify() {
         super.addNotify();
         //comm.sendClientCommand(ClientCommand.CREATE_MATCH);
-        System.out.println("command sent: create match");
+        //System.out.println("command sent: create match");
     }
 
     @Override

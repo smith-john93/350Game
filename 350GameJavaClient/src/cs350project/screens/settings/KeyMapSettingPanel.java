@@ -53,7 +53,7 @@ class KeyMapSettingPanel extends JPanel {
     }
     
     private void updateText() {
-        System.out.println("update text");
+        //System.out.println("update text");
         StringBuilder sb = new StringBuilder();
         if(keyChars != null) {
             for(int i = 0; i < keyChars.length; i++) {
@@ -91,7 +91,7 @@ class KeyMapSettingPanel extends JPanel {
         KeyAdapter keyListener = new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                System.out.println("key released on key map setting");
+                //System.out.println("key released on key map setting");
                 if(settingsPanel != null) {
                     settingsPanel.changeKeyMapping(e.getKeyCode(),mapCode);
                 }
@@ -102,7 +102,7 @@ class KeyMapSettingPanel extends JPanel {
         settingText.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("key map setting clicked");
+                //System.out.println("key map setting clicked");
                 requestFocus();
             }
         });
@@ -111,14 +111,14 @@ class KeyMapSettingPanel extends JPanel {
             
             @Override
             public void focusGained(FocusEvent e) {
-                System.out.println("key map setting focus gained");
+                //System.out.println("key map setting focus gained");
                 addKeyListener(keyListener);
                 settingText.setText("Press a key");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                System.out.println("key map setting focus lost");
+                //System.out.println("key map setting focus lost");
                 removeKeyListener(keyListener);
                 updateText();
             }

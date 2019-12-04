@@ -31,6 +31,9 @@ public class MatchObjectManager implements IncomingCommandListener {
     private static MatchObjectManager matchObjectManager;
     private final HashMap<Integer,MatchObject> matchObjects;
     private final ArrayList<MatchObjectManagerListener> matchObjectManagerListeners;
+    private int playerID = 0;
+    private PlayerCharacter player;
+    private PlayerCharacter opponent;
     
     private MatchObjectManager() {
         matchObjects = new HashMap<>();
@@ -48,6 +51,14 @@ public class MatchObjectManager implements IncomingCommandListener {
         return matchObjects.values();
     }
     
+    public PlayerCharacter getPlayer() {
+        return player;
+    }
+    
+    public PlayerCharacter getOpponent() {
+        return opponent;
+    }
+    
     public void addMatchObjectManagerListener(MatchObjectManagerListener matchObjectManagerListener) {
         matchObjectManagerListeners.add(matchObjectManagerListener);
     }
@@ -55,24 +66,30 @@ public class MatchObjectManager implements IncomingCommandListener {
     private void set(int id, MatchObject matchObject) {
         if(!matchObjects.containsKey(id)) {
             matchObjects.put(id, matchObject);
-            System.out.println("match object added: " + id);
+            //System.out.println("match object added: " + id);
             return;
         }
         throw new IllegalArgumentException("Attempted to overwrite match object. ID: " + id);
     }
     
-    public void clear() {
+    public void unsetAll() {
         matchObjects.clear();
     }
     
-    public void setPlayerCharacters(PlayerCharacter player, PlayerCharacter opponent) {
-        set(0,player);
-        //set(1,opponent);
+    public void setPlayer(PlayerCharacter player) {
+        this.player = player;
+        //setPlayerCharacter(playerID,player);
+    }
+    
+    private void setPlayerCharacter(int id, PlayerCharacter playerCharacter) {
+        playerCharacter.loadAllImageResources();
+        playerCharacter.setState(CharacterState.IDLE);
+        set(id,playerCharacter);
     }
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        System.out.println("match object manager received command " + serverCommand);
+        //System.out.println("match object manager received command " + serverCommand);
         switch(serverCommand) {
             case CREATE_MATCH_OBJECT:
                 createMatchObject(dataInputStream);
@@ -85,12 +102,19 @@ public class MatchObjectManager implements IncomingCommandListener {
     private void updateMatch(DataInputStream dataInputStream) {
         try {
             int id = dataInputStream.readShort();
-            System.out.println("update match object with ID: " + id);
+            //System.out.println("update match object with ID: " + id);
             MatchObject matchObject = matchObjects.get(id);
-            matchObject.receiveData(dataInputStream);
-            fireMatchObjectChanged();
+            if(matchObject != null) {
+                matchObject.receiveData(dataInputStream);
+                fireMatchObjectChanged();
+            } else {
+                MessageDialog.showErrorMessage(
+                        "Update failed. Cannot find match object with ID " + id + ".", 
+                        getClass()
+                );
+            }
         } catch(IOException e) {
-            MessageDialog.showErrorMessage("Unable to update match object.", getClass());
+            MessageDialog.showErrorMessage("Update failed. I/O exception.", getClass());
         }
     }
 
@@ -99,42 +123,45 @@ public class MatchObjectManager implements IncomingCommandListener {
         try {
             MatchObjectType type = MatchObjectType.parse(dataInputStream.readByte());
             int id = dataInputStream.readShort();
+            //System.out.println("match object type received: " + type + " with ID: " + id);
             MatchObject matchObject = null;
-            System.out.println("match object type received: " + type + " with ID: " + id);
             switch (type) {
                 case PLATFORM:
                     matchObject = new Platform();
+                    set(id, matchObject);
                     break;
                 case PLAYER_CHARACTER:
                     CharacterType characterType = CharacterType.parse(dataInputStream.readByte());
-                    System.out.println("character type received: " + characterType);
-                    PlayerCharacter playerCharacter = null;
+                    //System.out.println("character type received: " + characterType);
                     switch(characterType) {
                         case GANCHEV:
-                            playerCharacter = new Ganchev((short)id);
+                            opponent = new Ganchev();
                             break;
                         case COFFMAN:
-                            playerCharacter = new Coffman((short)id);
+                            opponent = new Coffman();
                             break;
                         case TRUMP:
-                            playerCharacter = new Trump((short)id);
+                            opponent = new Trump();
                             break;
                         case LEGOMAN:
-                            playerCharacter = new LegoMan((short)id);
+                            opponent = new LegoMan();
                             break;
+                        default:
+                            return;
                     }
-                    if(playerCharacter != null) {
-                        playerCharacter.setBounds(0, 0, 100, 100);
-                        playerCharacter.loadAllGameResources();
-                        playerCharacter.setState(CharacterState.THUMBNAIL);
-                        matchObject = playerCharacter;
+                    opponent.setPlayerID(id);
+                    setPlayerCharacter(id,opponent);
+                    if(id == 0) {
+                        playerID = 1;
                     }
+                    player.setPlayerID(playerID);
+                    setPlayerCharacter(playerID,player);
+                    matchObject = opponent;
                     break;
             }
             if(matchObject != null) {
                 matchObject.receiveData(dataInputStream);
             }
-            set(id, matchObject);
         } catch(IOException e) {
             MessageDialog.showErrorMessage(error, getClass());
         } catch(NoSuchElementException e) {

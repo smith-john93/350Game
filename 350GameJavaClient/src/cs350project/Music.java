@@ -23,7 +23,7 @@ public class Music {
     private void play(String fileName) {
         URL url = Music.class.getResource("/resources/music/" + fileName);
         music = new AudioClip(url.toString());
-        music.play();
+        //music.play();
     }
     
     public void playSelectionPanelMusic() {
@@ -31,6 +31,6 @@ public class Music {
     }
     
     public void stop() {
-        music.stop();
+        //music.stop();
     }
 }

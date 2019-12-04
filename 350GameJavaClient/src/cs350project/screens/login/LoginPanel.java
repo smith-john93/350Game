@@ -17,6 +17,10 @@ public class LoginPanel extends MenuPanel<LoginInputListener> {
         JTextField usernameField = MenuItemFactory.createTextField();
         JPasswordField passwordField = MenuItemFactory.createPasswordField();
         
+        // delete the next 2 lines after testing is completed
+        usernameField.setText("1");
+        passwordField.setText("1");
+        
         JButton loginButton = MenuItemFactory.createButton("Log In");
         loginButton.addActionListener(new ActionListener(){
             @Override

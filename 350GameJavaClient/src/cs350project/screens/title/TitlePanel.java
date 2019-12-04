@@ -5,7 +5,7 @@
  */
 package cs350project.screens.title;
 
-import cs350project.GameResource;
+import cs350project.ImageResource;
 import cs350project.Settings;
 import cs350project.menu.MenuItemFactory;
 import cs350project.screens.MessageDialog;
@@ -90,20 +90,20 @@ public class TitlePanel extends Panel<TitleInputListener> {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("click");
+                //System.out.println("click");
                 for(TitleInputListener titleInputListener : inputListeners) {
                     titleInputListener.start();
                 }
             }
         });
         
-        GameResource gameResource;
+        ImageResource gameResource;
         Rectangle bounds = getBounds();
         
         try {
-            gameResource = new GameResource(
+            gameResource = new ImageResource(
                     Settings.TITLE_IMAGE_FILE,
-                    GameResource.Type.STILL,
+                    ImageResource.Type.STILL,
                     bounds.width,
                     bounds.height
             );
@@ -113,9 +113,9 @@ public class TitlePanel extends Panel<TitleInputListener> {
         }
         
         try {
-            gameResource = new GameResource(
+            gameResource = new ImageResource(
                     Settings.TITLE_ANIMATION_FILE,
-                    GameResource.Type.PLAYS_ONCE,
+                    ImageResource.Type.PLAYS_ONCE,
                     bounds.width,
                     bounds.height
             );

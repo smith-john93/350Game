@@ -42,7 +42,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             @Override
             public void run() {
                 serverAddr = Multicast.getServerAddress();
-                System.out.println("got server address: " + serverAddr.getHostAddress());
+                //System.out.println("got server address: " + serverAddr.getHostAddress());
             }
         };
     }
@@ -149,9 +149,9 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public void sendMessage(String message) {
         if (messageWriter != null) {
             messageWriter.println(message);
-            System.out.println("Message sent: " + message);
+            //System.out.println("Message sent: " + message);
         } else {
-            System.out.println("Unable to send message.");
+            //System.out.println("Unable to send message.");
         }
         //BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         //BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -160,7 +160,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     @Override
     public void sendClientCommand(ClientCommand clientCommand) throws IOException {
         dataOutputStream.writeByte(clientCommand.getValue());
-        System.out.println("sent command: " + clientCommand + " " + clientCommand.getValue());
+        //System.out.println("sent command: " + clientCommand + " " + clientCommand.getValue());
     }
 
     private void sendCredentials(String username, char[] password) throws IOException {
@@ -170,22 +170,22 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             dataOutputStream.write(c);
         }
         Arrays.fill(password,'0'); // Clear the password array for security.
-        System.out.println("sent credentials");
+        //System.out.println("sent credentials");
     }
 
     private void sendString(String s) throws IOException {
         dataOutputStream.writeBytes(s);
-        System.out.println("sent string: " + s);
+        //System.out.println("sent string: " + s);
     }
 
     private void sendCharacterState(int stateCode) throws IOException {
         dataOutputStream.writeByte(stateCode);
-        System.out.println("sent character state: " + stateCode);
+        //System.out.println("sent character state: " + stateCode);
     }
 
     private void sendCharacterType(CharacterType characterType) throws IOException {
         dataOutputStream.writeByte(characterType.getValue());
-        System.out.println("sent character type: " + characterType + " " + characterType.getValue());
+        //System.out.println("sent character type: " + characterType + " " + characterType.getValue());
     }
 
     public void createAccount(String username, char[] password) {

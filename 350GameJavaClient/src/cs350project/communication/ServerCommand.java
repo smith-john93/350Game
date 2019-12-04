@@ -19,7 +19,9 @@ public enum ServerCommand {
     USER_AUTH_FAIL(0x6),
     USER_AUTH_BLOCKED(0x7),
     VALID_MATCH_NAME(0x8),
-    INVALID_MATCH_NAME(0x9);
+    INVALID_MATCH_NAME(0x9),
+    DELETE_MATCH_OBJECT(0xa),
+    END_GAME_INSTANCE(0xb);
     
     private final int value;
     

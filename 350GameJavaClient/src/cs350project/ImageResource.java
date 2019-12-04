@@ -21,13 +21,13 @@ import javax.swing.ImageIcon;
  *
  * @author Mark Masone
  */
-public class GameResource {
+public class ImageResource {
     private final String fileName;
     private final boolean loop;
     private final boolean once;
     private final Image[] frames;
     
-    public GameResource(String fileName, Type type, int width, int height) throws IOException {
+    public ImageResource(String fileName, Type type, int width, int height) throws IOException {
         this.once = type == Type.PLAYS_ONCE;
         this.loop = type == Type.LOOPS;
         fileName = "/resources/" + fileName;
@@ -42,27 +42,26 @@ public class GameResource {
                 int frameCount = reader.getNumImages(true);
                 frames = new Image[frameCount];
                 for (int i = 0; i < frameCount; i++) {
-                    frames[i] = getScaledImage(reader.read(i),width,height);
+                    frames[i] = getScaledImage(reader.read(i),0,0,width,height);
                 }
             } else {
                 ImageIcon characterImageIcon = new ImageIcon(url);
                 frames = new Image[1];
-                frames[0] = getScaledImage(characterImageIcon.getImage(),width,height);
+                frames[0] = getScaledImage(characterImageIcon.getImage(),0,0,width,height);
             }
         } else {
             throw new FileNotFoundException(fileName);
         }
     }
     
-    private Image getScaledImage(Image srcImg, int width, int height){
+    private Image getScaledImage(Image srcImg, int x, int y, int width, int height){
         
         BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = resizedImg.createGraphics();
 
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        int scaledImageX = 0;
         
-        g2.drawImage(srcImg, scaledImageX, 0, width, height, null);
+        g2.drawImage(srcImg, x, y, width, height, null);
         g2.dispose();
 
         return resizedImg;
