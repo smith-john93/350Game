@@ -16,7 +16,7 @@ namespace Database
         public const string LOW_KICK = "lowKick";
 
         /// <summary>
-        /// Default construvtor for the database. 
+        /// Default constructor for the database. 
         /// If a database does not exist, it builds one
         /// </summary>
         public Database()
@@ -59,7 +59,6 @@ CREATE TABLE UserInformation
 
         /// <summary>
         /// Adds a new user entry to the database with the given username and password. 
-        /// Must catch System.Data.SQLite.SQLiteException to handle the event of a username already being used in the database.
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
@@ -145,7 +144,7 @@ CREATE TABLE UserInformation
             string query = @"SELECT " + command + " FROM UserInformation WHERE username = @username";
             using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
             {
-                sqlCommand.Parameters.AddWithValue("@username",command);
+                sqlCommand.Parameters.AddWithValue("@username",username);
                 sqlCommand.Connection.Open();
                 using (SQLiteDataReader reader = sqlCommand.ExecuteReader())
                 {
