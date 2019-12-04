@@ -10,6 +10,11 @@ using Multicast;
 
 namespace GameServer
 {
+    public class SocketCommunicatorException : Exception
+    {
+        public SocketCommunicatorException(string message) : base(message) { }
+    }
+
     public class SocketCommunicator
     {
         
@@ -23,14 +28,30 @@ namespace GameServer
         private Multicast.Multicast multi;
         public bool RequestShutdown;
         private const string MULTICAST_STRING = "o";
-        public SocketCommunicator(GameController gameController)
+
+        ///<exception cref="SocketCommunicatorException">
+        ///Thrown when the local host has no IPv4 address entries.
+        ///</exception>
+        public SocketCommunicator(GameController gameController) 
         {
             gController = gameController;
 
             RequestShutdown = false;
 
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
-            ipAddr = ipHost.AddressList[0];
+            foreach(IPAddress ipAddress in ipHost.AddressList)
+            {
+                if(ipAddress.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    ipAddr = ipAddress;
+                    break;
+                }
+            }
+
+            if(ipAddr == null)
+            {
+                throw new SocketCommunicatorException("Host has no IPv4 addresses.");
+            }
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
 
@@ -96,10 +117,16 @@ namespace GameServer
             string[] info = information.Split(":");
             Console.WriteLine(information);
             */
+
+            /* This broke when I switched to IPv4 - Mark M.
             string[] info = information.Split("]:");
             info[0] = info[0].ToString().Replace("[", string.Empty);
             string[] IpV6 = info[0].ToString().Split("%");
             Console.WriteLine($"Server Information: \nServer IP: {IpV6[0]}. \nServer Socket: {info[1]}");
+            */
+
+            // This works - Mark M.
+            Console.WriteLine(information);
         }
     }
 }

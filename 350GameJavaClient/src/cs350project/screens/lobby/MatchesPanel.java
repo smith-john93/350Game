@@ -65,13 +65,14 @@ class MatchesPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 // delete the next 4 lines after testing is completed
+                /*
                 addMatch("match1");
                 for(LobbyInputListener lobbyInputListener : inputListeners) {
                     lobbyInputListener.createMatch("match1");
-                }
+                }*/
                 
                 // uncomment this block after testing is completed
-                /*while(true) {
+                while(true) {
                     String matchName = JOptionPane.showInputDialog(
                             matchesPanel, 
                             "Match Name", 
@@ -89,7 +90,7 @@ class MatchesPanel extends JPanel {
                         }
                         break;
                     }
-                }*/
+                }
             }
         });
         gbc.insets = Settings.INSETS_MENU_NO_RIGHT;

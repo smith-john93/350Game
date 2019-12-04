@@ -6,7 +6,7 @@ namespace Multicast
 {
     class Multicast
     {
-        private readonly string groupIP = "ff01::6";
+        private readonly string groupIP = "224.3.5.0";
         private readonly int groupPort = 12340;
         
         public Multicast() { }
@@ -20,7 +20,7 @@ namespace Multicast
         {
             IPAddress group = IPAddress.Parse(groupIP);
             IPEndPoint ipEndPoint = new IPEndPoint(group, groupPort);
-            UdpClient udpClient = new UdpClient(AddressFamily.InterNetworkV6);
+            UdpClient udpClient = new UdpClient(AddressFamily.InterNetwork);
 
             udpClient.JoinMulticastGroup(group);
 
