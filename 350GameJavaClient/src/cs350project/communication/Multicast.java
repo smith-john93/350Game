@@ -21,7 +21,7 @@ public class Multicast {
 
     private static final String MESSAGE = "o";
     private static final int PORT = 12340;
-    private static final String GROUP = "ff01::6";
+    private static final String GROUP = "224.3.5.0";
     
     public static InetAddress getServerAddress() {
         InetAddress serverAddr = null;
@@ -39,7 +39,7 @@ public class Multicast {
                     serverAddr = packet.getAddress();
                     break;
                 } else {
-                    //System.out.println("received unexpected multicast message");
+                    System.out.println("received unexpected multicast message");
                 }
             }
             socket.leaveGroup(groupAddr);
