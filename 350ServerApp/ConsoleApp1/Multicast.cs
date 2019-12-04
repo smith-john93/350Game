@@ -24,7 +24,6 @@ namespace Multicast
 
             udpClient.JoinMulticastGroup(group);
 
-            //Console.WriteLine("multicast group: " + groupIP + " port: " + groupPort);
 
             try
             {
@@ -36,8 +35,8 @@ namespace Multicast
                     data[i++] = (byte)c;
                 }
                 udpClient.SendAsync(data,data.Length,ipEndPoint);
-               // Console.WriteLine("sent multicast message: " + multicastMessage);
-            } catch(SocketException e)
+            }
+            catch(SocketException e)
             {
                 Console.WriteLine(e.Message);
             }

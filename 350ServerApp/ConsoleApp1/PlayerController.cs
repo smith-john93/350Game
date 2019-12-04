@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using GameServer.Enumerations;
+using System.IO;
 
 namespace GameServer
 {
@@ -13,12 +14,12 @@ namespace GameServer
         public NetworkStream clientInterface;
         private GameController gController;
         public string playername;
-        public bool inGame;
+        private bool inGame;
         public CharacterEnum selectedCharacter;
-        public bool CharacterPicked;
+        private bool CharacterPicked;
+
         public PlayerController(PlayerSocketController stream, GameController gameController)
         {
-            Console.WriteLine("Player Instance Created");
             clientInterface = stream.clientInterface;
             gController = gameController;
             CharacterPicked = false;
@@ -30,99 +31,54 @@ namespace GameServer
 
             if(!authenticatedUser)
             {
-                CloseConneciton();
                 return;
             }
 
             gController.playerList.Add(this);
 
-            Console.WriteLine($"Sendigng All Games to {playername}");
             gController.SendAllGames(this);
 
             PlayerControl();
         }
 
+        /// <summary>
+        /// Controls the player thread and hands exection to the appropriate areas
+        /// </summary>
         private void PlayerControl()
         {
             while(true)
             {
+                if (clientInterface == null)
+                {
+                    DisposePlayer();
+                    return;
+                }
 
-                Console.WriteLine("Waiting for Player Match Option");
-                int i = clientInterface.ReadByte();
-                Console.WriteLine($"Received option {i}");
+                int i;
+                try
+                {
+                    i = clientInterface.ReadByte();
+                }
+                catch(IOException)
+                {
+                    DisposePlayer();
+                    return;
+                }
+                   
 
                 switch (i)
                 {
                     case (int)ClientCommands.CREATE_MATCH:
-                        Console.WriteLine("Creating Match");
                         CreateGame();
-                        
-                        Console.WriteLine("Exiting Creating Match");
                         break;
 
                     case (int)ClientCommands.JOIN_MATCH:
-                        Console.WriteLine("Joining Match");
                         JoinGame();                       
-                        Console.WriteLine("Exiting Joining Match");
                         break;
 
                     default:
-                        Console.WriteLine($"Invalid Action {i}");
                         break;
                 }
-            }
-        }
-        async private void UpdateMatchCommand(PlayerController controller, bool local)
-        {
-            controller.clientInterface.WriteByte((byte)ServerCommands.UPDATE_MATCH);
-
-            //send 2 byte ID, 0 for this, 1 for opponent
-            controller.clientInterface.WriteByte(0);
-            if(local)
-                controller.clientInterface.WriteByte(0);
-            else
-                controller.clientInterface.WriteByte(1);
-
-            //send 1 byte character state
-            controller.clientInterface.WriteByte((byte)CharacterState.LOW_KICK);
-
-            //send 2 byte x-cord
-            controller.clientInterface.WriteByte(0);
-
-            if(local)
-                controller.clientInterface.WriteByte(0);
-            else
-                controller.clientInterface.WriteByte(50);
-                    
-            //send 2 byte y-cord
-            controller.clientInterface.WriteByte(0);
-            if(local)
-                controller.clientInterface.WriteByte(255);
-            else
-                controller.clientInterface.WriteByte(255);
-            //send health
-            controller.clientInterface.WriteByte(100);
-
-        }
-
-        async public void EchoCommand(PlayerController opponent)
-        {
-            while (true)
-            {
-                Console.WriteLine($"{playername} awaiting command");
-
-                byte b1 = (byte)clientInterface.ReadByte();
-                Console.WriteLine($"{b1} from {playername}");
-                byte b2 = (byte)clientInterface.ReadByte();
-                Console.WriteLine($"{b2} from {playername}");
-
-                Console.WriteLine("Received Command");
-
-                Task.Run(() => UpdateMatchCommand(this, true));
-                Task.Run(() => UpdateMatchCommand(opponent, false));
-
-
-                Console.WriteLine("Sent to both");
             }
         }
 
@@ -132,7 +88,6 @@ namespace GameServer
         /// </summary>
         private void JoinGame()
         {
-            Console.WriteLine("Join Match");
             //get the matchName from the client
             StringBuilder matchJoin = new StringBuilder();
             do
@@ -144,10 +99,14 @@ namespace GameServer
             }
             while (clientInterface.DataAvailable);
             string game = matchJoin.ToString();
-            Console.WriteLine($"Received match name {game}");
 
             //Add the player to the match
-            inGame = gController.AddPlayer(game, this);
+            bool inGame = gController.AddPlayer(game, this);
+
+            if (!inGame)
+                return;
+
+            //stay in the game until the player is no longer in the game
             while(inGame)
             {
                 continue;
@@ -155,8 +114,12 @@ namespace GameServer
             //write a method to handle cleanup after the game ends
         }
 
+        /// <summary>
+        /// Manages interaction for thr player when creating a game
+        /// </summary>
         private void CreateGame()
         {
+            //stay in the loop until the game is created
             while(true)
             {
                 //get the matchName from the client
@@ -169,78 +132,85 @@ namespace GameServer
                     matchMake.Append(u);
                 }
                 while (clientInterface.DataAvailable);
-                //Console.WriteLine($"Match to make: {matchMake}");
                 
                 //Turn the name into a string
                 string gameName = matchMake.ToString();
 
-                if (gController.CreateGame(gameName, this))
+                //check to see if a game with that name already exists
+                //otherwise the game runs until completion
+                if (!gController.CreateGame(gameName, this))
                 {
-                    inGame = true;
-                    while(inGame)
-                    {
-                        continue;
-                    }
-                    //this needs to handle cleanup after the game ends
-                }
-                else
-                {
+                    //inform the player the entered name is not valid, send the invalid match name byte
                     byte[] responseByte = new byte[1] { (byte)ServerCommands.INVALID_MATCH_NAME };
                     ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
                     clientInterface.Write(response);
                 }
+
             }
         }
         #endregion
 
         #region Communication
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="match"></param>
+        /// <param name="addMatch"></param>
         async public void PulseLobby(string match, bool addMatch)
         {
-            Console.WriteLine($"Player: {playername} inGame: {inGame}");
+            //send update if the player is not in a game
             if (!inGame)
             {
-                Console.WriteLine($"Player: {playername} inGame: {inGame} SENDING UPDATE");
+                //call the method to send the match update to the client
                 await Task.Run(() => SendMatchList(match, addMatch));
             }
         }
 
+        /// <summary>
+        /// Sends the client a match listing update 
+        /// </summary>
+        /// <param name="match"></param>
+        /// <param name="addMatch"></param>
         async public void SendMatchList(string match, bool addMatch)
         {
-            Console.WriteLine($"Sending {playername} update lobby");
+            //Send the client the update lobby byte
             byte[] updateCommand = new byte[1] { (byte)ServerCommands.UPDATE_LOBBY };
             await clientInterface.WriteAsync(updateCommand);
 
-            //Console.WriteLine($"sent udpate command");
-
+            //send the client a byte to indicate udpate or removal
             byte[] add = new byte[1] { addMatch ? (byte)1 : (byte)0 };
             await clientInterface.WriteAsync(add);
 
-            //Console.WriteLine($"sent action bit {add[0]}");
-            
+            //write the string to a charcter array
             byte[] matchName = new byte[10];
             int loc = 0;
             foreach (char a in match.ToCharArray())
             {
                 matchName[loc++] = (byte)a;
             }
+
+            //send the character array to the client
             await clientInterface.WriteAsync(matchName);
-            Console.WriteLine($"sent match name {match}");
         }
 
+        /// <summary>
+        /// Gets the player to be played in a game from the client
+        /// </summary>
         async public void GetCharacter()
         {
-            Console.WriteLine($"{playername} In Character Selection");
+
+            //listen for the character selected byte
             byte[] selectedBuffer = new byte[1];
             await clientInterface.ReadAsync(selectedBuffer);
             if (selectedBuffer[0] == (byte)ClientCommands.CHARACTER_SELECTED)
                 CharacterPicked = true;
 
-            Console.WriteLine(selectedBuffer[0]);            
+            //listen for which character has been picked
             byte[] buffer = new byte[1];
             await clientInterface.ReadAsync(buffer);
-            Console.WriteLine(buffer[0]);
             
+            //set the correct character
             switch(buffer[0])
             {
                 case (byte) CharacterEnum.Ganchev:
@@ -258,17 +228,52 @@ namespace GameServer
             }
         }
 
+        public bool HasSelectdCharacter()
+        {
+            return CharacterPicked;
+        }
+
+        /// <summary>
+        /// Informs the PlayerController this instance is in a game
+        /// </summary>
+        /// <param name="inGame"></param>
+        public void SetInGameState()
+        {
+            inGame = true;
+        }
+
+        /// <summary>
+        /// provides the game state of the player
+        /// </summary>
+        /// <returns></returns>
+        public bool GetGameState()
+        {
+            return inGame;
+        }
+
+        /// <summary>
+        /// Sets a ServerCommand enumeration to the player
+        /// </summary>
+        /// <param name="command"></param>
         public void SendMessage(ServerCommands command)
         {
             clientInterface.WriteByte((byte)command);
         }
         
+        /// <summary>
+        /// Sends a ReadOnlySpan of bytes to the player
+        /// </summary>
+        /// <param name="byteSpan"></param>
         public void SendMessage(ReadOnlySpan<byte> byteSpan)
         {
             clientInterface.Write(byteSpan);
         }
 
-        public void SendOpponentPlayer(CharacterEnum Selection)
+        /// <summary>
+        /// sends the player the opposing player's information
+        /// </summary>
+        /// <param name="Selection"></param>
+        public void SendOpponentPlayer(CharacterEnum Selection, byte playerId)
         {
             //send CREATE_MATCH_OBJECT = 0,         ---- 1 byte
             //MatchObjectType PlayerCharacter = 1,  ---- 1 byte
@@ -287,7 +292,7 @@ namespace GameServer
 
             //send short 1
             clientInterface.WriteByte(0);
-            clientInterface.WriteByte(1);
+            clientInterface.WriteByte(playerId);
 
             //send the player seleciton
             clientInterface.WriteByte((byte)Selection);
@@ -306,72 +311,99 @@ namespace GameServer
             clientInterface.WriteByte(100);
         }
 
+        /// <summary>
+        /// Sends coorrdinates of a platform to the player
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="MatchObjectId"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         public void SendPlatform(MatchObjectType command, int MatchObjectId, int x, int y, int w, int h)
         {
-            //create match object
+            //Send the byte for creating the match object
             clientInterface.WriteByte((byte)ServerCommands.CREATE_MATCH_OBJECT);
             clientInterface.WriteByte((byte)command);
             
-
+            //create an int array to send the remaining information
             int[] response = new int[5] { MatchObjectId, x, y, w, h };
             
-
+            //loop through the array to send each item in the array
             foreach (int i in response)
             {
-                /*
-                Console.WriteLine($"Sending {i}");
-                byte[] buf = BitConverter.GetBytes(i);
-                clientInterface.Write(buf, 0, buf.Length);
-                */
 
+                //send the client the first byte of the int
                 clientInterface.WriteByte((byte)(i >>8));
-                clientInterface.WriteByte((byte)i)
-                
-                    /*
-                clientInterface.WriteByte(0);
-                clientInterface.WriteByte((byte)i)
-                */;
+
+                //send the second byte of the int
+                clientInterface.WriteByte((byte)i);
             }
         }
         #endregion
 
         #region Validation and Authenticaiton
+
+        /// <summary>
+        /// Handles the login and create account process flow
+        /// </summary>
+        /// <returns></returns>
         private bool AuthenticateUser()
         {
             //set variables for the method to use
             int i;
             byte[] response = new byte[1];
 
+            
             while (true)
             {
                 //read the byte sent from the client
                 i = clientInterface.ReadByte();
                 
+                //if the client is trying to create an account                
                 if (i == (int)ClientCommands.CREATE_ACCOUNT)
                 {
+                    //call the method to create an account
                     bool accountCreated = CreateUserAccount();
 
+                    //if the account hs been created, respond with true
                     if (accountCreated)
                         return true;
                     
+                    //if the account was not created
+                    //close the connection to the socket and return false
                     CloseConneciton();
                     return false;
                 }
+                //if the client is trying to login
                 else if (i == (int)ClientCommands.LOGIN)
                 {
+                    //call the method to validate the user
                     bool validUser = ValidateUser();
 
+                    //if the user is valid, respond with true
                     if (validUser)
                         return true;
 
+                    //if the user was not valid
+                    //close the connection to the socket and return false
                     CloseConneciton();
                     return false;
                 }
                 else
+                {
+                    //A bad byte was sent by the client
+                    //close the connection
                     CloseConneciton();
+                    return false;
+                }
             }
         }
 
+        /// <summary>
+        /// Handles creation of a user account
+        /// </summary>
+        /// <returns></returns>
         private bool CreateUserAccount()
         {
             //listen for username and password
@@ -388,12 +420,18 @@ namespace GameServer
             return true;
         }
 
+        /// <summary>
+        /// Verifys if the user credentials are valid
+        /// </summary>
+        /// <returns></returns>
         private bool ValidateUser()
         {
 
+            //set variables needed for local execution
             bool validCred = false;
             int failures = 0;
 
+            //allow for 5 attempts to log in
             while(failures < 4)
             {
 
@@ -443,7 +481,6 @@ namespace GameServer
                 }
 
                 //set the client respaonse based on the response from validating in the DB
-
                 byte[] response = new byte[1];
                 if (validCred)
                     response[0] = (byte)ServerCommands.USER_AUTH_PASS;
@@ -478,9 +515,16 @@ namespace GameServer
 
         #region Cleanup
 
+
+        private void DisposePlayer()
+        {
+            gController.RemovePlayer(this);
+        }
+        /// <summary>
+        /// Closes the network stream for the instance
+        /// </summary>
         private void CloseConneciton()
         {
-            Console.WriteLine("Closing Connection");
             clientInterface.Close();
         }
 

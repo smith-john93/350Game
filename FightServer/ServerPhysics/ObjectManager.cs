@@ -73,9 +73,9 @@ namespace ServerPhysics
             create_platform(-10, 300, 50, 400);
             create_platform(1300, 300, 50, 400);
 
-            Player player1 = new Player(PlayerOneFighter, this, 150, 30, player1_stream);
+            Player player1 = new Player(PlayerOneFighter, this, 150, 30, player1_stream, 0);
             //player_list.Add(player1);
-            Player player2 = new Player(PlayerTwoFighter, this, 500, 30, player2_stream);
+            Player player2 = new Player(PlayerTwoFighter, this, 500, 30, player2_stream, 1);
 
             player1.AddOpponent(player2);
             player2.AddOpponent(player1);
@@ -84,8 +84,6 @@ namespace ServerPhysics
 
         public void start_physics()
         {
-            Console.WriteLine($"player count in game: {player_list.Count}");
-            Console.WriteLine($"platform count in game: {platform_list.Count}");
             foreach (Player p in player_list)
             {
                 Console.WriteLine("in for each");

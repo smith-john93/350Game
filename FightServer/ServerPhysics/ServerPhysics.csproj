@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTransferObject\PlayerStats.cs" />
-    <Compile Include="ServerTimer.cs" />
     <Compile Include="world_objects\Attack.cs" />
     <Compile Include="world_objects\Projectile.cs" />
     <Compile Include="world_objects\WorldObject.cs" />

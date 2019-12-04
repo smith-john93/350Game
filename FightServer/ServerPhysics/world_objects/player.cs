@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Net;
 using ServerPhysics.DataTransferObject;
+using System.IO;
 
 public enum Fighter
 {
@@ -57,7 +58,7 @@ namespace ServerPhysics.World_Objects
         private byte control_byte = (byte)0;
         private Player Opponent;
         private Fighter type;
-
+        private byte playerId;
         public System.Net.Sockets.NetworkStream player_stream;
  
         public void AddOpponent(Player p)
@@ -67,12 +68,12 @@ namespace ServerPhysics.World_Objects
         
         public PlayerStats GetPlayerStats()
         {
-            return new PlayerStats(x, y, control_byte, (byte)health);
+            return new PlayerStats(x, y, control_byte, (byte)health, playerId);
         }
 
-        public Player(Fighter f, ObjectManager o, int xx, int yy, System.Net.Sockets.NetworkStream strm)
+        public Player(Fighter f, ObjectManager o, int xx, int yy, System.Net.Sockets.NetworkStream strm, byte playerId)
         {
-            Console.WriteLine("O");
+            this.playerId = playerId; 
             id = o.world_object_count++;
             type = f;
             manager = o;
@@ -128,49 +129,68 @@ namespace ServerPhysics.World_Objects
 
         async public void GetPlayerByte()
         {
-            while(true)
+            try
             {
-                byte i = (byte)player_stream.ReadByte();
-                this.control_byte = (byte)player_stream.ReadByte();
+
+                while(true)
+                {
+                    byte i = (byte)player_stream.ReadByte();
+                    this.control_byte = (byte)player_stream.ReadByte();
+                }
+            }
+            catch(IOException)
+            {
+                //notify other player that the game has ended
+                //end the game gracefully
             }
         }
 
         async public void UpdatePlayer()
         {
-            PlayerStats s = new PlayerStats(x, y, control_byte, (byte)health);
-            await Task.Run(() => SendGameUpdate(s, true));
-            await Task.Run(() => SendGameUpdate(Opponent.GetPlayerStats(), false));
-
+            try
+            {
+                await Task.Run(() => SendGameUpdate(new PlayerStats(x, y, control_byte, (byte)health, playerId)));
+                await Task.Run(() => SendGameUpdate(Opponent.GetPlayerStats()));
+            }
+            catch(IOException)
+            {
+                //notify other player of end game
+                //end game grancefully
+            }
         }
-        async public void SendGameUpdate(PlayerStats stats, bool local)
+        async public void SendGameUpdate(PlayerStats stats)
         {
+            try
+            {
 
-            //Console.WriteLine("Sending update");
-            player_stream.WriteByte((byte)2);
+                //Console.WriteLine("Sending update");
+                player_stream.WriteByte((byte)2);
 
-            //send 2 byte ID, 0 for this, 1 for opponent
-            player_stream.WriteByte(0);
-            if (local)
+                //00 for player 1, 01 for player 2
                 player_stream.WriteByte(0);
-            else
-                player_stream.WriteByte(1);
-
-
+                player_stream.WriteByte(stats.playerId);
             
-            //send 1 byte character state
-            player_stream.WriteByte(stats.controlByte);
+                //send 1 byte character state
+                player_stream.WriteByte(stats.controlByte);
 
-            //send 2 byte x-cord
-            player_stream.WriteByte((byte)(stats.x >>8));
-            player_stream.WriteByte((byte)stats.x);
+                //send 2 byte x-cord
+                player_stream.WriteByte((byte)(stats.x >>8));
+                player_stream.WriteByte((byte)stats.x);
 
 
-            //send 2 byte y-cord
-            player_stream.WriteByte((byte)(stats.y >> 8));
-            player_stream.WriteByte((byte)stats.y);
+                //send 2 byte y-cord
+                player_stream.WriteByte((byte)(stats.y >> 8));
+                player_stream.WriteByte((byte)stats.y);
             
-            //send health
-            player_stream.WriteByte((byte)stats.health);
+                //send health
+                player_stream.WriteByte((byte)stats.health);
+            }
+            catch(IOException)
+            {
+                //catch here
+                //notify other
+                //end graceful
+            }
         }
 
         //---------------------------------------------------------------------------------
