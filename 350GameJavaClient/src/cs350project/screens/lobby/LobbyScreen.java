@@ -71,9 +71,11 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                 try {
                     int action = dataInputStream.readByte();
                     //System.out.println("action byte received: " + action);
-                    byte[] matchNameBytes = new byte[10];
-                    dataInputStream.read(matchNameBytes);
+                    byte[] matchNameBytes = new byte[1000];
+                    int bytesRead = dataInputStream.read(matchNameBytes);
                     String matchName = new String(matchNameBytes);
+                    System.out.println("bytes read " + bytesRead);
+                    matchName = matchName.substring(0, bytesRead);
                     //System.out.println("match name received: " + matchName);
                     switch (action) {
                         case 0:

@@ -160,7 +160,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     @Override
     public void sendClientCommand(ClientCommand clientCommand) throws IOException {
         dataOutputStream.writeByte(clientCommand.getValue());
-        //System.out.println("sent command: " + clientCommand + " " + clientCommand.getValue());
+        System.out.println("sent command: " + clientCommand + " " + clientCommand.getValue());
     }
 
     private void sendCredentials(String username, char[] password) throws IOException {
@@ -185,7 +185,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
 
     private void sendCharacterType(CharacterType characterType) throws IOException {
         dataOutputStream.writeByte(characterType.getValue());
-        //System.out.println("sent character type: " + characterType + " " + characterType.getValue());
+        System.out.println("sent character type: " + characterType + " " + characterType.getValue());
     }
 
     public void createAccount(String username, char[] password) {

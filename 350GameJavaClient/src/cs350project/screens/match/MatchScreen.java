@@ -182,6 +182,7 @@ public class MatchScreen extends Screen implements
         enableState(stateCode);
         updateMatch();
         disableState(stateCode);
+        //updateMatch();
     }
     
     @Override

@@ -118,7 +118,13 @@ class MatchesPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for(LobbyInputListener lobbyInputListener : inputListeners) {
-                    lobbyInputListener.joinMatch(matchesList.getSelectedValue());
+                    String matchName = matchesList.getModel().getElementAt(matchesList.getSelectedIndex());
+                    if(matchName != null) {
+                        System.out.println("selected value " + matchName);
+                        System.out.println("selected value length " + matchName.length());
+                        lobbyInputListener.joinMatch(matchName);
+                        //lobbyInputListener.joinMatch("match1");
+                    }
                 }
             }
         });
