@@ -188,7 +188,7 @@ WHERE username = @username
         }
 
         /// <summary>
-        /// Returns the key binding for a given command for the given user.
+        /// Returns the password for a given command for the given user.
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
@@ -202,18 +202,26 @@ WHERE username = @username
 ;
 ";
             using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
-            {                
+            {
                 sqlCommand.Parameters.AddWithValue("@username", username);
                 sqlCommand.Connection.Open();
-                using(SQLiteDataReader reader = sqlCommand.ExecuteReader())
+                try
                 {
-                    reader.Read();
-                    password = reader.GetString(0);
+                    using (SQLiteDataReader reader = sqlCommand.ExecuteReader())
+                    {
+                        reader.Read();
+                        password = reader.GetString(0);
 
+                    }
+                    Console.WriteLine(username + "'s password retrieved");
+                }
+                catch (System.InvalidOperationException e)
+                {
+                    Console.WriteLine("Username " + username + " does not exist.");
+                    password = null;
                 }
                 sqlCommand.Connection.Close();
             }
-            Console.WriteLine(username + "'s password retrieved");
             return password;
         }
 
