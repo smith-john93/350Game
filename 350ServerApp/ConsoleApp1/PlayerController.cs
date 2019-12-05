@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using GameServer.Enumerations;
 using System.IO;
+using Database;
 
 namespace GameServer
 {
@@ -17,9 +18,11 @@ namespace GameServer
         private bool inGame;
         public CharacterEnum selectedCharacter;
         private bool CharacterPicked;
+        private Database.Database databseService;
 
-        public PlayerController(PlayerSocketController stream, GameController gameController)
+        public PlayerController(PlayerSocketController stream, GameController gameController, Database.Database dbservice)
         {
+            databseService = dbservice;
             clientInterface = stream.clientInterface;
             gController = gameController;
             CharacterPicked = false;
@@ -27,13 +30,12 @@ namespace GameServer
 
         public void ManagePlayer()
         {
-            bool authenticatedUser = AuthenticateUser();
+            bool authenticatedUser = false;
 
-            if(!authenticatedUser)
-            {
-                return;
-            }
+            while(!authenticatedUser)
+                authenticatedUser = AuthenticateUser();
 
+            Console.WriteLine("Authorized");
             gController.playerList.Add(this);
 
             gController.SendAllGames(this);
@@ -183,13 +185,12 @@ namespace GameServer
             await clientInterface.WriteAsync(add);
 
             //write the string to a charcter array
-            byte[] matchName = new byte[10];
+            byte[] matchName = new byte[match.Length];
             int loc = 0;
             foreach (char a in match.ToCharArray())
             {
                 matchName[loc++] = (byte)a;
             }
-
             //send the character array to the client
             await clientInterface.WriteAsync(matchName);
         }
@@ -209,7 +210,9 @@ namespace GameServer
             //listen for which character has been picked
             byte[] buffer = new byte[1];
             await clientInterface.ReadAsync(buffer);
-            
+
+            Console.WriteLine($"{playername} {buffer[0]}");
+
             //set the correct character
             switch(buffer[0])
             {
@@ -353,7 +356,6 @@ namespace GameServer
             //set variables for the method to use
             int i;
             byte[] response = new byte[1];
-
             
             while (true)
             {
@@ -363,38 +365,41 @@ namespace GameServer
                 //if the client is trying to create an account                
                 if (i == (int)ClientCommands.CREATE_ACCOUNT)
                 {
+                    Console.WriteLine("creating account");
                     //call the method to create an account
-                    bool accountCreated = CreateUserAccount();
+                    bool accountCreated = false;
+
+                    accountCreated = CreateUserAccount();
+                    if(!accountCreated)
+                        SendMessage(ServerCommands.USER_AUTH_FAIL);
 
                     //if the account hs been created, respond with true
                     if (accountCreated)
                         return true;
-                    
-                    //if the account was not created
-                    //close the connection to the socket and return false
-                    CloseConneciton();
+
                     return false;
                 }
                 //if the client is trying to login
                 else if (i == (int)ClientCommands.LOGIN)
                 {
-                    //call the method to validate the user
-                    bool validUser = ValidateUser();
+                    Console.WriteLine("Logging in");
 
                     //if the user is valid, respond with true
-                    if (validUser)
+                    if (ValidateUser())
+                    {
+                        SendMessage(ServerCommands.USER_AUTH_PASS);
                         return true;
+                    }
 
-                    //if the user was not valid
-                    //close the connection to the socket and return false
-                    CloseConneciton();
+                    SendMessage(ServerCommands.USER_AUTH_FAIL);
                     return false;
                 }
                 else
                 {
+                    Console.WriteLine("Something fucked up");
                     //A bad byte was sent by the client
                     //close the connection
-                    CloseConneciton();
+                    //CloseConneciton();
                     return false;
                 }
             }
@@ -406,18 +411,41 @@ namespace GameServer
         /// <returns></returns>
         private bool CreateUserAccount()
         {
-            //listen for username and password
-            //ensure username is allowed int he DB
-            //create user in the database
 
+            StringBuilder cUser = new StringBuilder();
+            do
+            {
+                char u = (char)clientInterface.ReadByte();
+                if (u == 0)
+                    break;
+                cUser.Append(u);
+            }
+            while (clientInterface.DataAvailable);
+            Console.WriteLine($"new UserName: {cUser}");
 
+            //get the password from the client
+            StringBuilder cPass = new StringBuilder();
+            do
+            {
+                char u = (char)clientInterface.ReadByte();
+                if (u == 0)
+                    break;
+                cPass.Append(u);
+            }
+            while (clientInterface.DataAvailable);
+            Console.WriteLine($"new Password: {cPass}");
 
-            //if the username is good send back USER_AUTH_PASS
-            //If not USER_AUTH_FAIL
+            bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString());
 
-            // too many attempts
-            //USER_AUTH_BLOCKED
-            return true;
+            if(result)
+            {
+                Console.WriteLine("yeet");
+                return true;
+            }
+
+            Console.WriteLine("Not yeet");
+
+            return false;
         }
 
         /// <summary>
@@ -426,84 +454,40 @@ namespace GameServer
         /// <returns></returns>
         private bool ValidateUser()
         {
-
-            //set variables needed for local execution
-            bool validCred = false;
-            int failures = 0;
-
-            //allow for 5 attempts to log in
-            while(failures < 4)
+            //get the username from the client
+            StringBuilder cUser = new StringBuilder();
+            do
             {
-
-                //get the username from the client
-                StringBuilder cUser = new StringBuilder();
-                do
-                {
-                    char u = (char)clientInterface.ReadByte();
-                    if (u == 0)
-                        break;
-                    cUser.Append(u);
-                }
-                while (clientInterface.DataAvailable);
-                Console.WriteLine($"UserName: {cUser}");
-
-                //get the password from the client
-                StringBuilder cPass = new StringBuilder();
-                do
-                {
-                    char u = (char)clientInterface.ReadByte();
-                    if (u == 0)
-                        break;
-                    cPass.Append(u);
-                }
-                while (clientInterface.DataAvailable);
-                Console.WriteLine($"Password: {cPass}");
-
-                //convert the stringbuilders to string for validation
-                //this will be turned into sending the info to the DAL
-                string user = cUser.ToString();
-                string pass = cPass.ToString();
-                //if (user == "username")
-                //    if (pass == "password")
-                        validCred = true;
-
-                //checking to see if the credentials are valid
-                if (!validCred)
-                {
-                    failures++;
-                    if (failures == 4)
-                    {
-                        byte[] rejectionResponse = new byte[1] { (byte)ServerCommands.USER_AUTH_BLOCKED };
-                        ReadOnlySpan<byte> rejection = new ReadOnlySpan<byte>(rejectionResponse);
-                        clientInterface.Write(rejectionResponse);
-                        return false;
-                    }
-                }
-
-                //set the client respaonse based on the response from validating in the DB
-                byte[] response = new byte[1];
-                if (validCred)
-                    response[0] = (byte)ServerCommands.USER_AUTH_PASS;
-                else
-                    response[0] = (byte)ServerCommands.USER_AUTH_FAIL;
-
-                //to be deleted -- used for debugging
-                Console.WriteLine($"Reponding with {(response[0] == 5 ? true : false)}");
-
-                //create a ReadOnlySpan to respond to the client with
-                ReadOnlySpan<byte> a = new ReadOnlySpan<byte>(response);
-
-                //Respond to the client
-                clientInterface.Write(a);
-
-                //if the credentials are correct we can return to the contolling method
-                if (validCred)
-                {
-                    playername = user;
-                    return true;
-                }
+                char u = (char)clientInterface.ReadByte();
+                if (u == 0)
+                    break;
+                cUser.Append(u);
             }
-            return false;
+            while (clientInterface.DataAvailable);
+            Console.WriteLine($"UserName: {cUser}");
+
+            //get the password from the client
+            StringBuilder cPass = new StringBuilder();
+            do
+            {
+                char u = (char)clientInterface.ReadByte();
+                if (u == 0)
+                    break;
+                cPass.Append(u);
+            }
+            while (clientInterface.DataAvailable);
+            Console.WriteLine($"Password: {cPass}");
+
+            //convert the stringbuilders to string for validation
+            //this will be turned into sending the info to the DAL
+            string user = cUser.ToString();
+            string pass = cPass.ToString();
+
+            bool result = databseService.VerifyPassword(user, pass);
+            Console.WriteLine($"{pass} {result}");
+            if (result)
+                playername = user;
+            return result;
         }
 
         public void LeaveGame()

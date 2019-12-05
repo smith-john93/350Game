@@ -7,6 +7,7 @@
         CREATE_MATCH = 2,
         JOIN_MATCH = 3,
         UDPATE_MATCH = 4,
-        CHARACTER_SELECTED = 5
+        CHARACTER_SELECTED = 5,
+        SAVE_KEY_MAPPING = 6
     }
 }
