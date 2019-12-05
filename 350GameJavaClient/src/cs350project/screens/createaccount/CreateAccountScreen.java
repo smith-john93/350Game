@@ -1,6 +1,7 @@
 package cs350project.screens.createaccount;
 
 import cs350project.GameFrame;
+import cs350project.Settings;
 import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
 import cs350project.communication.IncomingCommandListener;
@@ -42,7 +43,7 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
 
     @Override
     public BackgroundImage getBackgroundImage() {
-        return new BackgroundImage("/resources/menu/background.jpg");
+        return new BackgroundImage(Settings.MENU_BACKGROUND_FILE);
     }
 
     @Override
