@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Net;
-
+using Database;
 
 namespace GameServer
 {
@@ -20,11 +20,11 @@ namespace GameServer
             Console.WriteLine("Generating Game Listing...");
             GameController gameController = new GameController();          
             Console.WriteLine("Game Listing Created");
-
+            Database.Database databaseService = new Database.Database();
             Console.WriteLine("Opening Socket Communication...");
             try
             {
-                SocketCommunicator communicator = new SocketCommunicator(gameController);
+                SocketCommunicator communicator = new SocketCommunicator(gameController, databaseService);
 
                 Thread SocketThread = new Thread(communicator.listen);
                 SocketThread.Start();

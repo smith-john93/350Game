@@ -92,6 +92,8 @@ CREATE TABLE UserInformation
                 }
                 command.Connection.Close();
             }
+
+            Console.WriteLine(succeeded ? true : false);
             return succeeded;
         }
 
@@ -224,6 +226,11 @@ WHERE username = @username
         public bool VerifyPassword(string submittedUsername, string submittedPassword)
         {
             string storedPassword = GetPassword(submittedUsername);
+            Console.WriteLine($"stored password {storedPassword}");
+            Console.WriteLine($"entered password {submittedPassword}");
+
+            Console.WriteLine($"Matching {(storedPassword == submittedPassword ? true : false)}");
+            
             return storedPassword == submittedPassword ? true : false;
         }
     }
