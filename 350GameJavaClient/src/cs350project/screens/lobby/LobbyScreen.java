@@ -55,7 +55,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     public void joinMatch(String matchName) {
         
         //comm.addIncomingCommandListener(matchObjectManager);
-        comm.joinMatch("match1");
+        comm.joinMatch(matchName);
     }
     
     @Override

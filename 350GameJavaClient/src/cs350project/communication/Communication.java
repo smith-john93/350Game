@@ -42,7 +42,7 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             @Override
             public void run() {
                 serverAddr = Multicast.getServerAddress();
-                //System.out.println("got server address: " + serverAddr.getHostAddress());
+                System.out.println("got server address: " + serverAddr.getHostAddress());
             }
         };
     }

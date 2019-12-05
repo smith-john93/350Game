@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Net;
-using Database;
+
 
 namespace GameServer
 {
@@ -17,47 +17,52 @@ namespace GameServer
 
             Console.WriteLine("Server initialized");
 
-            Console.WriteLine("Initializing Database");
-            Database.Database databaseService = new Database.Database();
-
             Console.WriteLine("Generating Game Listing...");
             GameController gameController = new GameController();          
             Console.WriteLine("Game Listing Created");
 
             Console.WriteLine("Opening Socket Communication...");
-            SocketCommunicator communicator = new SocketCommunicator(gameController, databaseService);
-            Thread SocketThread = new Thread(communicator.listen);
-            SocketThread.Start();
-            Console.WriteLine("Communication Started.");
-            Console.WriteLine("");
-
-            Thread.Sleep(500);
-
-            while(true)
+            try
             {
-                Console.WriteLine("\nOptions:");
-                Console.WriteLine("1: Check the game listing size");
-                Console.WriteLine("2: Shutdown the server");
-                
-                string a = Console.ReadLine();
+                SocketCommunicator communicator = new SocketCommunicator(gameController);
 
-                if (a == "1")
+                Thread SocketThread = new Thread(communicator.listen);
+                SocketThread.Start();
+                Console.WriteLine("Communication Started.");
+                Console.WriteLine("");
+
+                Thread.Sleep(500);
+
+                while (true)
                 {
-                    Console.WriteLine("Active Games:");
-                    foreach (string game in gameController.gameListing.Keys)
-                        Console.WriteLine(game);
-                }
-                else
-                {
-                    //matchMaker.RequestShutdown = true;
-                    communicator.listener.Stop();
-                    communicator.RequestShutdown = true;
+                    Console.WriteLine("\nOptions:");
+                    Console.WriteLine("1: Check the game listing size");
+                    Console.WriteLine("2: Shutdown the server");
 
-                    //MatchmakerThread.Join();
-                    SocketThread.Join();
-                    break;
+                    string a = Console.ReadLine();
 
+                    if (a == "1")
+                    {
+                        Console.WriteLine("Active Games:");
+                        foreach (string game in gameController.gameListing.Keys)
+                            Console.WriteLine(game);
+                    }
+                    else
+                    {
+                        //matchMaker.RequestShutdown = true;
+                        communicator.listener.Stop();
+                        communicator.RequestShutdown = true;
+
+                        //MatchmakerThread.Join();
+                        SocketThread.Join();
+                        break;
+
+                    }
                 }
+            }
+            catch (SocketCommunicatorException e)
+            {
+                Console.WriteLine(e.GetType() + ": " + e.Message);
             }
         }
     }

@@ -7,16 +7,20 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using Multicast;
-using Database;
 
 namespace GameServer
 {
+    public class SocketCommunicatorException : Exception
+    {
+        public SocketCommunicatorException(string message) : base(message) { }
+    }
+
     public class SocketCommunicator
     {
         
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
-        private Database.Database databaseService;
+
         private IPHostEntry ipHost;
         private const int commandPort = 12345;
         public TcpListener listener;
@@ -24,14 +28,30 @@ namespace GameServer
         private Multicast.Multicast multi;
         public bool RequestShutdown;
         private const string MULTICAST_STRING = "o";
-        public SocketCommunicator(GameController gameController, Database.Database dbService)
+
+        ///<exception cref="SocketCommunicatorException">
+        ///Thrown when the local host has no IPv4 address entries.
+        ///</exception>
+        public SocketCommunicator(GameController gameController) 
         {
             gController = gameController;
 
             RequestShutdown = false;
-            databaseService = dbService;
+
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
-            ipAddr = ipHost.AddressList[0];
+            foreach(IPAddress ipAddress in ipHost.AddressList)
+            {
+                if(ipAddress.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    ipAddr = ipAddress;
+                    break;
+                }
+            }
+
+            if(ipAddr == null)
+            {
+                throw new SocketCommunicatorException("Host has no IPv4 addresses.");
+            }
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
 
@@ -60,7 +80,7 @@ namespace GameServer
                     try
                     {
                         //Get a new TCPClient and hand it off to a PlayerSocketCOntroller, then spawn a new thread
-                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient(), gController, databaseService);
+                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient(), gController);
                         Thread playerThread = new Thread(p.Start);
                         playerThread.Start();                  
                     }
@@ -97,10 +117,16 @@ namespace GameServer
             string[] info = information.Split(":");
             Console.WriteLine(information);
             */
+
+            /* This broke when I switched to IPv4 - Mark M.
             string[] info = information.Split("]:");
             info[0] = info[0].ToString().Replace("[", string.Empty);
             string[] IpV6 = info[0].ToString().Split("%");
             Console.WriteLine($"Server Information: \nServer IP: {IpV6[0]}. \nServer Socket: {info[1]}");
+            */
+
+            // This works - Mark M.
+            Console.WriteLine(information);
         }
     }
 }
