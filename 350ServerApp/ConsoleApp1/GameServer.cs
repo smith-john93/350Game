@@ -18,14 +18,14 @@ namespace GameServer
             Console.WriteLine("Server initialized");
 
             Console.WriteLine("Initializing Database");
-            Database.Database dataBaseService = new Database.Database();
+            Database.Database databaseService = new Database.Database();
 
             Console.WriteLine("Generating Game Listing...");
             GameController gameController = new GameController();          
             Console.WriteLine("Game Listing Created");
 
             Console.WriteLine("Opening Socket Communication...");
-            SocketCommunicator communicator = new SocketCommunicator(gameController);
+            SocketCommunicator communicator = new SocketCommunicator(gameController, databaseService);
             Thread SocketThread = new Thread(communicator.listen);
             SocketThread.Start();
             Console.WriteLine("Communication Started.");

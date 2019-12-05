@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using Multicast;
+using Database;
 
 namespace GameServer
 {
@@ -15,7 +16,7 @@ namespace GameServer
         
         private IPEndPoint localEndPoint;
         private IPAddress ipAddr;
-
+        private Database.Database databaseService;
         private IPHostEntry ipHost;
         private const int commandPort = 12345;
         public TcpListener listener;
@@ -23,12 +24,12 @@ namespace GameServer
         private Multicast.Multicast multi;
         public bool RequestShutdown;
         private const string MULTICAST_STRING = "o";
-        public SocketCommunicator(GameController gameController)
+        public SocketCommunicator(GameController gameController, Database.Database dbService)
         {
             gController = gameController;
 
             RequestShutdown = false;
-
+            databaseService = dbService;
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
             ipAddr = ipHost.AddressList[0];
 
@@ -59,7 +60,7 @@ namespace GameServer
                     try
                     {
                         //Get a new TCPClient and hand it off to a PlayerSocketCOntroller, then spawn a new thread
-                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient(), gController);
+                        PlayerSocketController p = new PlayerSocketController(listener.AcceptTcpClient(), gController, databaseService);
                         Thread playerThread = new Thread(p.Start);
                         playerThread.Start();                  
                     }

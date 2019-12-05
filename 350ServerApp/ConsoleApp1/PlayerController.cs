@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using GameServer.Enumerations;
 using System.IO;
+using Database;
 
 namespace GameServer
 {
@@ -17,8 +18,9 @@ namespace GameServer
         private bool inGame;
         public CharacterEnum selectedCharacter;
         private bool CharacterPicked;
+        private Database.Database databseService;
 
-        public PlayerController(PlayerSocketController stream, GameController gameController)
+        public PlayerController(PlayerSocketController stream, GameController gameController, Database.Database dbservice)
         {
             clientInterface = stream.clientInterface;
             gController = gameController;
@@ -364,12 +366,22 @@ namespace GameServer
                 if (i == (int)ClientCommands.CREATE_ACCOUNT)
                 {
                     //call the method to create an account
-                    bool accountCreated = CreateUserAccount();
+                    bool accountCreated = false;
+
+                    int counter = 0;
+                    while(counter < 5 || !accountCreated)
+                    {
+                        accountCreated = CreateUserAccount();
+                        if(!accountCreated)
+                            SendMessage(ServerCommands.USER_AUTH_FAIL);
+                        SendMessage(ServerCommands.USER_AUTH_BLOCKED);
+                        counter++;
+                    }
 
                     //if the account hs been created, respond with true
                     if (accountCreated)
                         return true;
-                    
+
                     //if the account was not created
                     //close the connection to the socket and return false
                     CloseConneciton();
@@ -406,18 +418,36 @@ namespace GameServer
         /// <returns></returns>
         private bool CreateUserAccount()
         {
-            //listen for username and password
-            //ensure username is allowed int he DB
-            //create user in the database
 
+            StringBuilder cUser = new StringBuilder();
+            do
+            {
+                char u = (char)clientInterface.ReadByte();
+                if (u == 0)
+                    break;
+                cUser.Append(u);
+            }
+            while (clientInterface.DataAvailable);
+            Console.WriteLine($"UserName: {cUser}");
 
+            //get the password from the client
+            StringBuilder cPass = new StringBuilder();
+            do
+            {
+                char u = (char)clientInterface.ReadByte();
+                if (u == 0)
+                    break;
+                cPass.Append(u);
+            }
+            while (clientInterface.DataAvailable);
+            Console.WriteLine($"Password: {cPass}");
 
-            //if the username is good send back USER_AUTH_PASS
-            //If not USER_AUTH_FAIL
+            bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString());
 
-            // too many attempts
-            //USER_AUTH_BLOCKED
-            return true;
+            if(result)
+                return true;
+
+            return false;
         }
 
         /// <summary>

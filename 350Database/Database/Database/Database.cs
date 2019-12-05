@@ -6,14 +6,14 @@ namespace Database
 {
     public class Database
     {
-        public SQLiteConnection connection;
-        public const string MOVE_LEFT = "moveLeft";
-        public const string MOVE_RIGHT = "moveRight";
-        public const string CROUCH = "crouch";
-        public const string JUMP = "jump";
-        public const string PUNCH = "punch";
-        public const string HIGH_KICK = "highKick";
-        public const string LOW_KICK = "lowKick";
+        private SQLiteConnection connection;
+        private const string MOVE_LEFT = "moveLeft";
+        private const string MOVE_RIGHT = "moveRight";
+        private const string CROUCH = "crouch";
+        private const string JUMP = "jump";
+        private const string PUNCH = "punch";
+        private const string HIGH_KICK = "highKick";
+        private const string LOW_KICK = "lowKick";
 
         /// <summary>
         /// Default constructor for the database. 

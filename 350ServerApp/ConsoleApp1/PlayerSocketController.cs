@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Threading;
 using GameServer.Enumerations;
-
+using Database;
 namespace GameServer
 {
     public class PlayerSocketController
@@ -15,11 +15,11 @@ namespace GameServer
         private TcpClient _socket;
         PlayerController _player;
 
-        public PlayerSocketController(TcpClient playerSocket, GameController gameController)
+        public PlayerSocketController(TcpClient playerSocket, GameController gameController, Database.Database dbService)
         {
             _socket = playerSocket;
             clientInterface = playerSocket.GetStream();
-            _player = new PlayerController(this, gameController);
+            _player = new PlayerController(this, gameController, dbService);
         }
 
         /// <summary>
