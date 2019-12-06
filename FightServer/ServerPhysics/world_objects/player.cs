@@ -25,10 +25,27 @@ public enum Control
     movingright = 0x80,
 }
 
+public enum ServerCommands
+{
+    CREATE_MATCH_OBJECT = 0,
+    SELECT_CHARACTER = 1,
+    UPDATE_MATCH = 2,
+    UPDATE_LOBBY = 3,
+    START_MATCH = 4,
+    USER_AUTH_PASS = 5,
+    USER_AUTH_FAIL = 6,
+    USER_AUTH_BLOCKED = 7,
+    VALID_MATCH_NAME = 8,
+    INVALID_MATCH_NAME = 9,
+    DELETE_MATCH_OBJECT = 10,
+    END_GAME_INSTANCE = 11
+}
+
 namespace ServerPhysics.World_Objects
 {
     public class Player : WorldObject
     {
+        public bool facingRight = true;
         public bool isactive = true;
 
         private int fuel = 0;
@@ -164,7 +181,7 @@ namespace ServerPhysics.World_Objects
             {
 
                 //Console.WriteLine("Sending update");
-                player_stream.WriteByte((byte)2);
+                player_stream.WriteByte((byte)ServerCommands.UPDATE_MATCH);
 
                 //00 for player 1, 01 for player 2
                 player_stream.WriteByte(0);
@@ -250,6 +267,7 @@ namespace ServerPhysics.World_Objects
             }
             else if(movingRight)
             {
+                facingRight=true;
                 
                 if(xSpeed>(MOVEMENTSPEED+1)) xSpeed-= ACCELERATION;
                 else if(xSpeed<(MOVEMENTSPEED-1)) xSpeed+= ACCELERATION;
@@ -258,6 +276,7 @@ namespace ServerPhysics.World_Objects
             }
             else if(movingLeft)
             {
+                facingRight=false;
                 
                 if(xSpeed>-(MOVEMENTSPEED-1)) xSpeed-= ACCELERATION;
                 else if(xSpeed<-(MOVEMENTSPEED+1)) xSpeed+= ACCELERATION;
@@ -446,6 +465,18 @@ namespace ServerPhysics.World_Objects
             }
 
         }
+
+        public double getYSpeed() {return this.ySpeed;}
+        public double getXSpeed() {return this.xSpeed;}
+        public int getWidth() {return this.width;}
+        public int getHeight() {return this.height;}
+        public int getJumpSpeed() {return JUMPSPEED;}
+
+        
+
+        public void setYSpeed(int newspeed) {this.ySpeed=newspeed;}
+        public void setXSpeed(int newspeed) {this.xSpeed=newspeed;}
+
 
     }
 }
