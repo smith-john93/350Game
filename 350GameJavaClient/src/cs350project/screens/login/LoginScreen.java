@@ -62,6 +62,8 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
         //System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case USER_AUTH_PASS:
+                System.out.println("user auth pass");
+                Settings.getSettings().receiveKeyMappings(dataInputStream);
                 comm.removeIncomingCommandListener(this);
                 GameFrame.getInstance().showScreen(new LobbyScreen());
                 break;

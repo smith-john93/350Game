@@ -16,7 +16,8 @@ public enum ClientCommand {
     JOIN_MATCH(0x3),
     UPDATE_MATCH(0x4),
     CHARACTER_SELECTED(0x5),
-    SAVE_KEY_MAPPING(0x6);
+    SAVE_KEY_MAPPINGS(0x6),
+    SAVE_ALL_MAPPINGS(0x7);
     
     private final int value;
     

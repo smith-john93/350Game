@@ -173,14 +173,14 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         //System.out.println("sent credentials");
     }
 
-    private void sendString(String s) throws IOException {
+    public void sendString(String s) throws IOException {
         dataOutputStream.writeBytes(s);
-        //System.out.println("sent string: " + s);
+        System.out.println("sent string: " + s);
     }
 
-    private void sendCharacterState(int stateCode) throws IOException {
+    public void sendCharacterState(int stateCode) throws IOException {
         dataOutputStream.writeByte(stateCode);
-        //System.out.println("sent character state: " + stateCode);
+        System.out.println("sent character state: " + stateCode);
     }
 
     private void sendCharacterType(CharacterType characterType) throws IOException {

@@ -6,9 +6,15 @@
 package cs350project;
 
 import cs350project.characters.CharacterState;
+import cs350project.screens.MessageDialog;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -64,14 +70,14 @@ public class Settings {
     private Settings() {
         screenDimension = new Dimension(1366,768);
         keyMappings = new HashMap<>();
-        keyMappings.put(KeyEvent.VK_W,CharacterState.JUMPING);
+        /*keyMappings.put(KeyEvent.VK_W,CharacterState.JUMPING);
         keyMappings.put(KeyEvent.VK_D,CharacterState.MOVING_RIGHT);
         keyMappings.put(KeyEvent.VK_A,CharacterState.MOVING_LEFT);
         keyMappings.put(KeyEvent.VK_S,CharacterState.CROUCHING);
         keyMappings.put(KeyEvent.VK_P,CharacterState.PUNCH);
         keyMappings.put(KeyEvent.VK_K,CharacterState.HIGH_KICK);
         keyMappings.put(KeyEvent.VK_L,CharacterState.LOW_KICK);
-        keyMappings.put(KeyEvent.VK_B,CharacterState.BLOCKING);
+        keyMappings.put(KeyEvent.VK_B,CharacterState.BLOCKING);*/
     }
     
     public static Settings getSettings() {
@@ -99,5 +105,48 @@ public class Settings {
     
     public HashMap<Integer, Integer> getKeyMappings() {
         return keyMappings;
+    }
+    
+    public HashMap<Integer, ArrayList<Integer>> getActionMappings() {
+        return getActionMappings(keyMappings);
+    }
+    
+    public static HashMap<Integer, ArrayList<Integer>> getActionMappings(HashMap<Integer, Integer> keyMappings) {
+        HashMap<Integer, ArrayList<Integer>> actionMappings = new HashMap<>();
+        for(Map.Entry<Integer, Integer> entry : keyMappings.entrySet()) {
+            int stateCode = entry.getValue();
+            ArrayList<Integer> keyCodes = actionMappings.get(stateCode);
+            if(keyCodes == null) {
+                keyCodes = new ArrayList<>();
+            }
+            keyCodes.add(entry.getKey());
+            actionMappings.put(stateCode, keyCodes);
+        }
+        return actionMappings;
+    }
+    
+    public void receiveKeyMappings(DataInputStream dataInputStream) {
+        try {
+            for(int i = 0; i < 8; i++) {
+                int stateCode = dataInputStream.readByte();
+                if(stateCode < 0) {
+                    stateCode ^= 0xffffff00;
+                }
+                System.out.println("state code " + stateCode);
+                byte[] buffer = new byte[1];
+                StringBuilder sb = new StringBuilder();
+                while((buffer[0] = dataInputStream.readByte()) != 0) {
+                    sb.append(new String(buffer));
+                }
+                String[] keyCodes = sb.toString().split(",");
+                System.out.println("received state code " + stateCode);
+                for(String keyCode : keyCodes) {
+                    System.out.println("got key code " + keyCode);
+                    keyMappings.put(Integer.parseInt(keyCode),stateCode);
+                }
+            }
+        } catch(IOException e) {
+            MessageDialog.showErrorMessage("Failed to receive key mappings from server.", getClass());
+        }
     }
 }
