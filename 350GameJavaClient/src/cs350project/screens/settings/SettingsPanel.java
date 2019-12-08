@@ -144,7 +144,7 @@ public class SettingsPanel extends MenuPanel<SettingsInputListener> {
             gbc.gridy++;
         }
         
-        JLabel settingsLabel = MenuItemFactory.createLabel("SETTINGS");
+        JLabel settingsLabel = MenuItemFactory.createHeadingLabel("SETTINGS");
         
         updateScreenDimension();
         updateKeyMapSettings();

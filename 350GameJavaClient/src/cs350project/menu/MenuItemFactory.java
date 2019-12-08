@@ -7,6 +7,7 @@ package cs350project.menu;
 
 import cs350project.Settings;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Insets;
 import javax.swing.JButton;
@@ -59,9 +60,17 @@ public class MenuItemFactory {
         return passwordField;
     }
     
-    public static JLabel createLabel(String text) {
+    public static JLabel createHeadingLabel(String text) {
+        return createLabel(Settings.FONT_MENU_HEADING,text);
+    }
+    
+    public static JLabel createFieldLabel(String text) {
+        return createLabel(Settings.FONT_MENU_FIELD,text);
+    }
+    
+    public static JLabel createLabel(Font font, String text) {
         JLabel label = new JLabel(text);
-        label.setFont(Settings.FONT_MENU_HEADING);
+        label.setFont(font);
         label.setForeground(Settings.MENU_FOREGROUND_COLOR);
         return label;
     }

@@ -39,7 +39,7 @@ public class TitlePanel extends Panel<TitleInputListener> {
     
     public TitlePanel(String continueKeyText) {
         
-        JLabel startLabel = MenuItemFactory.createLabel(
+        JLabel startLabel = MenuItemFactory.createHeadingLabel(
                 "Press " + continueKeyText + " or click to start."
         );
         

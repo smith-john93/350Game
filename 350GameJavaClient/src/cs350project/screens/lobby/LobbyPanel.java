@@ -133,7 +133,7 @@ public class LobbyPanel extends Panel<LobbyInputListener> {
         //int spacing = leftBorder + leftBorder / 2;
         //jPanel.setPreferredSize(new Dimension(getWidth() / 2 - spacing, getHeight()));
         
-        JLabel jLabel = MenuItemFactory.createLabel(label);
+        JLabel jLabel = MenuItemFactory.createHeadingLabel(label);
         _gbc.insets = Settings.INSETS_MENU_NO_BOTTOM;
         _gbc.gridx = 0;
         _gbc.gridy = 0;

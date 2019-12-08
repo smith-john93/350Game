@@ -2,6 +2,7 @@ package cs350project.screens.login;
 
 import cs350project.GameFrame;
 import cs350project.Settings;
+import cs350project.Validate;
 import cs350project.screens.MessageDialog;
 import cs350project.screens.lobby.LobbyScreen;
 import cs350project.communication.Communication;
@@ -20,7 +21,6 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
     private final Communication comm;
     private String username;
     private int loginAttempts = 4;
-    private final int maxInputLength = 255;
 
     public LoginScreen() {
         comm = Communication.getInstance();
@@ -33,9 +33,10 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public void login(String username, char[] password) {
-        if(username.length() > maxInputLength || password.length > maxInputLength) {
-            String message = password.length > maxInputLength ? "Password" : "Username";
-            MessageDialog.showErrorMessage(this, message + " cannot contain more than 255 characters.", getClass(), false);
+        if(!Validate.chars(this,"Username",username.toCharArray())) {
+            return;
+        }
+        if(!Validate.chars(this,"Password",password)) {
             return;
         }
         this.username = username;

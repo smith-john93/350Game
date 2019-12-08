@@ -413,27 +413,26 @@ namespace GameServer
         /// <returns></returns>
         private bool CreateUserAccount()
         {
+            //get the username from the client
+            int size = clientInterface.ReadByte();
             StringBuilder cUser = new StringBuilder();
             do
             {
-                char u = (char)clientInterface.ReadByte();
-                if (u == 0)
-                    break;
-                cUser.Append(u);
+                cUser.Append(ReadChar());
+                size--;
             }
-            while (true);
+            while (size > 0);
             Console.WriteLine($"new UserName: {cUser}");
 
             //get the password from the client
+            size = clientInterface.ReadByte();
             StringBuilder cPass = new StringBuilder();
             do
             {
-                char u = (char)clientInterface.ReadByte();
-                if (u == 0)
-                    break;
-                cPass.Append(u);
+                cPass.Append(ReadChar());
+                size--;
             }
-            while (true);
+            while (size > 0);
             Console.WriteLine($"new Password: {cPass}");
 
             bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString());

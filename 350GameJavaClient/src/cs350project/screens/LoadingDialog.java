@@ -40,7 +40,7 @@ public class LoadingDialog {
     public LoadingDialog(String text) {
         GameFrame gameFrame = GameFrame.getInstance();
         jDialog = new JDialog(gameFrame,true);
-        JLabel jLabel = MenuItemFactory.createLabel(text);
+        JLabel jLabel = MenuItemFactory.createHeadingLabel(text);
         FontMetrics fontMetrics = gameFrame.getGraphics().getFontMetrics(jLabel.getFont());
         animationSize = fontMetrics.getAscent();
         int width = fontMetrics.stringWidth(text) + Settings.PADDING_MENU * 2 + animationSize;

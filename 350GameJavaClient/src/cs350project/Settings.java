@@ -46,12 +46,16 @@ public class Settings implements IncomingCommandListener {
     public static final String TITLE_IMAGE_FILE = "menu/welcomeAfter.png";
     public static final String TITLE_ANIMATION_FILE = "menu/welcome.gif";
     
+    public static final String FIELD_NAME_USERNAME = "Username";
+    public static final String FIELD_NAME_PASSWORD = "Password";
+    
     public static final Font BUTTON_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
     public static final Font BUTTON_FONT_MEDIUM = new Font(Font.MONOSPACED,Font.BOLD,24);
     public static final Font LIST_FONT = new Font(Font.MONOSPACED,Font.BOLD,32);
     public static final Font FONT_SETTING = new Font(Font.MONOSPACED,Font.PLAIN,24);
     public static final Font FONT_MENU_HEADING = new Font("Arial",Font.BOLD,40);
     public static final Font HEADING1_FONT = new Font("Arial",Font.BOLD,24);
+    public static final Font FONT_MENU_FIELD = new Font("Arial",Font.BOLD,16);
 
     public static final Color TRANSPARENT = new Color(0,0,0,0);
     public static final Color MENU_BACKGROUND_COLOR = Color.black;

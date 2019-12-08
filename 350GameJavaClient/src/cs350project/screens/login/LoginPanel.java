@@ -1,12 +1,13 @@
 package cs350project.screens.login;
 
+import cs350project.Settings;
 import cs350project.menu.MenuItemFactory;
 import cs350project.menu.MenuPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -14,12 +15,12 @@ public class LoginPanel extends MenuPanel<LoginInputListener> {
     
     @Override
     public JComponent[] getMenuItems() {
+        
+        JLabel usernameLabel = MenuItemFactory.createFieldLabel(Settings.FIELD_NAME_USERNAME);
+        JLabel passwordLabel = MenuItemFactory.createFieldLabel(Settings.FIELD_NAME_PASSWORD);
+        
         JTextField usernameField = MenuItemFactory.createTextField();
         JPasswordField passwordField = MenuItemFactory.createPasswordField();
-        
-        // delete the next 2 lines after testing is completed
-        usernameField.setText("1");
-        passwordField.setText("1");
         
         JButton loginButton = MenuItemFactory.createButton("Log In");
         loginButton.addActionListener(new ActionListener(){
@@ -34,6 +35,12 @@ public class LoginPanel extends MenuPanel<LoginInputListener> {
             }
         });
         
-        return new JComponent[]{usernameField,passwordField,loginButton};
+        return new JComponent[]{
+            usernameLabel,
+            usernameField,
+            passwordLabel,
+            passwordField,
+            loginButton
+        };
     }
 }
