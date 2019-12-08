@@ -74,11 +74,35 @@ public class GameFrame extends JFrame {
         }
     }
     
+    private boolean setServerAddress(String serverAddress) {
+        LoadingDialog serverAddressDialog = new LoadingDialog("Checking address...");
+        serverAddressDialog.open();
+
+        try {
+            Communication.getInstance().setServerAddress(serverAddress);
+            serverAddressDialog.close();
+            Settings.getSettings().saveSetting(
+                    Settings.SETTING_SERVER_ADDRESS, 
+                    serverAddress
+            );
+            return true;
+        } catch (UnknownHostException ex) {
+            serverAddressDialog.close();
+            MessageDialog.showErrorMessage(
+                    gameFrame,
+                    ex.getMessage(), 
+                    gameFrame.getClass()
+            );
+        }
+        return false;
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Communication.getInstance().detectServer();
+        Communication comm = Communication.getInstance();
+        comm.detectServer();
         //GameFrame.getInstance().showScreen(new TitleScreen());
         
         GameFrame.getInstance().showScreen(new MainMenuScreen());
@@ -87,20 +111,19 @@ public class GameFrame extends JFrame {
         
         if(serverAddress == null) {
         
-            String input;
             while(true) {
-                input = JOptionPane.showInputDialog(
+                serverAddress = JOptionPane.showInputDialog(
                         gameFrame, 
                         "Enter server address.", 
                         Settings.GAME_TITLE,
                         JOptionPane.PLAIN_MESSAGE
                 );
 
-                if(input == null) {
+                if(serverAddress == null) {
                     System.exit(0);
                 }
 
-                if(input.isBlank()) {
+                if(serverAddress.isBlank()) {
                     MessageDialog.showErrorMessage(
                             gameFrame,
                             "This field cannot be blank.", 
@@ -109,23 +132,12 @@ public class GameFrame extends JFrame {
                     continue;
                 }
 
-                LoadingDialog serverAddressDialog = new LoadingDialog("Checking address...");
-                serverAddressDialog.open();
-
-                try {
-                    Communication.getInstance().setServerAddress(input);
-                    serverAddressDialog.close();
-                    Settings.getSettings().saveSetting(Settings.SETTING_SERVER_ADDRESS, input);
+                if(gameFrame.setServerAddress(serverAddress)) {
                     break;
-                } catch (UnknownHostException ex) {
-                    serverAddressDialog.close();
-                    MessageDialog.showErrorMessage(
-                            gameFrame,
-                            ex.getMessage(), 
-                            gameFrame.getClass()
-                    );
                 }
             }
+        } else {
+            gameFrame.setServerAddress(serverAddress);
         }
     }
 }

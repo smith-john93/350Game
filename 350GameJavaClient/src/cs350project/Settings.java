@@ -141,6 +141,8 @@ public class Settings implements IncomingCommandListener {
                     while((line = br.readLine()) != null) {
                         String[] setting = line.split(":",limit);
                         settingsHashMap.put(setting[keyIndex], setting[valueIndex]);
+                        System.out.println("loaded setting from file: " + setting[keyIndex]);
+                        System.out.println("value: " + setting[valueIndex]);
                     }
                 } catch(IOException e) {
                     MessageDialog.showErrorMessage("Unable to read from settings file.", getClass());
