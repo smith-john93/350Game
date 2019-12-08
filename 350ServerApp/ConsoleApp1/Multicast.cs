@@ -7,7 +7,7 @@ namespace Multicast
     class Multicast
     {
         private readonly string groupIP = "224.3.5.0";
-        private readonly int groupPort = 12340;
+        private readonly int groupPort = 65000;
         
         public Multicast() { }
 
@@ -23,7 +23,6 @@ namespace Multicast
             UdpClient udpClient = new UdpClient(AddressFamily.InterNetwork);
 
             udpClient.JoinMulticastGroup(group);
-
 
             try
             {

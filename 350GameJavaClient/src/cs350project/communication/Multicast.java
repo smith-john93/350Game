@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class Multicast {
 
     private static final String MESSAGE = "o";
-    private static final int PORT = 12340;
+    private static final int PORT = 65000;
     private static final String GROUP = "224.3.5.0";
     
     public static InetAddress getServerAddress() {

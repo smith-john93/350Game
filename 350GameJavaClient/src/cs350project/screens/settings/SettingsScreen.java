@@ -7,21 +7,19 @@ package cs350project.screens.settings;
 
 import cs350project.GameFrame;
 import cs350project.Settings;
-import cs350project.communication.ClientCommand;
 import cs350project.communication.Communication;
+import cs350project.communication.CommunicationException;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
-import cs350project.screens.MessageDialog;
-import cs350project.screens.mainmenu.MainMenuScreen;
+import cs350project.screens.lobby.LobbyScreen;
 import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -66,39 +64,17 @@ public class SettingsScreen extends Screen implements SettingsInputListener, Inc
 
     @Override
     public void back() {
-        GameFrame.getInstance().showScreen(new MainMenuScreen());
+        GameFrame.getInstance().showScreen(new LobbyScreen());
     }
 
     @Override
     public void save() {
         Settings settings = Settings.getSettings();
         settings.setKeyMappings(keyMappings);
-        HashMap<Integer,ArrayList<Integer>> actionMappings = settings.getActionMappings();
         try {
-            comm.sendClientCommand(ClientCommand.SAVE_KEY_MAPPINGS);
-            for(int stateCode : actionMappings.keySet()) {
-                comm.sendCharacterState(stateCode);
-                StringBuilder keyCodeCSV = new StringBuilder();
-                ArrayList<Integer> keyCodes = actionMappings.get(stateCode);
-                for(int i = 0; i < keyCodes.size(); i++) {
-                    if(i != 0) {
-                        keyCodeCSV.append(",");
-                    }
-                    keyCodeCSV.append(keyCodes.get(i));
-                }
-                keyCodeCSV.append('\0');
-                String output = keyCodeCSV.toString();
-                comm.sendString(output);
-                System.out.println(output);
-                System.out.println("output length " + output.length());
-            }
-            comm.sendClientCommand(ClientCommand.SAVE_ALL_MAPPINGS);
-        } catch(IOException e) {
-            MessageDialog.showErrorMessage(
-                    "Unable to send key mappings to server. "
-                    + "Key mappings will not persist after the game is restarted.", 
-                    getClass()
-            );
+            comm.sendActionMappings(settings.getActionMappings());
+        } catch (CommunicationException ex) {
+            Logger.getLogger(SettingsScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

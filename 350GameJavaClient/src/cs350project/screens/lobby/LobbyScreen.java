@@ -9,6 +9,7 @@ import cs350project.GameFrame;
 import cs350project.Settings;
 import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
+import cs350project.communication.CommunicationException;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
@@ -16,8 +17,11 @@ import cs350project.screens.KeyMap;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import cs350project.screens.Screen;
 import cs350project.screens.selection.SelectionScreen;
+import cs350project.screens.settings.SettingsScreen;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -48,14 +52,27 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void createMatch(String matchName) {
-        comm.createMatch(matchName);
+        try {
+            comm.createMatch(matchName);
+        } catch (CommunicationException ex) {
+            MessageDialog.showErrorMessage(ex.getMessage(), getClass());
+        }
     }
     
     @Override
     public void joinMatch(String matchName) {
         
-        //comm.addIncomingCommandListener(matchObjectManager);
-        comm.joinMatch(matchName);
+        try {
+            //comm.addIncomingCommandListener(matchObjectManager);
+            comm.joinMatch(matchName);
+        } catch (CommunicationException ex) {
+            Logger.getLogger(LobbyScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
+    public void settings() {
+        GameFrame.getInstance().showScreen(new SettingsScreen());
     }
     
     @Override

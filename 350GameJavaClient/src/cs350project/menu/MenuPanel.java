@@ -39,7 +39,7 @@ public abstract class MenuPanel<E extends InputListener> extends Panel<E> {
         JPanel borderedPanel = new JPanel();
         borderedPanel.setLayout(new GridBagLayout());
         borderedPanel.setBackground(Settings.MENU_BACKGROUND_COLOR);
-        borderedPanel.setBorder(Settings.MENU_BORDER);
+        borderedPanel.setBorder(Settings.BORDER_MENU);
         
         /* Keep getMenuItems here to ensure that calls to the setters within 
         it will take visible affect on the panel.

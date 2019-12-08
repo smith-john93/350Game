@@ -16,11 +16,11 @@ public class MainMenuPanel extends MenuPanel<MainMenuInputListener> {
         
         final String logInCommand = "Log In";
         final String createAccountCommand = "Create New Account";
-        final String settingsCommand = "Settings";
+        //final String settingsCommand = "Settings";
         
         JButton loginButton = MenuItemFactory.createButton(logInCommand);
         JButton createAccountButton = MenuItemFactory.createButton(createAccountCommand);
-        JButton settingsButton = MenuItemFactory.createButton(settingsCommand);
+        //JButton settingsButton = MenuItemFactory.createButton(settingsCommand);
         
         ActionListener buttonListener = new ActionListener() {
             @Override
@@ -33,9 +33,9 @@ public class MainMenuPanel extends MenuPanel<MainMenuInputListener> {
                         case createAccountCommand:
                             mainMenuInputListener.createAccount();
                             break;
-                        case settingsCommand:
+                        /*case settingsCommand:
                             mainMenuInputListener.showSettings();
-                            break;
+                            break;*/
                     }
                 }
             }
@@ -43,8 +43,12 @@ public class MainMenuPanel extends MenuPanel<MainMenuInputListener> {
         
         loginButton.addActionListener(buttonListener);
         createAccountButton.addActionListener(buttonListener);
-        settingsButton.addActionListener(buttonListener);
+        //settingsButton.addActionListener(buttonListener);
         
-        return new JComponent[]{loginButton,createAccountButton,settingsButton};
+        return new JComponent[]{
+            loginButton,
+            createAccountButton,
+            //settingsButton
+        };
     }
 }

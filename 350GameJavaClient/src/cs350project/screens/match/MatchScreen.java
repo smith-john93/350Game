@@ -12,10 +12,10 @@ import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
 import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
+import cs350project.communication.CommunicationException;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -52,7 +52,7 @@ public class MatchScreen extends Screen implements
         combat = new Combat(player);
         matchObjectManager = MatchObjectManager.getInstance();
         matchObjectManager.setPlayer(player);
-        backgroundImage = new BackgroundImage("maps/whitehouse.png");
+        backgroundImage = new BackgroundImage("maps/WhiteHouse.png");
         matchOverlay = new MatchOverlay();
         Thread repaintThread = new Thread() {
             @Override
@@ -105,8 +105,8 @@ public class MatchScreen extends Screen implements
     private void updateMatch() {
         try {
             comm.updateMatch(this.stateCode);
-        } catch(IOException e) {
-            MessageDialog.showErrorMessage("Unable to update match.", getClass());
+        } catch(CommunicationException e) {
+            MessageDialog.showErrorMessage(e.getMessage(), getClass());
         }
     }
     

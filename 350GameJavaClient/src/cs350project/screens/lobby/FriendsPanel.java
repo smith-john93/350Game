@@ -52,7 +52,7 @@ class FriendsPanel extends JPanel {
         super.addNotify();
         
         lobbyPanel.buildJPanel(this,"FRIENDS",friendsList);
-        GridBagConstraints gbc = lobbyPanel.gbc;
+        GridBagConstraints gbc = lobbyPanel._gbc;
               
         JButton addButton = lobbyPanel.buildJButton("Add");
         JPanel friendsPanel = this;

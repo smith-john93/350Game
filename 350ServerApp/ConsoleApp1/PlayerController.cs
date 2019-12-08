@@ -361,7 +361,7 @@ namespace GameServer
             {
                 //read the byte sent from the client
                 i = clientInterface.ReadByte();
-                
+
                 //if the client is trying to create an account                
                 if (i == (int)ClientCommands.CREATE_ACCOUNT)
                 {
@@ -370,12 +370,14 @@ namespace GameServer
                     bool accountCreated = false;
 
                     accountCreated = CreateUserAccount();
-                    if(!accountCreated)
+                    if (!accountCreated)
                         SendMessage(ServerCommands.USER_AUTH_FAIL);
 
                     //if the account hs been created, respond with true
-                    if (accountCreated)
+                    if (accountCreated) {
+                        SendMessage(ServerCommands.USER_AUTH_PASS);
                         return true;
+                    }
 
                     return false;
                 }
