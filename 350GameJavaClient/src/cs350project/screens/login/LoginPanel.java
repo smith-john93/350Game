@@ -26,9 +26,10 @@ public class LoginPanel extends MenuPanel<LoginInputListener> {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (LoginInputListener loginInputListener : inputListeners) {
-                    char[] password = passwordField.getPassword();
-                    loginInputListener.login(usernameField.getText(), password);
-                    Arrays.fill(password, '0'); // Clear the password array for security.
+                    loginInputListener.login(
+                            usernameField.getText(), 
+                            passwordField.getPassword()
+                    );
                 }
             }
         });
