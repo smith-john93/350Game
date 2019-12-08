@@ -37,3 +37,23 @@ C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\obj
 C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.CoreCompileInputs.cache
 C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.exe
 C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.pdb
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csprojAssemblyReference.cache
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.Form1.resources
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.Properties.Resources.resources
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.GenerateResource.cache
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.CoreCompileInputs.cache
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\ServerPhysics.exe.config
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\ServerPhysics.exe
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\ServerPhysics.pdb
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\EntityFramework.dll
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.dll
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\EntityFramework.xml
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.xml
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.CopyComplete
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.exe
+C:\Users\giuliano011\Source\Repos\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.pdb
