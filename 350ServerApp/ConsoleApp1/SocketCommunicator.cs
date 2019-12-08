@@ -26,7 +26,7 @@ namespace GameServer
         private const int commandPort = 12345;
         public TcpListener listener;
         private GameController gController;
-        private Multicast.Multicast multi;
+        //private Multicast.Multicast multi;
         public bool RequestShutdown;
         private const string MULTICAST_STRING = "o";
 
@@ -56,7 +56,7 @@ namespace GameServer
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
 
-            multi = new Multicast.Multicast();
+            //multi = new Multicast.Multicast();
         }
 
 
@@ -65,7 +65,7 @@ namespace GameServer
             try
             {
                 Console.WriteLine("Starting Multicast Broadcast...");
-                Task.Run(() => SendMulticast(MULTICAST_STRING));
+                //Task.Run(() => SendMulticast(MULTICAST_STRING));
                 Console.WriteLine("Broadcast Started");                
 
                 listener = new TcpListener(localEndPoint);
@@ -103,14 +103,14 @@ namespace GameServer
             }
         }
 
-        async public void SendMulticast(string message)
-        {
-            while(!RequestShutdown)
-            {
-                multi.send(message);
-                Thread.Sleep(new TimeSpan(0, 0, 10));
-            }
-        }
+        //async public void SendMulticast(string message)
+        //{
+        //    while(!RequestShutdown)
+        //    {
+        //        multi.send(message);
+        //        Thread.Sleep(new TimeSpan(0, 0, 10));
+        //    }
+        //}
 
         private void DisplayInfo(string information)
         {

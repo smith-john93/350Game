@@ -7,7 +7,10 @@ namespace Multicast
     class Multicast
     {
         private readonly string groupIP = "224.3.5.0";
-        private readonly int groupPort = 12340;
+        /*
+        private readonly int groupPort = 12345;
+        */    
+        private readonly int groupPort = 65000;
         
         public Multicast() { }
 
@@ -35,9 +38,11 @@ namespace Multicast
                     data[i++] = (byte)c;
                 }
                 udpClient.SendAsync(data,data.Length,ipEndPoint);
+                //Console.WriteLine("Sending multicast");
             }
             catch(SocketException e)
             {
+                //Console.WriteLine("caught cast");
                 Console.WriteLine(e.Message);
             }
         }
