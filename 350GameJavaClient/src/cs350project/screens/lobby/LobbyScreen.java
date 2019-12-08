@@ -14,6 +14,7 @@ import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.KeyMap;
+import cs350project.screens.LoadingDialog;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import cs350project.screens.Screen;
 import cs350project.screens.selection.SelectionScreen;
@@ -32,6 +33,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     
     private final LobbyPanel lobbyPanel;
     private final Communication comm;
+    private LoadingDialog loadingDialog;
     
     public LobbyScreen() {
         lobbyPanel = new LobbyPanel();
@@ -52,11 +54,18 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void createMatch(String matchName) {
-        try {
-            comm.createMatch(matchName);
-        } catch (CommunicationException ex) {
-            MessageDialog.showErrorMessage(ex.getMessage(), getClass());
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    comm.createMatch(matchName);
+                    loadingDialog = new LoadingDialog("Waiting for another player to join...");
+                    loadingDialog.open();
+                } catch (CommunicationException ex) {
+                    MessageDialog.showErrorMessage(ex.getMessage(), getClass());
+                }
+            }
+        }.start();
     }
     
     @Override
@@ -111,6 +120,7 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                 break;
             case SELECT_CHARACTER:
                 try {
+                    loadingDialog.close();
                     comm.removeIncomingCommandListener(this);
                     GameFrame.getInstance().showScreen(new SelectionScreen());
                 } catch(IOException e) {

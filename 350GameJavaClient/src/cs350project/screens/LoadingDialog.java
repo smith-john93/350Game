@@ -15,8 +15,11 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -43,11 +46,32 @@ public class LoadingDialog {
         JLabel jLabel = MenuItemFactory.createHeadingLabel(text);
         FontMetrics fontMetrics = gameFrame.getGraphics().getFontMetrics(jLabel.getFont());
         animationSize = fontMetrics.getAscent();
-        int width = fontMetrics.stringWidth(text) + Settings.PADDING_MENU * 2 + animationSize;
-        int height = animationSize + Settings.PADDING_MENU * 2;
+        
+        // Call pack before getInsets
+        jDialog.pack(); 
+        Insets insets = jDialog.getInsets();
+        
+        int width = fontMetrics.stringWidth(text) 
+                + Settings.PADDING_MENU * 2 
+                + animationSize
+                + insets.left
+                + insets.right;
+        
+        int height = animationSize 
+                + Settings.PADDING_MENU * 2 
+                + insets.top 
+                + insets.bottom;
+        
         jDialog.setSize(new Dimension(width,height));
         jDialog.setLocationRelativeTo(gameFrame);
-        jDialog.setUndecorated(true);
+        jDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        jDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("loading dialog closed");
+            }
+        });
+        jDialog.setResizable(false);
         
         JPanel jPanel = new JPanel();
         jPanel.setBorder(Settings.BORDER_MENU);
