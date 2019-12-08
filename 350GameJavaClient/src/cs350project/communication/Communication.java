@@ -168,16 +168,19 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     }
 
     private void sendCredentials(String username, char[] password) throws IOException {
-        sendStringNullTerminated(username);
+        //sendStringNullTerminated(username);
+        sendString(username);
+        dataOutputStream.write(password.length);
         for(char c : password) {
-            dataOutputStream.write(c);
+            dataOutputStream.writeChar(c);
         }
         Arrays.fill(password,'0'); // Clear the password array for security.
         //System.out.println("sent credentials");
     }
 
     private void sendString(String s) throws IOException {
-        dataOutputStream.writeBytes(s);
+        dataOutputStream.write(s.length());
+        dataOutputStream.writeChars(s);
         System.out.println("comm: sent string: " + s);
     }
     

@@ -413,7 +413,6 @@ namespace GameServer
         /// <returns></returns>
         private bool CreateUserAccount()
         {
-
             StringBuilder cUser = new StringBuilder();
             do
             {
@@ -422,7 +421,7 @@ namespace GameServer
                     break;
                 cUser.Append(u);
             }
-            while (clientInterface.DataAvailable);
+            while (true);
             Console.WriteLine($"new UserName: {cUser}");
 
             //get the password from the client
@@ -434,7 +433,7 @@ namespace GameServer
                     break;
                 cPass.Append(u);
             }
-            while (clientInterface.DataAvailable);
+            while (true);
             Console.WriteLine($"new Password: {cPass}");
 
             bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString());
@@ -450,6 +449,13 @@ namespace GameServer
             return false;
         }
 
+        private char ReadChar()
+        {
+            int i = clientInterface.ReadByte() << 8;
+            i += clientInterface.ReadByte();
+            return (char)i;
+        }
+
         /// <summary>
         /// Verifys if the user credentials are valid
         /// </summary>
@@ -457,27 +463,26 @@ namespace GameServer
         private bool ValidateUser()
         {
             //get the username from the client
+            int size = clientInterface.ReadByte();
             StringBuilder cUser = new StringBuilder();
             do
             {
-                char u = (char)clientInterface.ReadByte();
-                if (u == 0)
-                    break;
-                cUser.Append(u);
+                cUser.Append(ReadChar());
+                size--;
             }
-            while (clientInterface.DataAvailable);
+            while (size > 0);
             Console.WriteLine($"UserName: {cUser}");
 
             //get the password from the client
+            size = clientInterface.ReadByte();
+            Console.WriteLine("password size " + size);
             StringBuilder cPass = new StringBuilder();
             do
             {
-                char u = (char)clientInterface.ReadByte();
-                if (u == 0)
-                    break;
-                cPass.Append(u);
+                cPass.Append(ReadChar());
+                size--;
             }
-            while (clientInterface.DataAvailable);
+            while (size > 0);
             Console.WriteLine($"Password: {cPass}");
 
             //convert the stringbuilders to string for validation

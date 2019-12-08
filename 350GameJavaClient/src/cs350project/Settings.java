@@ -10,6 +10,7 @@ import cs350project.communication.ServerCommand;
 import cs350project.screens.MessageDialog;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileReader;
@@ -227,12 +228,12 @@ public class Settings implements IncomingCommandListener {
                     stateCode ^= 0xffffff00;
                 }
                 System.out.println("state code " + stateCode);
-                byte[] buffer = new byte[1];
-                StringBuilder sb = new StringBuilder();
-                while((buffer[0] = dataInputStream.readByte()) != 0) {
-                    sb.append(new String(buffer));
+                byte b;
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                while((b = dataInputStream.readByte()) != 0) {
+                    buffer.write(b);
                 }
-                String[] keyCodes = sb.toString().split(",");
+                String[] keyCodes = new String(buffer.toByteArray()).split(",");
                 System.out.println("received state code " + stateCode);
                 for(String keyCode : keyCodes) {
                     System.out.println("got key code " + keyCode);
