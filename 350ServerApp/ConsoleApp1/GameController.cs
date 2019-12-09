@@ -40,6 +40,7 @@ namespace GameServer
         /// <returns></returns>
         public bool CreateGame(string gameName, PlayerController player)
         {
+            Console.WriteLine($"Creating match {gameName}");
             //verify the games does not exist in the dictionary yet
             if (gameListing.ContainsKey(gameName))
                 return false;
@@ -71,6 +72,7 @@ namespace GameServer
 
         public bool AddPlayer(string game, PlayerController player)
         {
+            Console.WriteLine("Adding PLayer");
             if (!gameListing.ContainsKey(game))
             { 
                 return false;

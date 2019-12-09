@@ -97,16 +97,17 @@ namespace GameServer
         /// </summary>
         private void JoinGame()
         {
+            Console.WriteLine("Joining game");
+            int size = clientInterface.ReadByte();
+            //int size = clientInterface.ReadByte();
             //get the matchName from the client
             StringBuilder matchJoin = new StringBuilder();
             do
             {
-                char u = (char)clientInterface.ReadByte();
-                if (u == 0)
-                    break;
-                matchJoin.Append(u);
+                matchJoin.Append(ReadChar());
+                    size--;
             }
-            while (clientInterface.DataAvailable);
+            while (size > 0);
             string game = matchJoin.ToString();
 
             //Add the player to the match
@@ -128,6 +129,8 @@ namespace GameServer
         /// </summary>
         private void CreateGame()
         {
+
+            int size = clientInterface.ReadByte();
             //stay in the loop until the game is created
             while(true)
             {
@@ -135,12 +138,10 @@ namespace GameServer
                 StringBuilder matchMake = new StringBuilder();
                 do
                 {
-                    char u = (char)clientInterface.ReadByte();
-                    if (u == 0)
-                        break;
-                    matchMake.Append(u);
+                    matchMake.Append(ReadChar());
+                    size--;
                 }
-                while (clientInterface.DataAvailable);
+                while (size> 0);
                 
                 //Turn the name into a string
                 string gameName = matchMake.ToString();
@@ -227,6 +228,7 @@ namespace GameServer
         /// <param name="addMatch"></param>
         async public void SendMatchList(string match, bool addMatch)
         {
+            Console.WriteLine("Pulsing");
             //Send the client the update lobby byte
             byte[] updateCommand = new byte[1] { (byte)ServerCommands.UPDATE_LOBBY };
             await clientInterface.WriteAsync(updateCommand);
