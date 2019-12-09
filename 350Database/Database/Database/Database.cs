@@ -36,14 +36,14 @@ CREATE TABLE UserInformation
 ( 
 	username TEXT NOT NULL UNIQUE, 
     password TEXT NOT NULL,
-	moveLeft TEXT DEFAULT 'a',
-	moveRight TEXT DEFAULT 'd',
-    crouch TEXT DEFAULT 's', 
-	jump TEXT DEFAULT 'w', 
-	block TEXT DEFAULT 'o',
-    punch TEXT DEFAULT 'p',
-	highKick TEXT DEFAULT 'k', 
-	lowKick TEXT DEFAULT 'l', 
+	MOVING_LEFT TEXT DEFAULT 'a',
+	MOVING_RIGHT TEXT DEFAULT 'd',
+    CROUCHING TEXT DEFAULT 's', 
+	JUMPING TEXT DEFAULT 'w', 
+	BLOCKING TEXT DEFAULT 'o',
+    PUNCH TEXT DEFAULT 'p',
+	HIGH_KICK TEXT DEFAULT 'k', 
+	LOW_KICK TEXT DEFAULT 'l', 
 
     PRIMARY KEY(username)
 )

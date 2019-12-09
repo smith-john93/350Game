@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using GameServer.Enumerations;
 using System.IO;
 using Database;
+using GameServer.DataTranferObjects;
+
 
 namespace GameServer
 {
@@ -35,9 +37,9 @@ namespace GameServer
             while(!authenticatedUser)
                 authenticatedUser = AuthenticateUser();
 
-            Console.WriteLine("Authorized");
-            gController.playerList.Add(this);
+            SendKeyMappings();
 
+            gController.playerList.Add(this);
             gController.SendAllGames(this);
 
             PlayerControl();
@@ -48,6 +50,7 @@ namespace GameServer
         /// </summary>
         private void PlayerControl()
         {
+            Console.WriteLine("In player control");
             while(true)
             {
                 if (clientInterface == null)
@@ -66,7 +69,8 @@ namespace GameServer
                     DisposePlayer();
                     return;
                 }
-                   
+
+                Console.WriteLine($"received {i}");
 
                 switch (i)
                 {
@@ -78,6 +82,9 @@ namespace GameServer
                         JoinGame();                       
                         break;
 
+                    case (int)ClientCommands.SAVE_KEY_MAPPINGS:
+                        SaveMapping();
+                        break;
                     default:
                         break;
                 }
@@ -149,6 +156,50 @@ namespace GameServer
                 }
 
             }
+        }
+        
+        private void SaveMapping()
+        {
+            Console.WriteLine("in mapping");
+            List<KeyMapDTO> mappings = new List<KeyMapDTO>();
+            //receive char state
+            //receive int until none are left
+            int i = 0;
+            while(true)
+            {
+                if (i == 8)
+                    break;
+                i++;
+                Console.WriteLine("in while");
+
+                byte charState = (byte)clientInterface.ReadByte();
+
+                StringBuilder characterString = new StringBuilder();
+                do
+                {
+                   char b = (char)clientInterface.ReadByte();
+                    Console.WriteLine($"Read byte {b}");
+                    if (b == (char)0)
+                        break;
+
+                    Console.WriteLine($"received {b}");
+                   characterString.Append(b);
+                }while (clientInterface.DataAvailable);
+
+                KeyMapDTO map = new KeyMapDTO();
+                map.Command = charState;
+                map.KeyString = characterString.ToString();
+                mappings.Add(map);
+            }
+
+            foreach(KeyMapDTO map in mappings)
+            {
+                Console.WriteLine($"{playername}, {CommandUtilities.ParseCommand(map.Command).ToString()}, {map.KeyString}");
+                databseService.SetKeyBinding(playername, CommandUtilities.ParseCommand(map.Command).ToString(), map.KeyString);
+            }
+            Console.WriteLine("Sending key mapping");
+            SendMessage(ServerCommands.SAVED_KEY_MAPPINGS);
+            return;
         }
         #endregion
 
@@ -341,6 +392,37 @@ namespace GameServer
 
                 //send the second byte of the int
                 clientInterface.WriteByte((byte)i);
+            }
+        }
+
+        private void SendKeyMappings()
+        {
+            List<KeyMapDTO> keyMapList = new List<KeyMapDTO>();
+            foreach(Command c in (Command[])Enum.GetValues((typeof(Command))))
+            {
+                if ((byte)c == 0)
+                    continue;
+                KeyMapDTO map = new KeyMapDTO();
+                map.Command = (byte)c;
+                map.KeyString = databseService.GetKeyBinding(playername, c.ToString());
+                keyMapList.Add(map);
+            }
+
+            foreach (KeyMapDTO mappingObject in keyMapList)
+            {
+                Console.WriteLine($"Sending {mappingObject.Command} {mappingObject.KeyString}");
+                byte[] array = new byte[mappingObject.KeyString.Length+1];
+                int i = 0;
+                foreach (char a in mappingObject.KeyString.ToCharArray())
+                {
+                    array[i] = (byte)a;
+                    i++;
+                }
+                array[mappingObject.KeyString.Length] = 0;
+               
+                ReadOnlySpan<byte> byteSpan = new ReadOnlySpan<byte>(array);
+                clientInterface.WriteByte(mappingObject.Command);
+                clientInterface.Write(byteSpan);
             }
         }
         #endregion
