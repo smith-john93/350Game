@@ -66,3 +66,4 @@ C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\bin
 C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.xml
 C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\bin\Debug\System.Data.SQLite.dll.config
 C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csproj.CopyComplete
+C:\Users\Mark Masone\OneDrive - WCSU\cs350\350Game\FightServer\ServerPhysics\obj\Debug\ServerPhysics.csprojAssemblyReference.cache

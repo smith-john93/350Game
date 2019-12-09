@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,6 +40,7 @@ public class LoadingDialog {
     private final Timer animationTimer;
     private final int animationSize;
     private final int animationRate = 50;
+    private ArrayList<LoadingDialogListener> loadingDialogListeners = new ArrayList<>();
     
     public LoadingDialog(String text) {
         GameFrame gameFrame = GameFrame.getInstance();
@@ -69,6 +71,9 @@ public class LoadingDialog {
             @Override
             public void windowClosing(WindowEvent e) {
                 System.out.println("loading dialog closed");
+                for(LoadingDialogListener loadingDialogListener : loadingDialogListeners) {
+                    loadingDialogListener.loadingDialogClosing();
+                }
             }
         });
         jDialog.setResizable(false);
@@ -125,6 +130,10 @@ public class LoadingDialog {
                 jDialog.setVisible(true);
             }
         };
+    }
+    
+    public void addLoadingDialogListener(LoadingDialogListener loadingDialogListener) {
+        loadingDialogListeners.add(loadingDialogListener);
     }
     
     public void open() {

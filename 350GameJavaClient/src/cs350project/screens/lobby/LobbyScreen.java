@@ -120,7 +120,9 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                 break;
             case SELECT_CHARACTER:
                 try {
-                    loadingDialog.close();
+                    if(loadingDialog != null) {
+                        loadingDialog.close();
+                    }
                     comm.removeIncomingCommandListener(this);
                     GameFrame.getInstance().showScreen(new SelectionScreen());
                 } catch(IOException e) {
