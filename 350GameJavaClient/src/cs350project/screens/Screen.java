@@ -40,23 +40,37 @@ public abstract class Screen extends JComponent {
         }
     }
     
-    public void loadingDialog(Loader loader, String message) {
+    protected void createLoadingDialog(Loader loader, String message) {
+        createLoadingDialog(loader, message, true, null);
+    }
+    
+    protected LoadingDialog createLoadingDialog(
+            Loader loader, 
+            String message, 
+            boolean closeAfterLoad,
+            LoadingDialogListener loadingDialogListener
+    ) {
         JComponent jComponent = this;
+        LoadingDialog loadingDialog = new LoadingDialog(message);
+        if(loadingDialogListener != null) {
+            loadingDialog.addLoadingDialogListener(loadingDialogListener);
+        }
         new Thread() {
             @Override
             public void run() {
-                LoadingDialog loadingDialog = new LoadingDialog(message);
                 loadingDialog.open();
-                
                 try {
                     loader.load();
-                    loadingDialog.close();
+                    if(closeAfterLoad) {
+                        loadingDialog.close();
+                    }
                 } catch (CommunicationException ex) {
                     loadingDialog.close();
                     MessageDialog.showErrorMessage(jComponent,ex.getMessage(),getClass(),false);
                 }
             }
         }.start();
+        return loadingDialog;
     }
     
     public abstract BackgroundImage getBackgroundImage();

@@ -40,7 +40,7 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
             return;
         }
         this.username = username;
-        loadingDialog(new Loader() {
+        createLoadingDialog(new Loader() {
             @Override
             protected void load() throws CommunicationException {
                 comm.createAccount(username, password);

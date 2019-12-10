@@ -102,7 +102,6 @@ public class GameFrame extends JFrame {
      */
     public static void main(String[] args) {
         Communication comm = Communication.getInstance();
-        comm.detectServer();
         //GameFrame.getInstance().showScreen(new TitleScreen());
         
         GameFrame.getInstance().showScreen(new MainMenuScreen());

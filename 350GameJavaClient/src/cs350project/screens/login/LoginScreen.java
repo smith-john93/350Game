@@ -40,7 +40,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
             return;
         }
         this.username = username;
-        loadingDialog(new Loader() {
+        createLoadingDialog(new Loader() {
             @Override
             protected void load() throws CommunicationException {
                 comm.login(username, password);

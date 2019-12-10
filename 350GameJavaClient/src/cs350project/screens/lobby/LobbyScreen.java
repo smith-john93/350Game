@@ -15,6 +15,7 @@ import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.KeyMap;
 import cs350project.screens.LoadingDialog;
+import cs350project.screens.LoadingDialogListener;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import cs350project.screens.Screen;
 import cs350project.screens.selection.SelectionScreen;
@@ -29,7 +30,10 @@ import javax.swing.JPanel;
  *
  * @author Mark Masone
  */
-public class LobbyScreen extends Screen implements LobbyInputListener, IncomingCommandListener {
+public class LobbyScreen extends Screen implements 
+        LobbyInputListener, 
+        IncomingCommandListener,
+        LoadingDialogListener {
     
     private final LobbyPanel lobbyPanel;
     private final Communication comm;
@@ -54,18 +58,12 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
 
     @Override
     public void createMatch(String matchName) {
-        new Thread() {
+        loadingDialog = createLoadingDialog(new Loader() {
             @Override
-            public void run() {
-                try {
-                    comm.createMatch(matchName);
-                    loadingDialog = new LoadingDialog("Waiting for another player to join...");
-                    loadingDialog.open();
-                } catch (CommunicationException ex) {
-                    MessageDialog.showErrorMessage(ex.getMessage(), getClass());
-                }
+            protected void load() throws CommunicationException {
+                comm.createMatch(matchName);
             }
-        }.start();
+        },"Waiting for another player to join...",false,this);
     }
     
     @Override
@@ -87,6 +85,11 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
     @Override
     public void back() {
         GameFrame.getInstance().showScreen(new MainMenuScreen());
+    }
+    
+    @Override
+    public void loadingDialogClosing() {
+        System.exit(0);
     }
 
     @Override
@@ -130,10 +133,10 @@ public class LobbyScreen extends Screen implements LobbyInputListener, IncomingC
                 }
                 break;
             case VALID_MATCH_NAME:
-                //System.out.println("valid match name");
+                System.out.println("valid match name");
                 break;
             case INVALID_MATCH_NAME:
-                //System.out.println("invalid match name");
+                System.out.println("invalid match name");
                 break;
         }
     }

@@ -36,19 +36,9 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private static Communication communication;
     private boolean connected = false;
     private InetAddress serverAddr;
-    // multicast code
-    //private final Thread detectServerThread;
 
     private Communication() {
         incomingCommandListeners = new CopyOnWriteArrayList<>();
-        // multicast code
-        /*detectServerThread = new Thread() {
-            @Override
-            public void run() {
-                serverAddr = Multicast.getServerAddress();
-                System.out.println("got server address: " + serverAddr.getHostAddress());
-            }
-        };*/
     }
 
     public static Communication getInstance() {
@@ -73,19 +63,8 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public boolean isConnected() {
         return connected;
     }
-    
-    public void detectServer() {
-        // multicast code
-        //detectServerThread.start();
-    }
 
-    public void connect() throws CommunicationException {
-        // multicast code
-        /*try {
-            detectServerThread.join(5000);
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-        }*/
+    private void connect() throws CommunicationException {
         
         if(serverAddr == null) {
             throw new CommunicationException("Could not detect server.");
