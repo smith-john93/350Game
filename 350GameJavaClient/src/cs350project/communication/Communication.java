@@ -162,12 +162,6 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         dataOutputStream.writeChars(s);
         System.out.println("comm: sent string: " + s);
     }
-    
-    private void sendStringNullTerminated(String s) throws IOException {
-        sendString(s);
-        dataOutputStream.writeByte(0);
-        System.out.println("comm: sent ascii 0");
-    }
 
     private void sendCharacterState(int stateCode) throws IOException {
         dataOutputStream.writeByte(stateCode);
@@ -245,9 +239,8 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             sendClientCommand(ClientCommand.SAVE_KEY_MAPPINGS);
             for(ActionMapping actionMapping : actionMappings) {
                 sendCharacterState(actionMapping.stateCode);
-                sendStringNullTerminated(actionMapping.getKeyCodesCSV());
+                sendString(actionMapping.getKeyCodesCSV());
             }
-            sendClientCommand(ClientCommand.SAVE_ALL_MAPPINGS);
         } catch(IOException e) {
             throw new CommunicationException(
                     "Unable to send key mappings to server. "
