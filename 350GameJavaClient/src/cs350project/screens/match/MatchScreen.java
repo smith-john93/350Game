@@ -12,10 +12,10 @@ import cs350project.screens.MessageDialog;
 import cs350project.communication.Communication;
 import cs350project.characters.CharacterState;
 import cs350project.characters.PlayerCharacter;
+import cs350project.communication.CommunicationException;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -32,7 +32,6 @@ public class MatchScreen extends Screen implements
 
     private final MatchKeyMap matchKeyMap;
     private final MatchPanel matchPanel;
-    private final Combat combat;
     private final Communication comm;
     private final MatchObjectManager matchObjectManager;
     private final BackgroundImage backgroundImage;
@@ -49,10 +48,9 @@ public class MatchScreen extends Screen implements
         matchKeyMap = new MatchKeyMap(Settings.getSettings().getKeyMappings());
         matchPanel = new MatchPanel();
         comm = Communication.getInstance();
-        combat = new Combat(player);
         matchObjectManager = MatchObjectManager.getInstance();
         matchObjectManager.setPlayer(player);
-        backgroundImage = new BackgroundImage("maps/whitehouse.png");
+        backgroundImage = new BackgroundImage("maps/WhiteHouse.png");
         matchOverlay = new MatchOverlay();
         Thread repaintThread = new Thread() {
             @Override
@@ -83,7 +81,6 @@ public class MatchScreen extends Screen implements
         super.addNotify();
         matchKeyMap.addInputListener(matchPanel);
         matchKeyMap.addInputListener(this);
-        matchKeyMap.addInputListener(combat);
         matchPanel.addOutgoingMessageListener(comm);
         matchPanel.addOutgoingCommandListener(comm);
         matchPanel.add(matchOverlay);
@@ -104,9 +101,9 @@ public class MatchScreen extends Screen implements
     
     private void updateMatch() {
         try {
-            comm.updateMatch(this.stateCode);
-        } catch(IOException e) {
-            MessageDialog.showErrorMessage("Unable to update match.", getClass());
+            comm.updateMatch(stateCode);
+        } catch(CommunicationException e) {
+            MessageDialog.showErrorMessage(e.getMessage(), getClass());
         }
     }
     
@@ -118,64 +115,32 @@ public class MatchScreen extends Screen implements
         this.stateCode ^= stateCode;
     }
     
-    private void startMove(int stateCode) {
-        enableState(stateCode);
-        updateMatch();
+    @Override
+    public void startMovement(int stateCode) {
+        switch(stateCode) {
+            case CharacterState.JUMPING:
+            case CharacterState.MOVING_LEFT:
+            case CharacterState.CROUCHING:
+            case CharacterState.MOVING_RIGHT:
+            case CharacterState.BLOCKING:
+                enableState(stateCode);
+                updateMatch();
+                break;
+        }
     }
     
-    private void endMove(int stateCode) {
-        disableState(stateCode);
-        updateMatch();
-    }
-    
     @Override
-    public void startJump() {
-        startMove(CharacterState.JUMPING);
-    }
-
-    @Override
-    public void endJump() {
-        endMove(CharacterState.JUMPING);
-    }
-
-    @Override
-    public void startMoveLeft() {
-        startMove(CharacterState.MOVING_LEFT);
-    }
-
-    @Override
-    public void endMoveLeft() {
-        endMove(CharacterState.MOVING_LEFT);
-    }
-
-    @Override
-    public void startCrouch() {
-        startMove(CharacterState.CROUCHING);
-    }
-
-    @Override
-    public void endCrouch() {
-        endMove(CharacterState.CROUCHING);
-    }
-
-    @Override
-    public void startMoveRight() {
-        startMove(CharacterState.MOVING_RIGHT);
-    }
-
-    @Override
-    public void endMoveRight() {
-        endMove(CharacterState.MOVING_RIGHT);
-    }
-
-    @Override
-    public void startBlock() {
-        startMove(CharacterState.BLOCKING);
-    }
-
-    @Override
-    public void endBlock() {
-        endMove(CharacterState.BLOCKING);
+    public void endMovement(int stateCode) {
+        switch(stateCode) {
+            case CharacterState.JUMPING:
+            case CharacterState.MOVING_LEFT:
+            case CharacterState.CROUCHING:
+            case CharacterState.MOVING_RIGHT:
+            case CharacterState.BLOCKING:
+                disableState(stateCode);
+                updateMatch();
+                break;
+        }
     }
     
     private void attack(int stateCode) {

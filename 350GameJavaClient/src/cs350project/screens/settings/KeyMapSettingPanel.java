@@ -82,8 +82,8 @@ class KeyMapSettingPanel extends JPanel {
         settingLabel.setForeground(Color.white);
         settingLabel.setFont(Settings.HEADING1_FONT);
         
-        settingText.setFont(Settings.SETTING_FONT);
-        int settingTextHeight = getFontMetrics(Settings.SETTING_FONT).getHeight();
+        settingText.setFont(Settings.FONT_SETTING);
+        int settingTextHeight = getFontMetrics(Settings.FONT_SETTING).getHeight();
         settingText.setPreferredSize(new Dimension(200,settingTextHeight));
         settingText.setDisabledTextColor(Color.black);
         settingText.setEnabled(false);

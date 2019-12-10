@@ -38,7 +38,8 @@ public enum ServerCommands
     VALID_MATCH_NAME = 8,
     INVALID_MATCH_NAME = 9,
     DELETE_MATCH_OBJECT = 10,
-    END_GAME_INSTANCE = 11
+    END_GAME_INSTANCE = 11,
+    SAVED_KEY_MAPPINGS = 12
 }
 
 namespace ServerPhysics.World_Objects

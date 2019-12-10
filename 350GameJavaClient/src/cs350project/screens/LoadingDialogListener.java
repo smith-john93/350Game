@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.matchloading;
-
-import cs350project.screens.Panel;
+package cs350project.screens;
 
 /**
  *
  * @author Mark Masone
  */
-public class MatchLoadingPanel extends Panel {
-    
+public interface LoadingDialogListener {
+    void loadingDialogClosing();
 }

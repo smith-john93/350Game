@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs350project.screens.match;
+package cs350project.communication;
 
 /**
  *
  * @author Mark Masone
  */
-public interface MovementInputListener extends MatchInputListener {
-    void startMovement(int stateCode);
-    void endMovement(int stateCode);
+public class CommunicationException extends Exception {
+    public CommunicationException(String message) {
+        super(message);
+    }
 }

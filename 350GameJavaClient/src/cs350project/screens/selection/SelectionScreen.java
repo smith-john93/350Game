@@ -8,20 +8,20 @@ package cs350project.screens.selection;
 import cs350project.GameFrame;
 import cs350project.Music;
 import cs350project.Settings;
-import cs350project.characters.CharacterType;
 import cs350project.characters.PlayerCharacter;
 import cs350project.communication.Communication;
+import cs350project.communication.CommunicationException;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
-import cs350project.screens.MessageDialog;
-import cs350project.screens.lobby.LobbyScreen;
 import cs350project.screens.match.MatchObjectManager;
 import cs350project.screens.match.MatchScreen;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -60,12 +60,16 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
 
     @Override
     public void characterSelected() {
-        player1 = selectionPanel.getPlayer1Selection();
-        MatchObjectManager.getInstance().setPlayer(player1);
-        //player2 = selectionPanel.getPlayer2Selection();
-        comm.addIncomingCommandListener(MatchObjectManager.getInstance());
-        comm.characterSelected(player1.getCharacterType());
-        //System.out.println("waiting for other player to select");
+        try {
+            player1 = selectionPanel.getPlayer1Selection();
+            MatchObjectManager.getInstance().setPlayer(player1);
+            //player2 = selectionPanel.getPlayer2Selection();
+            comm.addIncomingCommandListener(MatchObjectManager.getInstance());
+            comm.characterSelected(player1.getCharacterType());
+            //System.out.println("waiting for other player to select");
+        } catch (CommunicationException ex) {
+            Logger.getLogger(SelectionScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

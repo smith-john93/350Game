@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package cs350project.communication;
+import cs350project.Settings.ActionMapping;
 import cs350project.screens.MessageDialog;
 import cs350project.characters.CharacterType;
 import java.io.DataInputStream;
@@ -13,6 +14,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,17 +36,9 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     private static Communication communication;
     private boolean connected = false;
     private InetAddress serverAddr;
-    private final Thread detectServerThread;
 
     private Communication() {
         incomingCommandListeners = new CopyOnWriteArrayList<>();
-        detectServerThread = new Thread() {
-            @Override
-            public void run() {
-                serverAddr = Multicast.getServerAddress();
-                System.out.println("got server address: " + serverAddr.getHostAddress());
-            }
-        };
     }
 
     public static Communication getInstance() {
@@ -52,6 +46,10 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
             communication = new Communication();
         }
         return communication;
+    }
+    
+    public void setServerAddress(String host) throws UnknownHostException {
+        serverAddr = InetAddress.getByName(host);
     }
 
     public void addIncomingCommandListener(IncomingCommandListener incomingCommandListener) {
@@ -65,34 +63,23 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     public boolean isConnected() {
         return connected;
     }
-    
-    public void detectServer() {
-        detectServerThread.start();
-    }
 
-    public boolean connect() {
-        try {
-            detectServerThread.join(5000);
-        } catch (InterruptedException e) {
-            System.err.println(e.getMessage());
-        }
+    private void connect() throws CommunicationException {
         
         if(serverAddr == null) {
-            MessageDialog.showErrorMessage("Could not detect server.", getClass());
-            return false;
+            throw new CommunicationException("Could not detect server.");
         }
         
         if (dataSocket == null || !dataSocket.isConnected()) {
             connected = false;
+            
             try {
                 dataSocket = new Socket(serverAddr, commandPort);
                 dataOutputStream = new DataOutputStream(dataSocket.getOutputStream());
                 dataInputStream = new DataInputStream(dataSocket.getInputStream());
-                return listen();
+                listen();
             } catch (IOException e) {
-                System.err.println(e.getMessage());
-                MessageDialog.showErrorMessage("Unable to connect to server.", getClass());
-                return false;
+                throw new CommunicationException("Unable to connect to server.");
             }
         }
         /*
@@ -102,15 +89,13 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         } catch(IOException e) {
             JOptionPane.showMessageDialog(null,"Cannot send messages to the server.");
         }*/
-        return true;
     }
     
-    private boolean listen() {
+    private void listen() throws CommunicationException {
         Class c = getClass();
         String error = "Unable to listen for incoming data.";
         if(dataInputStream == null || !dataSocket.isConnected()) {
-            MessageDialog.showErrorMessage(error, c);
-            return false;
+            throw new CommunicationException(error);
         } else {
             Thread listenerThread = new Thread(){
                 @Override
@@ -123,7 +108,6 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
                             }
                         }
                     } catch(IOException e) {
-                        System.err.println(e.getMessage());
                         MessageDialog.showErrorMessage(error, c);
                     } catch(NoSuchElementException e) {
                         MessageDialog.showErrorMessage(e.getMessage(), c);
@@ -131,7 +115,6 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
                 }
             };
             listenerThread.start();
-            return true;
         }
     }
 
@@ -164,23 +147,31 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
     }
 
     private void sendCredentials(String username, char[] password) throws IOException {
-        dataOutputStream.writeBytes(username);
-        dataOutputStream.write(0);
+        //sendStringNullTerminated(username);
+        sendString(username);
+        dataOutputStream.write(password.length);
         for(char c : password) {
-            dataOutputStream.write(c);
+            dataOutputStream.writeChar(c);
         }
         Arrays.fill(password,'0'); // Clear the password array for security.
         //System.out.println("sent credentials");
     }
 
     private void sendString(String s) throws IOException {
-        dataOutputStream.writeBytes(s);
-        //System.out.println("sent string: " + s);
+        dataOutputStream.write(s.length());
+        dataOutputStream.writeChars(s);
+        System.out.println("comm: sent string: " + s);
+    }
+    
+    private void sendStringNullTerminated(String s) throws IOException {
+        sendString(s);
+        dataOutputStream.writeByte(0);
+        System.out.println("comm: sent ascii 0");
     }
 
     private void sendCharacterState(int stateCode) throws IOException {
         dataOutputStream.writeByte(stateCode);
-        //System.out.println("sent character state: " + stateCode);
+        System.out.println("sent character state: " + stateCode);
     }
 
     private void sendCharacterType(CharacterType characterType) throws IOException {
@@ -188,69 +179,80 @@ public class Communication implements OutgoingMessageListener, OutgoingCommandLi
         System.out.println("sent character type: " + characterType + " " + characterType.getValue());
     }
 
-    public void createAccount(String username, char[] password) {
-        if(connect()) {
-            try {
-                sendClientCommand(ClientCommand.CREATE_ACCOUNT);
-                sendCredentials(username, password);
-            } catch (IOException e) {
-                MessageDialog.showErrorMessage("Unable to create account.", getClass());
-            }
+    public void createAccount(String username, char[] password) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.CREATE_ACCOUNT);
+            sendCredentials(username, password);
+        } catch (IOException e) {
+            throw new CommunicationException("Unable to create account.");
         }
     }
 
-    public void login(String username, char[] password) {
-        if(connect()) {
-            try {
-                sendClientCommand(ClientCommand.LOGIN);
-                sendCredentials(username, password);
-            } catch (IOException e) {
-                MessageDialog.showErrorMessage("Unable to log in.", getClass());
-            }
+    public void login(String username, char[] password) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.LOGIN);
+            sendCredentials(username, password);
+        } catch (IOException ex) {
+            throw new CommunicationException("Unable to log in.");
         }
     }
 
-    public void createMatch(String matchName) {
-        if(connect()) {
-            try {
-                sendClientCommand(ClientCommand.CREATE_MATCH);
-                sendString(matchName);
-            } catch (IOException e) {
-                MessageDialog.showErrorMessage("Unable to create match.", getClass());
-            }
+    public void createMatch(String matchName) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.CREATE_MATCH);
+            sendString(matchName);
+        } catch (IOException ex) {
+            throw new CommunicationException("Unable to create match.");
         }
     }
 
-    public void joinMatch(String matchName) {
-        if(connect()) {
-            try {
-                sendClientCommand(ClientCommand.JOIN_MATCH);
-                sendString(matchName);
-            } catch (IOException e) {
-                MessageDialog.showErrorMessage("Unable to join match.", getClass());
-            }
+    public void joinMatch(String matchName) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.JOIN_MATCH);
+            sendString(matchName);
+        } catch (IOException e) {
+            throw new CommunicationException("Unable to join match.");
         }
     }
     
-    public void updateMatch(int stateCode) throws IOException {
-        if(connect()) {
-            try {
-                sendClientCommand(ClientCommand.UPDATE_MATCH);
-                sendCharacterState(stateCode);
-            } catch (IOException e) {
-                MessageDialog.showErrorMessage("Unable to update match.", getClass());
-            }
+    public void updateMatch(int stateCode) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.UPDATE_MATCH);
+            sendCharacterState(stateCode);
+        } catch (IOException e) {
+            throw new CommunicationException("Unable to update match.");
         }
     }
     
-    public void characterSelected(CharacterType characterType) {
-        if(connect()) {
-            try {
-                sendClientCommand(ClientCommand.CHARACTER_SELECTED);
-                sendCharacterType(characterType);
-            } catch (IOException e) {
-                MessageDialog.showErrorMessage("Unable to send character selection.", getClass());
+    public void characterSelected(CharacterType characterType) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.CHARACTER_SELECTED);
+            sendCharacterType(characterType);
+        } catch (IOException e) {
+            throw new CommunicationException("Unable to send character selection.");
+        }
+    }
+    
+    public void sendActionMappings(ActionMapping[] actionMappings) throws CommunicationException {
+        connect();
+        try {
+            sendClientCommand(ClientCommand.SAVE_KEY_MAPPINGS);
+            for(ActionMapping actionMapping : actionMappings) {
+                sendCharacterState(actionMapping.stateCode);
+                sendStringNullTerminated(actionMapping.getKeyCodesCSV());
             }
+            sendClientCommand(ClientCommand.SAVE_ALL_MAPPINGS);
+        } catch(IOException e) {
+            throw new CommunicationException(
+                    "Unable to send key mappings to server. "
+                    + "Key mappings will not persist after the game has restarted."
+            );
         }
     }
 }

@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 public class BackButtonPanel extends JPanel {
     
     private final ActionListener actionListener;
+    public static final String ACTION_COMMAND = "Back";
     
     public BackButtonPanel(ActionListener actionListener) {
         this.actionListener = actionListener;
@@ -29,13 +31,11 @@ public class BackButtonPanel extends JPanel {
     public void addNotify() {
         super.addNotify();
         setLayout(new FlowLayout(FlowLayout.LEADING,0,0));
-        setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        setBorder(new EmptyBorder(Settings.INSETS_MENU_TOP));
         // Make the background transparent.
         setBackground(Settings.TRANSPARENT);
    
-        JButton backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(150,50));
-        backButton.setFont(Settings.BUTTON_FONT);
+        JButton backButton = MenuItemFactory.createSmallButton(ACTION_COMMAND);
         backButton.addActionListener(actionListener);
         add(backButton);
     }

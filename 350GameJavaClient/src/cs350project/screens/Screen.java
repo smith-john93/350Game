@@ -6,6 +6,7 @@
 package cs350project.screens;
 
 import cs350project.Settings;
+import cs350project.communication.CommunicationException;
 import java.awt.Rectangle;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -15,6 +16,10 @@ import javax.swing.JPanel;
  * @author Mark Masone
  */
 public abstract class Screen extends JComponent {
+    
+    protected abstract class Loader {
+        protected abstract void load() throws CommunicationException;
+    }
     
     @Override
     public void addNotify() {
@@ -33,6 +38,39 @@ public abstract class Screen extends JComponent {
             backgroundImage.setBounds(bounds);
             add(backgroundImage);
         }
+    }
+    
+    protected void createLoadingDialog(Loader loader, String message) {
+        createLoadingDialog(loader, message, true, null);
+    }
+    
+    protected LoadingDialog createLoadingDialog(
+            Loader loader, 
+            String message, 
+            boolean closeAfterLoad,
+            LoadingDialogListener loadingDialogListener
+    ) {
+        JComponent jComponent = this;
+        LoadingDialog loadingDialog = new LoadingDialog(message);
+        if(loadingDialogListener != null) {
+            loadingDialog.addLoadingDialogListener(loadingDialogListener);
+        }
+        new Thread() {
+            @Override
+            public void run() {
+                loadingDialog.open();
+                try {
+                    loader.load();
+                    if(closeAfterLoad) {
+                        loadingDialog.close();
+                    }
+                } catch (CommunicationException ex) {
+                    loadingDialog.close();
+                    MessageDialog.showErrorMessage(jComponent,ex.getMessage(),getClass(),false);
+                }
+            }
+        }.start();
+        return loadingDialog;
     }
     
     public abstract BackgroundImage getBackgroundImage();

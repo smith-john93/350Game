@@ -28,7 +28,7 @@ class IncrementalSetting extends JPanel {
     IncrementalSetting(SettingsPanel settingsPanel) {
         this.settingsPanel = settingsPanel;
         settingText = new JTextField();
-        settingText.setFont(Settings.SETTING_FONT);
+        settingText.setFont(Settings.FONT_SETTING);
         settingText.setPreferredSize(new Dimension(200,0));
     }
     

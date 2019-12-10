@@ -2,8 +2,9 @@ package cs350project.screens.createaccount;
 
 import cs350project.GameFrame;
 import cs350project.Settings;
-import cs350project.communication.ClientCommand;
+import cs350project.Validate;
 import cs350project.communication.Communication;
+import cs350project.communication.CommunicationException;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.MessageDialog;
@@ -32,8 +33,19 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
 
     @Override
     public void createAccount(String username, char[] password) {
+        if(!Validate.chars(this,"Username",username.toCharArray())) {
+            return;
+        }
+        if(!Validate.chars(this,"Password",password)) {
+            return;
+        }
         this.username = username;
-        comm.createAccount(username, password);
+        createLoadingDialog(new Loader() {
+            @Override
+            protected void load() throws CommunicationException {
+                comm.createAccount(username, password);
+            }
+        },"Creating account...");
     }
 
     @Override

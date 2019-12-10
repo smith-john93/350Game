@@ -14,4 +14,5 @@ import cs350project.menu.BackButtonListener;
 public interface LobbyInputListener extends BackButtonListener {
     void createMatch(String matchName);
     void joinMatch(String matchName);
+    void settings();
 }

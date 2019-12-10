@@ -57,7 +57,7 @@ class MatchesPanel extends JPanel {
         super.addNotify();
         
         JPanel matchesPanel = lobbyPanel.buildJPanel(this,"MATCHES",matchesList);
-        GridBagConstraints gbc = lobbyPanel.gbc;
+        GridBagConstraints gbc = lobbyPanel._gbc;
         
         JButton createButton = lobbyPanel.buildJButton("Create");
         createButton.addActionListener(new ActionListener() {

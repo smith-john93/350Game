@@ -2,9 +2,11 @@ package cs350project.screens.login;
 
 import cs350project.GameFrame;
 import cs350project.Settings;
+import cs350project.Validate;
 import cs350project.screens.MessageDialog;
 import cs350project.screens.lobby.LobbyScreen;
 import cs350project.communication.Communication;
+import cs350project.communication.CommunicationException;
 import cs350project.communication.IncomingCommandListener;
 import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
@@ -31,10 +33,19 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public void login(String username, char[] password) {
+        if(!Validate.chars(this,"Username",username.toCharArray())) {
+            return;
+        }
+        if(!Validate.chars(this,"Password",password)) {
+            return;
+        }
         this.username = username;
-        comm.login(username, password);
-        //this.username = "username";
-        //comm.login(this.username, "password".toCharArray()); // for testing
+        createLoadingDialog(new Loader() {
+            @Override
+            protected void load() throws CommunicationException {
+                comm.login(username, password);
+            }
+        },"Logging in...");
     }
 
     @Override
@@ -48,6 +59,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
         LoginPanel loginPanel = new LoginPanel();
         loginPanel.addInputListener(this);
         comm.addIncomingCommandListener(this);
+        comm.addIncomingCommandListener(Settings.getSettings());
         
         return loginPanel;
     }
@@ -62,6 +74,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
         //System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case USER_AUTH_PASS:
+                System.out.println("user auth pass");
                 comm.removeIncomingCommandListener(this);
                 GameFrame.getInstance().showScreen(new LobbyScreen());
                 break;
