@@ -163,33 +163,36 @@ namespace GameServer
         {
             Console.WriteLine("in mapping");
             List<KeyMapDTO> mappings = new List<KeyMapDTO>();
+
             //receive char state
             //receive int until none are left
             int i = 0;
             while(true)
             {
+                Console.WriteLine($"In iteration {i}");
                 if (i == 8)
                     break;
                 i++;
                 Console.WriteLine("in while");
 
                 byte charState = (byte)clientInterface.ReadByte();
+                Console.WriteLine("Read charState");
 
-                StringBuilder characterString = new StringBuilder();
+                int size = clientInterface.ReadByte();
+                Console.WriteLine("Read size");
+                //get the matchName from the client
+                StringBuilder MappingString = new StringBuilder();
                 do
                 {
-                   char b = (char)clientInterface.ReadByte();
-                    Console.WriteLine($"Read byte {b}");
-                    if (b == (char)0)
-                        break;
+                    MappingString.Append(ReadChar());
+                    size--;
+                }
+                while (size > 0);
 
-                    Console.WriteLine($"received {b}");
-                   characterString.Append(b);
-                }while (clientInterface.DataAvailable);
-
+                Console.WriteLine("Read char arrar");
                 KeyMapDTO map = new KeyMapDTO();
                 map.Command = charState;
-                map.KeyString = characterString.ToString();
+                map.KeyString = MappingString.ToString();
                 mappings.Add(map);
             }
 
