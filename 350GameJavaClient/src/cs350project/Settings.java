@@ -209,6 +209,7 @@ public class Settings implements IncomingCommandListener {
     
     public static ActionMapping[] getActionMappings(HashMap<Integer, Integer> keyMappings) {
         HashMap<Integer, ActionMapping> actionMappings = new HashMap<>();
+        System.out.println("key mappings size in getActionMappings: " + keyMappings.size());
         for(Map.Entry<Integer, Integer> entry : keyMappings.entrySet()) {
             int stateCode = entry.getValue();
             ActionMapping actionMapping = actionMappings.get(stateCode);
@@ -217,6 +218,7 @@ public class Settings implements IncomingCommandListener {
                         stateCode,
                         new ArrayList<>()
                 );
+                actionMappings.put(stateCode, actionMapping);
             }
             actionMapping.keyCodes.add(entry.getKey());
         }

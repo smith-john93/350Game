@@ -14,27 +14,30 @@ import cs350project.communication.ServerCommand;
 import cs350project.screens.BackgroundImage;
 import cs350project.screens.Screen;
 import cs350project.screens.KeyMap;
+import cs350project.screens.LoadingDialog;
 import cs350project.screens.lobby.LobbyScreen;
 import java.io.DataInputStream;
 import javax.swing.JPanel;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Mark Masone
  */
-public class SettingsScreen extends Screen implements SettingsInputListener, IncomingCommandListener {
+public class SettingsScreen extends Screen implements 
+        SettingsInputListener, 
+        IncomingCommandListener {
 
     private final SettingsPanel settingsPanel;
     private final HashMap<Integer, Integer> keyMappings;
     private final Communication comm;
+    private LoadingDialog loadingDialog;
 
     public SettingsScreen() {
         settingsPanel = new SettingsPanel();
         keyMappings = new HashMap<>();
         keyMappings.putAll(Settings.getSettings().getKeyMappings());
+        System.out.println("key mappings in hash: " + keyMappings.size());
         comm = Communication.getInstance();
     }
 
@@ -69,19 +72,20 @@ public class SettingsScreen extends Screen implements SettingsInputListener, Inc
 
     @Override
     public void save() {
-        Settings settings = Settings.getSettings();
-        settings.setKeyMappings(keyMappings);
-        try {
-            comm.sendActionMappings(settings.getActionMappings());
-        } catch (CommunicationException ex) {
-            Logger.getLogger(SettingsScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        loadingDialog = createLoadingDialog(new Loader() {
+            public void load() throws CommunicationException {
+                Settings settings = Settings.getSettings();
+                settings.setKeyMappings(keyMappings);
+                comm.sendActionMappings(settings.getActionMappings());
+            }
+        },"Saving key mappings...",false,null);
     }
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
         if(serverCommand == ServerCommand.SAVED_KEY_MAPPINGS) {
-            System.out.println("KEY MAPPINGS SAVED");
+            loadingDialog.close();
+            GameFrame.getInstance().showScreen(new LobbyScreen());
         }
     }
 }
