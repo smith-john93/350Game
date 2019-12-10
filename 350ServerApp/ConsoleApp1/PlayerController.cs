@@ -97,16 +97,17 @@ namespace GameServer
         /// </summary>
         private void JoinGame()
         {
+            Console.WriteLine("Joining game");
+            int size = clientInterface.ReadByte();
+            //int size = clientInterface.ReadByte();
             //get the matchName from the client
             StringBuilder matchJoin = new StringBuilder();
             do
             {
-                char u = (char)clientInterface.ReadByte();
-                if (u == 0)
-                    break;
-                matchJoin.Append(u);
+                matchJoin.Append(ReadChar());
+                    size--;
             }
-            while (clientInterface.DataAvailable);
+            while (size > 0);
             string game = matchJoin.ToString();
 
             //Add the player to the match
@@ -128,6 +129,8 @@ namespace GameServer
         /// </summary>
         private void CreateGame()
         {
+
+            int size = clientInterface.ReadByte();
             //stay in the loop until the game is created
             while(true)
             {
@@ -135,12 +138,10 @@ namespace GameServer
                 StringBuilder matchMake = new StringBuilder();
                 do
                 {
-                    char u = (char)clientInterface.ReadByte();
-                    if (u == 0)
-                        break;
-                    matchMake.Append(u);
+                    matchMake.Append(ReadChar());
+                    size--;
                 }
-                while (clientInterface.DataAvailable);
+                while (size> 0);
                 
                 //Turn the name into a string
                 string gameName = matchMake.ToString();
@@ -162,33 +163,36 @@ namespace GameServer
         {
             Console.WriteLine("in mapping");
             List<KeyMapDTO> mappings = new List<KeyMapDTO>();
+
             //receive char state
             //receive int until none are left
             int i = 0;
             while(true)
             {
+                Console.WriteLine($"In iteration {i}");
                 if (i == 8)
                     break;
                 i++;
                 Console.WriteLine("in while");
 
                 byte charState = (byte)clientInterface.ReadByte();
+                Console.WriteLine("Read charState");
 
-                StringBuilder characterString = new StringBuilder();
+                int size = clientInterface.ReadByte();
+                Console.WriteLine("Read size");
+                //get the matchName from the client
+                StringBuilder MappingString = new StringBuilder();
                 do
                 {
-                   char b = (char)clientInterface.ReadByte();
-                    Console.WriteLine($"Read byte {b}");
-                    if (b == (char)0)
-                        break;
+                    MappingString.Append(ReadChar());
+                    size--;
+                }
+                while (size > 0);
 
-                    Console.WriteLine($"received {b}");
-                   characterString.Append(b);
-                }while (clientInterface.DataAvailable);
-
+                Console.WriteLine("Read char arrar");
                 KeyMapDTO map = new KeyMapDTO();
                 map.Command = charState;
-                map.KeyString = characterString.ToString();
+                map.KeyString = MappingString.ToString();
                 mappings.Add(map);
             }
 
@@ -227,6 +231,7 @@ namespace GameServer
         /// <param name="addMatch"></param>
         async public void SendMatchList(string match, bool addMatch)
         {
+            Console.WriteLine("Pulsing");
             //Send the client the update lobby byte
             byte[] updateCommand = new byte[1] { (byte)ServerCommands.UPDATE_LOBBY };
             await clientInterface.WriteAsync(updateCommand);
