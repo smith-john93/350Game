@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.Net;
-using Database;
 
 namespace GameServer
 {
     public class GameServer
     {
 
+        private const string connecitonString = "Data Source=database.sqlite3";
         public GameServer() { }
 
         public void StartServer()
@@ -17,10 +14,14 @@ namespace GameServer
 
             Console.WriteLine("Server initialized");
 
-            Console.WriteLine("Generating Game Listing...");
+            Console.Write("Generating Game Listing...");
             GameController gameController = new GameController();          
             Console.WriteLine("Game Listing Created");
-            Database.Database databaseService = new Database.Database();
+
+            Console.Write("Launching Database...");
+            Database.Database databaseService = new Database.Database(connecitonString);
+            Console.WriteLine("Data base launched");
+
             Console.WriteLine("Opening Socket Communication...");
             try
             {

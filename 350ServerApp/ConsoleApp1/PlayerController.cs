@@ -21,13 +21,15 @@ namespace GameServer
         public CharacterEnum selectedCharacter;
         private bool CharacterPicked;
         private Database.Database databseService;
+        private const string connecitonString = "Data Source=database.sqlite3";
 
-        public PlayerController(PlayerSocketController stream, GameController gameController, Database.Database dbservice)
+
+        public PlayerController(PlayerSocketController stream, GameController gameController)
         {
-            databseService = dbservice;
             clientInterface = stream.clientInterface;
             gController = gameController;
             CharacterPicked = false;
+            databseService = new Database.Database(connecitonString);
         }
 
         public void ManagePlayer()
@@ -63,30 +65,30 @@ namespace GameServer
                 try
                 {
                     i = clientInterface.ReadByte();
+
+                    Console.WriteLine($"received {i}");
+
+                    switch (i)
+                    {
+                        case (int)ClientCommands.CREATE_MATCH:
+                            CreateGame();
+                            break;
+
+                        case (int)ClientCommands.JOIN_MATCH:
+                            JoinGame();                       
+                            break;
+
+                        case (int)ClientCommands.SAVE_KEY_MAPPINGS:
+                            SaveMapping();
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 catch(IOException)
                 {
                     DisposePlayer();
                     return;
-                }
-
-                Console.WriteLine($"received {i}");
-
-                switch (i)
-                {
-                    case (int)ClientCommands.CREATE_MATCH:
-                        CreateGame();
-                        break;
-
-                    case (int)ClientCommands.JOIN_MATCH:
-                        JoinGame();                       
-                        break;
-
-                    case (int)ClientCommands.SAVE_KEY_MAPPINGS:
-                        SaveMapping();
-                        break;
-                    default:
-                        break;
                 }
             }
         }
@@ -129,33 +131,40 @@ namespace GameServer
         /// </summary>
         private void CreateGame()
         {
-
-            int size = clientInterface.ReadByte();
-            //stay in the loop until the game is created
-            while(true)
+            try
             {
-                //get the matchName from the client
-                StringBuilder matchMake = new StringBuilder();
-                do
+
+                int size = clientInterface.ReadByte();
+                //stay in the loop until the game is created
+                while(true)
                 {
-                    matchMake.Append(ReadChar());
-                    size--;
-                }
-                while (size> 0);
+                    //get the matchName from the client
+                    StringBuilder matchMake = new StringBuilder();
+                    do
+                    {
+                        matchMake.Append(ReadChar());
+                        size--;
+                    }
+                    while (size> 0);
                 
-                //Turn the name into a string
-                string gameName = matchMake.ToString();
+                    //Turn the name into a string
+                    string gameName = matchMake.ToString();
 
-                //check to see if a game with that name already exists
-                //otherwise the game runs until completion
-                if (!gController.CreateGame(gameName, this))
-                {
-                    //inform the player the entered name is not valid, send the invalid match name byte
-                    byte[] responseByte = new byte[1] { (byte)ServerCommands.INVALID_MATCH_NAME };
-                    ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
-                    clientInterface.Write(response);
+                    //check to see if a game with that name already exists
+                    //otherwise the game runs until completion
+                    if (!gController.CreateGame(gameName, this))
+                    {
+                        //inform the player the entered name is not valid, send the invalid match name byte
+                        byte[] responseByte = new byte[1] { (byte)ServerCommands.INVALID_MATCH_NAME };
+                        ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
+                        clientInterface.Write(response);
+                    }
+
                 }
-
+            }
+            catch(IOException)
+            {
+                gController.RemovePlayer(this);
             }
         }
         
@@ -199,7 +208,7 @@ namespace GameServer
             foreach(KeyMapDTO map in mappings)
             {
                 Console.WriteLine($"{playername}, {CommandUtilities.ParseCommand(map.Command).ToString()}, {map.KeyString}");
-                databseService.SetKeyBinding(playername, CommandUtilities.ParseCommand(map.Command).ToString(), map.KeyString);
+                databseService.SetKeyBinding(playername, CommandUtilities.ParseCommand(map.Command).ToString(), map.KeyString, connecitonString);
             }
             Console.WriteLine("Sending key mapping");
             SendMessage(ServerCommands.SAVED_KEY_MAPPINGS);
@@ -409,7 +418,7 @@ namespace GameServer
                     continue;
                 KeyMapDTO map = new KeyMapDTO();
                 map.Command = (byte)c;
-                map.KeyString = databseService.GetKeyBinding(playername, c.ToString());
+                map.KeyString = databseService.GetKeyBinding(playername, c.ToString(), connecitonString);
                 keyMapList.Add(map);
             }
 
@@ -522,7 +531,7 @@ namespace GameServer
             while (size > 0);
             Console.WriteLine($"new Password: {cPass}");
 
-            bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString());
+            bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString(), connecitonString);
 
             if(result)
             {
@@ -576,7 +585,7 @@ namespace GameServer
             string user = cUser.ToString();
             string pass = cPass.ToString();
 
-            bool result = databseService.VerifyPassword(user, pass);
+            bool result = databseService.VerifyPassword(user, pass, connecitonString);
             Console.WriteLine($"{pass} {result}");
             if (result)
                 playername = user;

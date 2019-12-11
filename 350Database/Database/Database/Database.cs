@@ -6,24 +6,12 @@ namespace Database
 {
     public class Database
     {
-        private SQLiteConnection connection;
-        private const string MOVE_LEFT = "moveLeft";
-        private const string MOVE_RIGHT = "moveRight";
-        private const string CROUCH = "crouch";
-        private const string JUMP = "jump";
-        private const string PUNCH = "punch";
-        private const string HIGH_KICK = "highKick";
-        private const string LOW_KICK = "lowKick";
-
         /// <summary>
         /// Default constructor for the database. 
         /// If a database does not exist, it builds one
         /// </summary>
-        public Database()
+        public Database(string connectionString)
         {
-            // Establish connection to the database
-            connection = new SQLiteConnection("Data Source=database.sqlite3");
-
             // Create new database file if not found
             if (!File.Exists("./database.sqlite3"))
             {
@@ -48,7 +36,7 @@ CREATE TABLE UserInformation
     PRIMARY KEY(username)
 )
 ";
-                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                using (SQLiteCommand command = new SQLiteCommand(query, new SQLiteConnection(connectionString)))
                 {
                     command.Connection.Open();
                     command.ExecuteNonQuery();
@@ -63,28 +51,28 @@ CREATE TABLE UserInformation
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public bool AddNewUser(string username, string password)
+        public bool AddNewUser(string username, string password, string ConnectionString)
         {
             bool succeeded = false;
             int i = 0;
 
             // Insert entry into the LoginInformation and UserKeybinding tables
             string insertQuery = "INSERT INTO UserInformation ('username', 'password') VALUES (@username, @password)";
-            string checkQuery = "SELECT 1 FROM UserInformation WHERE username = @username"; 
-            using (SQLiteCommand command = new SQLiteCommand(string.Empty, connection))
+            string checkQuery = "SELECT 1 FROM UserInformation WHERE username = @username";
+            using (SQLiteCommand command = new SQLiteCommand(string.Empty, new SQLiteConnection(ConnectionString)))
             {
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
                 command.Connection.Open();
                 command.CommandText = checkQuery;
-                using(SQLiteDataReader reader = command.ExecuteReader())
+                using (SQLiteDataReader reader = command.ExecuteReader())
                 {
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         i = int.Parse(reader[0].ToString());
                     }
                 }
-                if(i == 0)
+                if (i == 0)
                 {
                     command.CommandText = insertQuery;
                     succeeded = true;
@@ -101,10 +89,10 @@ CREATE TABLE UserInformation
         /// Removes a user from the database with the given username.
         /// </summary>
         /// <param name="username"></param>
-        public void RemoveUser(string username)
+        public void RemoveUser(string username, string ConnectionString)
         {
             string query = "DELETE FROM UserInformation WHERE username= @username";
-            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+            using (SQLiteCommand command = new SQLiteCommand(query, new SQLiteConnection(ConnectionString)))
             {
                 command.Parameters.AddWithValue("@username", username);
                 command.Connection.Open();
@@ -120,10 +108,10 @@ CREATE TABLE UserInformation
         /// <param name="username"></param>
         /// <param name="command"></param>
         /// <param name="key"></param>
-        public void SetKeyBinding(string username, string command, string key)
+        public void SetKeyBinding(string username, string command, string key, string ConnectionString)
         {
             string query = "UPDATE UserInformation SET " + command + " = @key WHERE username = @username";
-            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, new SQLiteConnection(ConnectionString)))
             {
                 sqlCommand.Parameters.AddWithValue("@key", key);
                 sqlCommand.Parameters.AddWithValue("@username", username);
@@ -140,11 +128,11 @@ CREATE TABLE UserInformation
         /// <param name="username"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        public string GetKeyBinding(string username, string command)
+        public string GetKeyBinding(string username, string command, string ConnectionString)
         {
             string key = string.Empty; ;
             string query = @"SELECT " + command + " FROM UserInformation WHERE username = @username";
-            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, new SQLiteConnection(ConnectionString)))
             {
                 sqlCommand.Parameters.AddWithValue("@username",username);
                 sqlCommand.Connection.Open();
@@ -167,7 +155,7 @@ CREATE TABLE UserInformation
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        public void SetPassword(string username, string password)
+        public void SetPassword(string username, string password, string ConnectionString)
         {
             string query = @"
 UPDATE UserInformation 
@@ -175,7 +163,7 @@ SET password = @password
 WHERE username = @username
 ;
 ";
-            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, new SQLiteConnection(ConnectionString)))
             {
                 sqlCommand.Parameters.AddWithValue("@username", username);
                 sqlCommand.Parameters.AddWithValue("@password", password);
@@ -192,7 +180,7 @@ WHERE username = @username
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        private string GetPassword(string username)
+        private string GetPassword(string username, string ConnectionString)
         {
             string password;
             string query = @"
@@ -201,7 +189,7 @@ FROM UserInformation
 WHERE username = @username
 ;
 ";
-            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, connection))
+            using (SQLiteCommand sqlCommand = new SQLiteCommand(query, new SQLiteConnection(ConnectionString)))
             {
                 sqlCommand.Parameters.AddWithValue("@username", username);
                 sqlCommand.Connection.Open();
@@ -231,9 +219,9 @@ WHERE username = @username
         /// <param name="submittedUsername"></param>
         /// <param name="submittedPassword"></param>
         /// <returns></returns>
-        public bool VerifyPassword(string submittedUsername, string submittedPassword)
+        public bool VerifyPassword(string submittedUsername, string submittedPassword, string ConnectionString)
         {
-            string storedPassword = GetPassword(submittedUsername);
+            string storedPassword = GetPassword(submittedUsername, ConnectionString);
             Console.WriteLine($"stored password {storedPassword}");
             Console.WriteLine($"entered password {submittedPassword}");
 

@@ -7,12 +7,12 @@ namespace ServerPhysics.World_Objects
     {
         public bool facingRight = true;
 
-        public int lifetime = 5;
+        public int lifetime = 8;
         public int damage = 10;
         public Player owner;
         public int xoffset = 50;
         public int yoffset = -20;
-        public int cooldown = 60;
+        public int cooldown = 10;
 
         public Attack(int x, int y, Player owner, ObjectManager o)
         {
@@ -61,6 +61,7 @@ namespace ServerPhysics.World_Objects
             if(lifetime<0)
             {
                 this.manager.attack_list.Remove(this);
+                this.owner.unset_control_bit(Control.attack);
             }
             else
             {
@@ -75,6 +76,10 @@ namespace ServerPhysics.World_Objects
                 p.health -= damage;
                 p.hit_cooldown = lifetime+5;// after a player is hit by an attack they are immune to incoming attacks for a small second
                 p.setYSpeed(p.getJumpSpeed());
+                int punchdirection;
+                if (facingRight) punchdirection = 1;
+                else punchdirection = -1;
+                p.setXSpeed(p.getJumpSpeed() * punchdirection);
             }
         }
     }

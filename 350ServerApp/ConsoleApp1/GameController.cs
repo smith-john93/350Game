@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GameServer.Enumerations;
+using System.Threading;
 using System.Linq;
 
 namespace GameServer
@@ -10,6 +10,10 @@ namespace GameServer
     {        
         //A dictionary to maintain games and references to the games
         public Dictionary<string, GameSimulation> gameListing;
+
+        //Set to true while notifications are being sent out
+        //otherwise we can run into issues when accessing and modifying the list
+        bool LockDownGameList = false;
 
         //A list to maintain each player
         public List<PlayerController> playerList;
@@ -57,8 +61,16 @@ namespace GameServer
             GameSimulation game = new GameSimulation();
             game.AddPlayer1(player);
 
+            while(LockDownGameList)
+            {
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 10));
+            }
+            LockDownGameList = true;
             //add the game to a dicitonary
             gameListing.Add(gameName, game);
+
+            LockDownGameList = false;
+
             Console.WriteLine($"{gameListing.Count} games in wait");
             NotifyLobbyUpdate(gameName, true);
             StartGame(gameName);
@@ -101,18 +113,29 @@ namespace GameServer
 
         async private void NotifyLobbyUpdate(string match, bool add)
         {
-            foreach(PlayerController player in playerList)
+            while (LockDownGameList)
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 10));
+
+            LockDownGameList = true;
+
+            foreach (PlayerController player in playerList)
             {
                 await Task.Run(() => player.PulseLobby(match, add));
             }
+            LockDownGameList = false;
         }
 
         public void SendAllGames(PlayerController player)
         {
+            while (LockDownGameList)
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 10));
+
+            LockDownGameList = true;
             foreach(KeyValuePair<string, GameSimulation> game in gameListing.Where(a => a.Value.PlayerTwoJoined() == false))
             {
-                NotifyLobbyUpdate(game.Key, true);
+                Task.Run(() => player.PulseLobby(game.Key, true));
             }
+            LockDownGameList = false;
         }
     }
 }

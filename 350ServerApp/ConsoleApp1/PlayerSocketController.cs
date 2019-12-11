@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Collections.Generic;
-using System.Threading;
-using GameServer.Enumerations;
-using Database;
+
 namespace GameServer
 {
     public class PlayerSocketController
@@ -14,12 +11,14 @@ namespace GameServer
         public NetworkStream clientInterface;
         private TcpClient _socket;
         PlayerController _player;
+        GameController gameControl;
 
         public PlayerSocketController(TcpClient playerSocket, GameController gameController, Database.Database dbService)
         {
             _socket = playerSocket;
+            gameControl = gameController;
             clientInterface = playerSocket.GetStream();
-            _player = new PlayerController(this, gameController, dbService);
+            _player = new PlayerController(this, gameController);
         }
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace GameServer
             }
             catch (IOException)
             {
-                //client invalid disconnect action
+                gameControl.RemovePlayer(_player);
             }
 
             try

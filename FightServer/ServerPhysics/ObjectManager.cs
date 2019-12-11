@@ -93,8 +93,10 @@ namespace ServerPhysics
             Console.WriteLine("out of for loop");
             while(true)
             {
-                //Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
-                Thread.Sleep(50);
+                /*
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
+                */
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 50));
                 //Console.WriteLine("ticking...");
                 game_tick();
                 UpdatePlayers();

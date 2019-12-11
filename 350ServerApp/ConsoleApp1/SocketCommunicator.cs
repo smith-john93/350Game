@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.WebSockets;
-using Multicast;
-using Database;
+
 
 namespace GameServer
 {
@@ -36,7 +31,7 @@ namespace GameServer
         public SocketCommunicator(GameController gameController, Database.Database dbService) 
         {
             gController = gameController;
-            databaseService = dbService;
+            //databaseService = dbService;
             RequestShutdown = false;
 
             ipHost = Dns.GetHostEntry(Dns.GetHostName());
