@@ -82,13 +82,11 @@ public class MatchScreen extends Screen implements
         matchKeyMap.addInputListener(matchPanel);
         matchKeyMap.addInputListener(this);
         matchPanel.addOutgoingMessageListener(comm);
-        matchPanel.addOutgoingCommandListener(comm);
         matchPanel.add(matchOverlay);
         matchObjectManager.addMatchObjectManagerListener(this);
         for(MatchObject matchObject : matchObjectManager.getMatchObjects()) {
             if(matchObject != null) {
                 matchPanel.add(matchObject);
-                //System.out.println("match object added to match panel: " + matchObject.getClass().getSimpleName());
             }
         }
     }
@@ -147,7 +145,6 @@ public class MatchScreen extends Screen implements
         enableState(stateCode);
         updateMatch();
         disableState(stateCode);
-        //updateMatch();
     }
     
     @Override

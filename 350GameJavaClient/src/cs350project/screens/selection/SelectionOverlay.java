@@ -27,7 +27,9 @@ public class SelectionOverlay extends JComponent {
                 for(int i = 0; i < characterBorders.length; i++) {
                     if(characterBorders[i].contains(e.getPoint())) {
                         selectedCharacter = i;
-                        repaint();
+                        for(SelectionInputListener selectionInputListener : selectionInputListeners) {
+                            selectionInputListener.highlightCharacter();
+                        }
                     }
                 }
             }
@@ -70,14 +72,14 @@ public class SelectionOverlay extends JComponent {
     public void highlightNextRight() {
         if(selectedCharacter < characterBorders.length - 1) {
             selectedCharacter++;
-            repaint();
+            //repaint();
         }
     }
 
     public void highlightNextLeft() {
         if(selectedCharacter > 0) {
             selectedCharacter--;
-            repaint();
+            //repaint();
         }
     }
 }

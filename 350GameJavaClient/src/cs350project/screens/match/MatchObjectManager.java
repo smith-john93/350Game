@@ -96,6 +96,16 @@ public class MatchObjectManager implements IncomingCommandListener {
                 break;
             case UPDATE_MATCH:
                 updateMatch(dataInputStream);
+                break;
+            case END_GAME_INSTANCE:
+                endGame();
+                break;
+        }
+    }
+    
+    private void endGame() {
+        for(MatchObjectManagerListener matchObjectManagerListener : matchObjectManagerListeners) {
+            matchObjectManagerListener.endGame();
         }
     }
 

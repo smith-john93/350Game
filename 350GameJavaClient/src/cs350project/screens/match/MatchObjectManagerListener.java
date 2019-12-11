@@ -11,4 +11,5 @@ package cs350project.screens.match;
  */
 public interface MatchObjectManagerListener {
     void matchObjectChanged();
+    void endGame();
 }

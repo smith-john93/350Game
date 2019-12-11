@@ -21,10 +21,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -33,21 +37,24 @@ import javax.swing.Timer;
  */
 public class LoadingDialog {
     
-    private final JDialog jDialog;
-    private final Thread dialogThread;
+    private JDialog jDialog;
     private Image[] frames;
     private int frameIndex = 0;
-    private final Timer animationTimer;
-    private final int animationSize;
+    private Timer animationTimer;
     private final int animationRate = 50;
-    private ArrayList<LoadingDialogListener> loadingDialogListeners = new ArrayList<>();
+    private final ArrayList<LoadingDialogListener> loadingDialogListeners = new ArrayList<>();
+    private final String text;
     
     public LoadingDialog(String text) {
+        this.text = text;
+    }
+    
+    private void init() {
         GameFrame gameFrame = GameFrame.getInstance();
         jDialog = new JDialog(gameFrame,true);
         JLabel jLabel = MenuItemFactory.createHeadingLabel(text);
         FontMetrics fontMetrics = gameFrame.getGraphics().getFontMetrics(jLabel.getFont());
-        animationSize = fontMetrics.getAscent();
+        int animationSize = fontMetrics.getAscent();
         
         // Call pack before getInsets
         jDialog.pack(); 
@@ -123,13 +130,6 @@ public class LoadingDialog {
         jPanel.add(animationPanel);
         
         jDialog.setContentPane(jPanel);
-        
-        dialogThread = new Thread() {
-            @Override
-            public void run() {
-                jDialog.setVisible(true);
-            }
-        };
     }
     
     public void addLoadingDialogListener(LoadingDialogListener loadingDialogListener) {
@@ -137,16 +137,32 @@ public class LoadingDialog {
     }
     
     public void open() {
-        dialogThread.start();
-        while(true) {
-            if(jDialog.isActive()) {
-                break;
+        if(SwingUtilities.isEventDispatchThread()) {
+            if(jDialog == null) {
+                init();
             }
+            animationTimer.start();
+            jDialog.setVisible(true);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    open();
+                }
+            });
         }
-        animationTimer.start();
     }
     
     public void close() {
-        jDialog.setVisible(false);
+        if(SwingUtilities.isEventDispatchThread()) {
+            if(jDialog != null) {
+                jDialog.setVisible(false);
+            }
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    close();
+                }
+            });
+        }
     }
 }

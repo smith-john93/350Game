@@ -6,7 +6,6 @@
 package cs350project.screens.match;
 
 import cs350project.Settings;
-import cs350project.communication.OutgoingCommandListener;
 import cs350project.communication.OutgoingMessageListener;
 import cs350project.chat.*;
 import java.util.ArrayList;
@@ -24,10 +23,8 @@ public class MatchPanel extends Panel implements
     private final ChatMessageField chatMessageField;
     private ChatMessageFieldKeyAdapter chatMessageFieldKeyAdapter;
     private final ArrayList<OutgoingMessageListener> outgoingMessageListeners;
-    private final ArrayList<OutgoingCommandListener> outgoingCommandListeners;
     
     public MatchPanel() {
-        outgoingCommandListeners = new ArrayList<>();
         outgoingMessageListeners = new ArrayList<>();
         chatMessageQueue = new ChatMessageQueue();
         chatMessageField = new ChatMessageField();
@@ -56,10 +53,6 @@ public class MatchPanel extends Panel implements
     
     public void addOutgoingMessageListener(OutgoingMessageListener outgoingMessageListener) {
         outgoingMessageListeners.add(outgoingMessageListener);
-    }
-
-    public void addOutgoingCommandListener(OutgoingCommandListener outgoingCommandListener) {
-        outgoingCommandListeners.add(outgoingCommandListener);
     }
     
     @Override
