@@ -6,7 +6,6 @@
 package cs350project.screens.selection;
 
 import cs350project.GameFrame;
-import cs350project.Music;
 import cs350project.Settings;
 import cs350project.characters.PlayerCharacter;
 import cs350project.communication.Communication;
@@ -21,8 +20,6 @@ import cs350project.screens.match.MatchObjectManager;
 import cs350project.screens.match.MatchScreen;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -33,7 +30,6 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     
     private final SelectionKeyMap selectionKeyMap;
     private final SelectionPanel selectionPanel;
-    private final Music music;
     private final Communication comm;
     private PlayerCharacter player1;
     private LoadingDialog loadingDialog;
@@ -41,7 +37,6 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     public SelectionScreen() throws IOException {
         selectionPanel = new SelectionPanel();
         selectionKeyMap = new SelectionKeyMap();
-        music = new Music();
         comm = Communication.getInstance();
     }
     
@@ -56,7 +51,6 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
         selectionKeyMap.addSelectionInputListener(this);
         SelectionOverlay selectionOverlay = selectionPanel.getSelectionOverlay();
         selectionOverlay.addSelectionInputListener(this);
-        music.playSelectionPanelMusic();
     }
 
     @Override
@@ -106,7 +100,6 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
         if(serverCommand == ServerCommand.START_MATCH) {
             comm.removeIncomingCommandListener(this);
             GameFrame.getInstance().showScreen(new MatchScreen(player1));
-            music.stop();
         }
     }
 }
