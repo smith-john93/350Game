@@ -66,6 +66,7 @@ public class LoginScreen extends Screen implements LoginInputListener, IncomingC
 
     @Override
     public void back() {
+        comm.removeIncomingCommandListener(this);
         GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 

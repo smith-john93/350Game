@@ -50,6 +50,7 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
 
     @Override
     public void back() {
+        comm.removeIncomingCommandListener(this);
         GameFrame.getInstance().showScreen(new MainMenuScreen());
     }
 
@@ -63,6 +64,7 @@ public class CreateAccountScreen extends Screen implements CreateAccountInputLis
         CreateAccountPanel createAccountPanel = new CreateAccountPanel();
         createAccountPanel.addInputListener(this);
         comm.addIncomingCommandListener(this);
+        comm.addIncomingCommandListener(Settings.getSettings());
         return createAccountPanel;
     }
 

@@ -15,4 +15,5 @@ public interface SelectionInputListener extends InputListener {
     void characterSelected();
     void highlightNextRight();
     void highlightNextLeft();
+    void highlightCharacter();
 }

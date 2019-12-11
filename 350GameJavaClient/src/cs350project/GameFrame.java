@@ -10,11 +10,17 @@ import cs350project.screens.LoadingDialog;
 import cs350project.screens.MessageDialog;
 import cs350project.screens.Screen;
 import cs350project.screens.mainmenu.MainMenuScreen;
+import cs350project.screens.selection.SelectionScreen;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -34,26 +40,46 @@ public class GameFrame extends JFrame {
 
     public static GameFrame getInstance() {
         if(gameFrame == null) {
-            gameFrame = new GameFrame();
-            gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            gameFrame.setTitle(Settings.GAME_TITLE);
-            gameFrame.pack();
-            Settings settings = Settings.getSettings();
-            Dimension screenDimension = settings.getScreenDimension();
-            gameFrame.setSize(screenDimension);
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        gameFrame = new GameFrame();
+                        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        gameFrame.setTitle(Settings.GAME_TITLE);
+                        gameFrame.pack();
+                        Settings settings = Settings.getSettings();
+                        Dimension screenDimension = settings.getScreenDimension();
+                        gameFrame.setSize(screenDimension);
+                    }
+                });
+            } catch (InterruptedException | InvocationTargetException ex) {
+                Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return gameFrame;
     }
     
     public void showScreen(Screen screen) {
-        if(this.screen != null) {
-            remove(this.screen);
+        if(SwingUtilities.isEventDispatchThread()) {
+            if(this.screen != null) {
+                remove(this.screen);
+            }
+            setKeyMap(screen.getKeyMap());
+            add(screen);
+            setVisible(true);
+            requestFocus();
+            this.screen = screen;
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        showScreen(screen);
+                    }
+                });
+            } catch (InterruptedException | InvocationTargetException ex) {
+                Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        setKeyMap(screen.getKeyMap());
-        add(screen);
-        setVisible(true);
-        requestFocus();
-        this.screen = screen;
     }
     
     @Override
@@ -105,6 +131,12 @@ public class GameFrame extends JFrame {
         //GameFrame.getInstance().showScreen(new TitleScreen());
         
         GameFrame.getInstance().showScreen(new MainMenuScreen());
+
+        /*try {
+            GameFrame.getInstance().showScreen(new SelectionScreen());
+        } catch (IOException ex) {
+            Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         
         String serverAddress = Settings.getSettings().getSetting(Settings.SETTING_SERVER_ADDRESS);
         
