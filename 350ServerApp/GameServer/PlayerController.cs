@@ -27,24 +27,31 @@ namespace GameServer
         public PlayerController(PlayerSocketController stream, GameController gameController)
         {
             forceLeaveGame = false;
+            CharacterPicked = false;
             clientInterface = stream.clientInterface;
             gController = gameController;
-            CharacterPicked = false;
             databseService = new Database.Database(connecitonString);
         }
 
+        /// <summary>
+        /// Authenticates a user then passes control to a function to handle the player options
+        /// </summary>
         public void ManagePlayer()
         {
-            bool authenticatedUser = false;
+            //authenticate the user
+            //while(!authenticatedUser)
+            bool authenticatedUser = AuthenticateUser();
 
-            while(!authenticatedUser)
-                authenticatedUser = AuthenticateUser();
-
+            //Send the key mappings to the client
             SendKeyMappings();
 
+            //add the player to the game list
             gController.playerList.Add(this);
+
+            //send the client all the games in the lobby that are available
             gController.SendAllGames(this);
 
+            //pass control to the player control function
             PlayerControl();
         }
 
@@ -53,8 +60,10 @@ namespace GameServer
         /// </summary>
         private void PlayerControl()
         {
+            //Stay in the loop to allow for the thread to return here after a selected action is completed
             while(true)
             {
+                //if the client interface is null, dispose of it
                 if (clientInterface == null)
                 {
                     Console.WriteLine("No connection");
@@ -62,21 +71,19 @@ namespace GameServer
                     return;
                 }
 
-                int i;
+                
                 try
                 {
-                    i = clientInterface.ReadByte();
+                    //read the next byte from the client
+                    int i = clientInterface.ReadByte();
 
-                    Console.WriteLine($"received {i}");
-
+                    //switch based on the selected action
                     switch (i)
-                    {
+                    {                        
                         case (int)ClientCommands.CREATE_MATCH:
-                            Console.WriteLine("Creating Game");
                             CreateGame();
                             inGame = false;
                             forceLeaveGame = false;
-                            Console.WriteLine("back in switch from create");
                             continue;
 
                         case (int)ClientCommands.JOIN_MATCH:
@@ -110,7 +117,7 @@ namespace GameServer
         private void JoinGame()
         {
             int size = clientInterface.ReadByte();
-            //int size = clientInterface.ReadByte();
+
             //get the matchName from the client
             StringBuilder matchJoin = new StringBuilder();
             do
@@ -128,10 +135,11 @@ namespace GameServer
                 return;
 
             //stay in the game until the player is no longer in the game
+            //needed to use the forceLeaveGame bool, inGame was not kicking out of the loop
             while(!forceLeaveGame)
             {
+                //sleep for a bit
                 Thread.Sleep(new TimeSpan(0,0,0,0,100));
-                //Console.WriteLine($"{playername} still in game");
                 continue;
             }
             return;
@@ -146,6 +154,7 @@ namespace GameServer
             {
 
                 int size = clientInterface.ReadByte();
+
                 //stay in the loop until the game is created
                 while(true)
                 {
@@ -178,12 +187,17 @@ namespace GameServer
             }
             catch(IOException)
             {
+                //the client disconnected, remove the player
                 gController.RemovePlayer(this);
             }
         }
         
+        /// <summary>
+        /// Saves a new key mapping for the client
+        /// </summary>
         private void SaveMapping()
         {
+            //create a list of key mapping objects
             List<KeyMapDTO> mappings = new List<KeyMapDTO>();
 
             //receive char state
@@ -191,13 +205,18 @@ namespace GameServer
             int i = 0;
             while(true)
             {
+                //we will always receive 8, so we never want to exceed 0 indexed 8 counter
                 if (i == 8)
                     break;
                 i++;
 
+                //characterState is sent first
                 byte charState = (byte)clientInterface.ReadByte();
 
+                //read the size of the string
                 int size = clientInterface.ReadByte();
+
+
                 //get the matchName from the client
                 StringBuilder MappingString = new StringBuilder();
                 do
@@ -207,18 +226,20 @@ namespace GameServer
                 }
                 while (size > 0);
 
+                //create a new mapping and add it to the list
                 KeyMapDTO map = new KeyMapDTO();
                 map.Command = charState;
                 map.KeyString = MappingString.ToString();
                 mappings.Add(map);
             }
 
+            //Save all the mappings in the database
             foreach(KeyMapDTO map in mappings)
             {
-                //Console.WriteLine($"{playername}, {CommandUtilities.ParseCommand(map.Command).ToString()}, {map.KeyString}");
                 databseService.SetKeyBinding(playername, CommandUtilities.ParseCommand(map.Command).ToString(), map.KeyString, connecitonString);
             }
-            //Console.WriteLine("Sending key mapping");
+            
+            //Notify the client that the mappings saved
             SendMessage(ServerCommands.SAVED_KEY_MAPPINGS);
             return;
         }
@@ -248,7 +269,6 @@ namespace GameServer
         /// <param name="addMatch"></param>
         async public void SendMatchList(string match, bool addMatch)
         {
-            Console.WriteLine("Pulsing");
             //Send the client the update lobby byte
             byte[] updateCommand = new byte[1] { (byte)ServerCommands.UPDATE_LOBBY };
             await clientInterface.WriteAsync(updateCommand);
@@ -265,15 +285,24 @@ namespace GameServer
             WriteChars(match.ToCharArray());
         }
 
+        /// <summary>
+        /// Writes characters to the client
+        /// </summary>
+        /// <param name="chars"></param>
         async private void WriteChars(char[] chars)
         {
+            //get the length of the character array times 2
             byte[] bytes = new byte[chars.Length * 2];
             int i = 0;
             foreach(char c in chars)
             {
+                //get the higher order bytes
                 bytes[i++] = (byte)(c >> 8);
+
+                //get the lower order bytes
                 bytes[i++] = (byte)c;
             }
+            //write the byte array to the client
             await clientInterface.WriteAsync(bytes);
         }
 
@@ -286,6 +315,8 @@ namespace GameServer
             //listen for the character selected byte
             byte[] selectedBuffer = new byte[1];
             await clientInterface.ReadAsync(selectedBuffer);
+
+            //when they select, set the boolean value to true
             if (selectedBuffer[0] == (byte)ClientCommands.CHARACTER_SELECTED)
                 CharacterPicked = true;
 
@@ -312,6 +343,10 @@ namespace GameServer
             }
         }
 
+        /// <summary>
+        /// Gets if the client has picked a character yet
+        /// </summary>
+        /// <returns></returns>
         public bool HasSelectdCharacter()
         {
             return CharacterPicked;
@@ -432,6 +467,7 @@ namespace GameServer
             {
                 if ((byte)c == 0)
                     continue;
+
                 KeyMapDTO map = new KeyMapDTO();
                 map.Command = (byte)c;
                 map.KeyString = databseService.GetKeyBinding(playername, c.ToString(), connecitonString);
@@ -440,7 +476,7 @@ namespace GameServer
 
             foreach (KeyMapDTO mappingObject in keyMapList)
             {
-                //Console.WriteLine($"Sending {mappingObject.Command} {mappingObject.KeyString}");
+                Console.WriteLine($"Sending {mappingObject.Command} {mappingObject.KeyString}");
                 byte[] array = new byte[mappingObject.KeyString.Length+1];
                 int i = 0;
                 foreach (char a in mappingObject.KeyString.ToCharArray())
@@ -477,15 +513,15 @@ namespace GameServer
                 //if the client is trying to create an account                
                 if (i == (int)ClientCommands.CREATE_ACCOUNT)
                 {
-                    //call the method to create an account
-                    bool accountCreated = false;
 
-                    accountCreated = CreateUserAccount();
+                    //call the method to create an account
+                    bool accountCreated = CreateUserAccount();
                     if (!accountCreated)
                         SendMessage(ServerCommands.USER_AUTH_FAIL);
 
                     //if the account hs been created, respond with true
-                    if (accountCreated) {
+                    if (accountCreated) 
+                    {
                         SendMessage(ServerCommands.USER_AUTH_PASS);
                         return true;
                     }
@@ -539,21 +575,29 @@ namespace GameServer
                 size--;
             }
             while (size > 0);
-
+            //try to add the user to the database
             bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString(), connecitonString);
-
-            if(result)
+            
+            if (result)
             {
-                return true;
+                playername = cUser.ToString();
             }
-
-            return false;
+            
+            return result;
         }
 
+        /// <summary>
+        /// Reads a character from the client 
+        /// </summary>
+        /// <returns></returns>
         private char ReadChar()
         {
+            //get the higher order bytes
             int i = clientInterface.ReadByte() << 8;
+            
+            //get the lower order bytes
             i += clientInterface.ReadByte();
+
             return (char)i;
         }
 
@@ -598,24 +642,17 @@ namespace GameServer
         {
             inGame = false;
             forceLeaveGame = true;
-            Console.WriteLine($"{playername} leaving game. Value: {inGame}");
         }
-
         #endregion
 
         #region Cleanup
 
-
+        /// <summary>
+        /// removesthis player from the controler's player list
+        /// </summary>
         private void DisposePlayer()
         {
             gController.RemovePlayer(this);
-        }
-        /// <summary>
-        /// Closes the network stream for the instance
-        /// </summary>
-        private void CloseConneciton()
-        {
-            clientInterface.Close();
         }
 
         #endregion

@@ -1,5 +1,5 @@
 using System;
-using System.Drawing;
+using System.Linq;
 using System.Collections.Generic;
 using ServerPhysics.World_Objects;
 using System.Threading;
@@ -17,8 +17,9 @@ namespace ServerPhysics
         public List<WorldObject> attack_list;// a list of attacks
 
         public int world_object_count = 2;
+        public bool gameInProgress = false;
 
-        
+
         public  ObjectManager()
         {
             world_object_list = new List<List<WorldObject>>();
@@ -49,6 +50,7 @@ namespace ServerPhysics
 
         public ObjectManager(System.Net.Sockets.NetworkStream player1_stream,Fighter PlayerOneFighter, System.Net.Sockets.NetworkStream player2_stream, Fighter PlayerTwoFighter)
         {
+            
             world_object_list = new List<List<WorldObject>>();
 
             // Create a list of platforms.
@@ -82,23 +84,30 @@ namespace ServerPhysics
             //player_list.Add(player2);            
         }
 
-        public void start_physics()
+        public bool start_physics()
         {
             foreach (Player p in player_list)
             {
-                Console.WriteLine("in for each");
                 Task.Run(() => p.GetPlayerByte());
             }
 
-            Console.WriteLine("out of for loop");
-            while(true)
+            gameInProgress = true;
+            while(gameInProgress)
             {
-                //Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
-                Thread.Sleep(50);
+                /*
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
+                */
+                Thread.Sleep(new TimeSpan(0, 0, 0, 0, 50));
                 //Console.WriteLine("ticking...");
                 game_tick();
                 UpdatePlayers();
             }
+
+            Player p1 = (Player)player_list.FirstOrDefault();
+
+            if (p1.health > 0)
+                return true;
+            return false;
         }
 
         async private void UpdatePlayers()
@@ -116,9 +125,9 @@ namespace ServerPhysics
             Platform p = new Platform(x, y, width, height, this);                     
         }
 
-        public void create_attack(int x, int y, Player owner)
+        public void create_attack(int x, int y, Player owner, bool facingRight)
         {
-            Attack a = new Attack(x, y, owner, this);
+            Attack a = new Attack(x, y, owner, this, facingRight);
 
             attack_list.Add(a);
         }

@@ -38,7 +38,6 @@ namespace GameServer
                 {
                     Console.WriteLine("\nOptions:");
                     Console.WriteLine("1: Check the game listing size");
-                    //Console.WriteLine("2: Shutdown the server");
 
                     string a = Console.ReadLine();
 
@@ -50,14 +49,7 @@ namespace GameServer
                     }
                     else
                     {
-                        //matchMaker.RequestShutdown = true;
-                        communicator.listener.Stop();
-                        communicator.RequestShutdown = true;
-
-                        //MatchmakerThread.Join();
-                        SocketThread.Join();
-                        break;
-
+                        continue;
                     }
                 }
             }

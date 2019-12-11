@@ -53,7 +53,7 @@ namespace GameServer
             ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
             player.SendMessage(response);
 
-
+            //set this player to in game
             player.SetInGameState();
 
             //create the game
@@ -70,27 +70,31 @@ namespace GameServer
 
             LockDownGameList = false;
 
+            //notify the lobby that this game is available
             NotifyLobbyUpdate(gameName, true);
 
             StartGame(gameName);
-
+        
             gameListing.Remove(gameName);
             return true;
         }
 
-        public void EndGame(string game)
-        {
-            gameListing.Remove(game);
-        }
-
+        /// <summary>
+        /// Adds a player to a game
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public bool AddPlayer(string game, PlayerController player)
         {
+            //ensure the game exists
             if (!gameListing.ContainsKey(game))
             { 
                 return false;
             }
             else
             {
+                //make sure player1 is in the game
                 if(gameListing.GetValueOrDefault(game).PlayerOneJoined())
                 {
                     player.SetInGameState();
@@ -98,6 +102,7 @@ namespace GameServer
                     gameListing.GetValueOrDefault(game).AddPlayer2(player);
                     return true;
                 }
+                //add player 2 if player 1 is in the game
                 else
                 {
                     gameListing.GetValueOrDefault(game).AddPlayer1(player);
@@ -106,18 +111,27 @@ namespace GameServer
             }            
         }
 
+        /// <summary>
+        /// removes a player from the Player List
+        /// </summary>
+        /// <param name="player"></param>
         public void RemovePlayer(PlayerController player)
         {
             playerList.Remove(player);
         }
 
+        /// <summary>
+        /// notify every client that a match is avalable
+        /// </summary>
+        /// <param name="match"></param>
+        /// <param name="add"></param>
         async private void NotifyLobbyUpdate(string match, bool add)
         {
             while (LockDownGameList)
                 Thread.Sleep(new TimeSpan(0, 0, 0, 0, 10));
 
             LockDownGameList = true;
-
+            
             foreach (PlayerController player in playerList)
             {
                 await Task.Run(() => player.PulseLobby(match, add));
@@ -125,6 +139,10 @@ namespace GameServer
             LockDownGameList = false;
         }
 
+        /// <summary>
+        /// Sendonly player the entire active lobby
+        /// </summary>
+        /// <param name="player"></param>
         public void SendAllGames(PlayerController player)
         {
             while (LockDownGameList)

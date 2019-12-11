@@ -20,3 +20,13 @@
 /350Database/Database/Database/bin/Debug
 /350Database/Database/Database/obj/Debug
 /350Database/Database/Database/obj/Release
+/350Database/Database/Database/bin/x64/Debug
+/350Database/Database/Database/bin/x64/Release
+/350Database/Database/Database/obj/x64
+/350ServerApp/GameServer/bin/Debug/netcoreapp3.1
+/350ServerApp/GameServer/obj/Debug/netcoreapp3.1
+/350ServerApp/GameServer/obj
+/FightServer/ServerPhysics/bin/x64/Debug
+/FightServer/ServerPhysics/bin/x64/Release
+/FightServer/ServerPhysics/obj/x64/Debug
+/FightServer/ServerPhysics/obj/x64/Release
