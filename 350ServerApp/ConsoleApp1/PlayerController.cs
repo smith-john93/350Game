@@ -237,18 +237,27 @@ namespace GameServer
             await clientInterface.WriteAsync(updateCommand);
 
             //send the client a byte to indicate udpate or removal
-            byte[] add = new byte[1] { addMatch ? (byte)1 : (byte)0 };
-            await clientInterface.WriteAsync(add);
+            byte[] action = new byte[1] { addMatch ? (byte)1 : (byte)0 };
+            await clientInterface.WriteAsync(action);
 
-            //write the string to a charcter array
-            byte[] matchName = new byte[match.Length];
-            int loc = 0;
-            foreach (char a in match.ToCharArray())
-            {
-                matchName[loc++] = (byte)a;
-            }
+            //send the length of the string to the client
+            byte[] length = new byte[] { (byte)match.Length };
+            await clientInterface.WriteAsync(length);
+
             //send the character array to the client
-            await clientInterface.WriteAsync(matchName);
+            WriteChars(match.ToCharArray());
+        }
+
+        async private void WriteChars(char[] chars)
+        {
+            byte[] bytes = new byte[chars.Length * 2];
+            int i = 0;
+            foreach(char c in chars)
+            {
+                bytes[i++] = (byte)(c >> 8);
+                bytes[i++] = (byte)c;
+            }
+            await clientInterface.WriteAsync(bytes);
         }
 
         /// <summary>

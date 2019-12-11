@@ -100,11 +100,14 @@ public class LobbyScreen extends Screen implements
                 try {
                     int action = dataInputStream.readByte();
                     //System.out.println("action byte received: " + action);
-                    byte[] matchNameBytes = new byte[1000];
-                    int bytesRead = dataInputStream.read(matchNameBytes);
-                    String matchName = new String(matchNameBytes);
-                    System.out.println("bytes read " + bytesRead);
-                    matchName = matchName.substring(0, bytesRead);
+                    int length = dataInputStream.readByte();
+                    char[] chars = new char[length];
+                    int i = 0;
+                    while(length > 0) {
+                        chars[i++] = dataInputStream.readChar();
+                        length--;
+                    }
+                    String matchName = new String(chars);
                     //System.out.println("match name received: " + matchName);
                     switch (action) {
                         case 0:
