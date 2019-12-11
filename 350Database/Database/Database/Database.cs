@@ -57,8 +57,10 @@ CREATE TABLE UserInformation
             int i = 0;
 
             // Insert entry into the LoginInformation and UserKeybinding tables
-            string insertQuery = "INSERT INTO UserInformation ('username', 'password') VALUES (@username, @password)";
             string checkQuery = "SELECT 1 FROM UserInformation WHERE username = @username";
+            string insertQuery = @"
+INSERT INTO UserInformation ('username', 'password', 'MOVING_LEFT', 'MOVING_RIGHT', 'CROUCHING', 'JUMPING', 'BLOCKING', 'PUNCH', 'HIGH_KICK', 'LOW_KICK') 
+VALUES (@username, @password,'65','68','83','87', '79', '80','75','76')";
             using (SQLiteCommand command = new SQLiteCommand(string.Empty, new SQLiteConnection(ConnectionString)))
             {
                 command.Parameters.AddWithValue("@username", username);
@@ -80,8 +82,6 @@ CREATE TABLE UserInformation
                 }
                 command.Connection.Close();
             }
-
-            Console.WriteLine(succeeded ? true : false);
             return succeeded;
         }
 
@@ -138,7 +138,7 @@ CREATE TABLE UserInformation
                 {
                     while(reader.Read())
                     {
-                        key = reader.GetString(0);
+                        key = reader[0].ToString();
                     }            
                 }
                 sqlCommand.Connection.Close();
@@ -198,7 +198,7 @@ WHERE username = @username
 
                     }
                 }
-                catch (System.InvalidOperationException e)
+                catch (System.InvalidOperationException)
                 {
                     password = null;
                 }

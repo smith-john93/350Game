@@ -81,7 +81,7 @@ namespace ServerPhysics.World_Objects
         private Fighter type;
         private byte playerId;
         public System.Net.Sockets.NetworkStream player_stream;
- 
+
         public void AddOpponent(Player p)
         {
             Opponent = p;
@@ -153,7 +153,7 @@ namespace ServerPhysics.World_Objects
             try
             {
 
-                while(true)
+                while(manager.gameInProgress)
                 {
                     byte i = (byte)player_stream.ReadByte();
                     this.control_byte = (byte)player_stream.ReadByte();

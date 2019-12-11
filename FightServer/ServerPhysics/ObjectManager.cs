@@ -88,11 +88,8 @@ namespace ServerPhysics
         {
             foreach (Player p in player_list)
             {
-                Console.WriteLine("in for each");
                 Task.Run(() => p.GetPlayerByte());
             }
-
-            Console.WriteLine("out of for loop");
 
             gameInProgress = true;
             while(gameInProgress)
