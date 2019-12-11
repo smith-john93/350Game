@@ -74,6 +74,7 @@ namespace GameServer
             Console.WriteLine($"{gameListing.Count} games in wait");
             NotifyLobbyUpdate(gameName, true);
             StartGame(gameName);
+            gameListing.Remove(gameName);
             return true;
         }
 

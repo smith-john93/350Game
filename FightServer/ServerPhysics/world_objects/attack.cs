@@ -13,8 +13,9 @@ namespace ServerPhysics.World_Objects
         public int xoffset = 50;
         public int yoffset = -20;
         public int cooldown = 10;
+        public int knockback = 40;
 
-        public Attack(int x, int y, Player owner, ObjectManager o)
+        public Attack(int x, int y, Player owner, ObjectManager o,bool fr)
         {
             id = o.world_object_count++;
             this.x = x;
@@ -23,6 +24,7 @@ namespace ServerPhysics.World_Objects
             this.manager = o;
             this.width=25;
             this.height=10;
+            this.facingRight = fr;
 
             this.owner.move_cooldown = cooldown;
 
@@ -79,7 +81,7 @@ namespace ServerPhysics.World_Objects
                 int punchdirection;
                 if (facingRight) punchdirection = 1;
                 else punchdirection = -1;
-                p.setXSpeed(p.getJumpSpeed() * punchdirection);
+                p.setXSpeed(knockback * punchdirection);
             }
         }
     }

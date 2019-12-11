@@ -55,8 +55,10 @@ namespace GameServer
             Console.WriteLine("In player control");
             while(true)
             {
+                Console.WriteLine("Happy Happy Fun Time");
                 if (clientInterface == null)
                 {
+                    Console.WriteLine("No connection");
                     DisposePlayer();
                     return;
                 }
@@ -131,6 +133,7 @@ namespace GameServer
         /// </summary>
         private void CreateGame()
         {
+            Console.WriteLine("In create");
             try
             {
 
@@ -150,6 +153,7 @@ namespace GameServer
                     //Turn the name into a string
                     string gameName = matchMake.ToString();
 
+                    Console.WriteLine("Creating game");
                     //check to see if a game with that name already exists
                     //otherwise the game runs until completion
                     if (!gController.CreateGame(gameName, this))
@@ -159,7 +163,6 @@ namespace GameServer
                         ReadOnlySpan<byte> response = new ReadOnlySpan<byte>(responseByte);
                         clientInterface.Write(response);
                     }
-
                 }
             }
             catch(IOException)
@@ -170,7 +173,6 @@ namespace GameServer
         
         private void SaveMapping()
         {
-            Console.WriteLine("in mapping");
             List<KeyMapDTO> mappings = new List<KeyMapDTO>();
 
             //receive char state
@@ -178,17 +180,13 @@ namespace GameServer
             int i = 0;
             while(true)
             {
-                Console.WriteLine($"In iteration {i}");
                 if (i == 8)
                     break;
                 i++;
-                Console.WriteLine("in while");
 
                 byte charState = (byte)clientInterface.ReadByte();
-                Console.WriteLine("Read charState");
 
                 int size = clientInterface.ReadByte();
-                Console.WriteLine("Read size");
                 //get the matchName from the client
                 StringBuilder MappingString = new StringBuilder();
                 do
@@ -198,7 +196,6 @@ namespace GameServer
                 }
                 while (size > 0);
 
-                Console.WriteLine("Read char arrar");
                 KeyMapDTO map = new KeyMapDTO();
                 map.Command = charState;
                 map.KeyString = MappingString.ToString();
@@ -207,10 +204,10 @@ namespace GameServer
 
             foreach(KeyMapDTO map in mappings)
             {
-                Console.WriteLine($"{playername}, {CommandUtilities.ParseCommand(map.Command).ToString()}, {map.KeyString}");
+                //Console.WriteLine($"{playername}, {CommandUtilities.ParseCommand(map.Command).ToString()}, {map.KeyString}");
                 databseService.SetKeyBinding(playername, CommandUtilities.ParseCommand(map.Command).ToString(), map.KeyString, connecitonString);
             }
-            Console.WriteLine("Sending key mapping");
+            //Console.WriteLine("Sending key mapping");
             SendMessage(ServerCommands.SAVED_KEY_MAPPINGS);
             return;
         }
@@ -285,7 +282,6 @@ namespace GameServer
             byte[] buffer = new byte[1];
             await clientInterface.ReadAsync(buffer);
 
-            Console.WriteLine($"{playername} {buffer[0]}");
 
             //set the correct character
             switch(buffer[0])
@@ -433,7 +429,7 @@ namespace GameServer
 
             foreach (KeyMapDTO mappingObject in keyMapList)
             {
-                Console.WriteLine($"Sending {mappingObject.Command} {mappingObject.KeyString}");
+                //Console.WriteLine($"Sending {mappingObject.Command} {mappingObject.KeyString}");
                 byte[] array = new byte[mappingObject.KeyString.Length+1];
                 int i = 0;
                 foreach (char a in mappingObject.KeyString.ToCharArray())
@@ -470,7 +466,6 @@ namespace GameServer
                 //if the client is trying to create an account                
                 if (i == (int)ClientCommands.CREATE_ACCOUNT)
                 {
-                    Console.WriteLine("creating account");
                     //call the method to create an account
                     bool accountCreated = false;
 
@@ -489,7 +484,6 @@ namespace GameServer
                 //if the client is trying to login
                 else if (i == (int)ClientCommands.LOGIN)
                 {
-                    Console.WriteLine("Logging in");
 
                     //if the user is valid, respond with true
                     if (ValidateUser())
@@ -503,10 +497,7 @@ namespace GameServer
                 }
                 else
                 {
-                    Console.WriteLine("Something fucked up");
                     //A bad byte was sent by the client
-                    //close the connection
-                    //CloseConneciton();
                     return false;
                 }
             }
@@ -527,7 +518,6 @@ namespace GameServer
                 size--;
             }
             while (size > 0);
-            Console.WriteLine($"new UserName: {cUser}");
 
             //get the password from the client
             size = clientInterface.ReadByte();
@@ -538,17 +528,13 @@ namespace GameServer
                 size--;
             }
             while (size > 0);
-            Console.WriteLine($"new Password: {cPass}");
 
             bool result = databseService.AddNewUser(cUser.ToString(), cPass.ToString(), connecitonString);
 
             if(result)
             {
-                Console.WriteLine("yeet");
                 return true;
             }
-
-            Console.WriteLine("Not yeet");
 
             return false;
         }
@@ -575,11 +561,9 @@ namespace GameServer
                 size--;
             }
             while (size > 0);
-            Console.WriteLine($"UserName: {cUser}");
 
             //get the password from the client
             size = clientInterface.ReadByte();
-            Console.WriteLine("password size " + size);
             StringBuilder cPass = new StringBuilder();
             do
             {
@@ -587,7 +571,6 @@ namespace GameServer
                 size--;
             }
             while (size > 0);
-            Console.WriteLine($"Password: {cPass}");
 
             //convert the stringbuilders to string for validation
             //this will be turned into sending the info to the DAL
@@ -595,7 +578,6 @@ namespace GameServer
             string pass = cPass.ToString();
 
             bool result = databseService.VerifyPassword(user, pass, connecitonString);
-            Console.WriteLine($"{pass} {result}");
             if (result)
                 playername = user;
             return result;

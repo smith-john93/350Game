@@ -67,11 +67,14 @@ namespace ServerPhysics.World_Objects
         private bool attacking = false;
 
         private static int MOVEMENTSPEED = 20;
-        private static int WALLJUMPSPEED = -40;
+        private static int WALLJUMPSPEED = -60;
         private static int JUMPSPEED = -13;
         private static int MAXFUEL = 100;
         private static int HOVERSPEED = 5;
         private static int ACCELERATION = 5;
+
+        private static int XMODELOFFSET = 68;
+        private static int YMODELOFFSET = 10;
 
         private byte control_byte = (byte)0;
         private Player Opponent;
@@ -86,7 +89,7 @@ namespace ServerPhysics.World_Objects
         
         public PlayerStats GetPlayerStats()
         {
-            return new PlayerStats(x, y, control_byte, (byte)health, playerId);
+            return new PlayerStats(x - XMODELOFFSET, y - YMODELOFFSET, control_byte, (byte)health, playerId);
         }
 
         public Player(Fighter f, ObjectManager o, int xx, int yy, System.Net.Sockets.NetworkStream strm, byte playerId)
@@ -98,8 +101,8 @@ namespace ServerPhysics.World_Objects
 
             x = xx;
             y = yy;
-            width = 200;
-            height = 200;
+            width = 62;
+            height = 190;
 
             player_stream = strm;
 
@@ -167,7 +170,7 @@ namespace ServerPhysics.World_Objects
         {
             try
             {
-                await Task.Run(() => SendGameUpdate(new PlayerStats(x, y, control_byte, (byte)health, playerId)));
+                await Task.Run(() => SendGameUpdate(this.GetPlayerStats()));
                 await Task.Run(() => SendGameUpdate(Opponent.GetPlayerStats()));
             }
             catch(IOException)
@@ -225,16 +228,23 @@ namespace ServerPhysics.World_Objects
             movingRight = get_control_bit(Control.movingright);
             attacking = get_control_bit(Control.attack);
 
+            if(health<=0)
+            {
+                manager.gameInProgress = false;
+            }
+
             #region physics
             if (attacking && move_cooldown <= 0)
             {
+                /*
                 if (type == Fighter.ganchev)
                 {
                     this.manager.create_projectile(x, y, this);
                 }
                 else
+                */
                 {
-                    this.manager.create_attack(x, y, this);
+                    this.manager.create_attack(x, y, this, facingRight);
                 }
             }
 

@@ -99,7 +99,6 @@ CREATE TABLE UserInformation
                 command.ExecuteNonQuery();
                 command.Connection.Close();
             }
-            Console.WriteLine("User " + username + " removed.");
         }
 
         /// <summary>
@@ -119,7 +118,6 @@ CREATE TABLE UserInformation
                 sqlCommand.ExecuteNonQuery();
                 sqlCommand.Connection.Close();
             }                
-            Console.WriteLine(command + " key for user " + username + " set to " + key);
         }
 
         /// <summary>
@@ -146,7 +144,6 @@ CREATE TABLE UserInformation
                 sqlCommand.Connection.Close();
             }
 
-            Console.WriteLine(command + " key binding for " + username + " is " + key);
             return key;
         }
 
@@ -172,7 +169,6 @@ WHERE username = @username
                 sqlCommand.Connection.Close();
 
             }
-            Console.WriteLine("Password for " + username + " updated.");
         }
 
         /// <summary>
@@ -201,11 +197,9 @@ WHERE username = @username
                         password = reader.GetString(0);
 
                     }
-                    Console.WriteLine(username + "'s password retrieved");
                 }
                 catch (System.InvalidOperationException e)
                 {
-                    Console.WriteLine("Username " + username + " does not exist.");
                     password = null;
                 }
                 sqlCommand.Connection.Close();
@@ -222,10 +216,6 @@ WHERE username = @username
         public bool VerifyPassword(string submittedUsername, string submittedPassword, string ConnectionString)
         {
             string storedPassword = GetPassword(submittedUsername, ConnectionString);
-            Console.WriteLine($"stored password {storedPassword}");
-            Console.WriteLine($"entered password {submittedPassword}");
-
-            Console.WriteLine($"Matching {(storedPassword == submittedPassword ? true : false)}");
             
             return storedPassword == submittedPassword ? true : false;
         }

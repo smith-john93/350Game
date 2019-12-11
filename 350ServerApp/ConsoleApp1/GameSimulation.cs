@@ -82,10 +82,18 @@ namespace GameServer
             player2.SendMessage(ServerCommands.START_MATCH);
 
 
-            GameObject.start_physics();
+            bool player1Win = GameObject.start_physics();
+
+            //NotifyGameEnd();
 
             player1.LeaveGame();
             player2.LeaveGame();
+        }
+
+        private void NotifyGameEnd()
+        {
+            player1.SendMessage(ServerCommands.END_GAME_INSTANCE);
+            player2.SendMessage(ServerCommands.END_GAME_INSTANCE);
         }
 
         public void SelectCharacter()
