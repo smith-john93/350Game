@@ -98,6 +98,7 @@ public class SelectionScreen extends Screen implements SelectionInputListener, I
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
         //System.out.println("selection screen received command: " + serverCommand);
         if(serverCommand == ServerCommand.START_MATCH) {
+            loadingDialog.close();
             comm.removeIncomingCommandListener(this);
             GameFrame.getInstance().showScreen(new MatchScreen(player1));
         }

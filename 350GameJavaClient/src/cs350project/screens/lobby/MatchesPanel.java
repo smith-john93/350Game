@@ -75,7 +75,7 @@ class MatchesPanel extends JPanel {
                 while(true) {
                     String matchName = JOptionPane.showInputDialog(
                             matchesPanel, 
-                            "Match Name", 
+                            "Enter Match Name", 
                             "Create Match", 
                             JOptionPane.PLAIN_MESSAGE
                     );
