@@ -642,13 +642,14 @@ namespace GameServer
         {
             inGame = false;
             forceLeaveGame = true;
-            Console.WriteLine($"{playername} leaving game. Value: {inGame}");
         }
         #endregion
 
         #region Cleanup
 
-
+        /// <summary>
+        /// removesthis player from the controler's player list
+        /// </summary>
         private void DisposePlayer()
         {
             gController.RemovePlayer(this);

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace GameServer.DataTranferObjects
 {
+    /// <summary>
+    /// This is a Data Transfer Object for a 1 byte command and a string
+    /// </summary>
     public class KeyMapDTO
     {
         public KeyMapDTO()

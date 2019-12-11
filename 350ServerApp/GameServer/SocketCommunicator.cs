@@ -94,29 +94,12 @@ namespace GameServer
             }
         }
 
-        //async public void SendMulticast(string message)
-        //{
-        //    while(!RequestShutdown)
-        //    {
-        //        multi.send(message);
-        //        Thread.Sleep(new TimeSpan(0, 0, 10));
-        //    }
-        //}
-
+        /// <summary>
+        /// Display the IP information
+        /// </summary>
+        /// <param name="information"></param>
         private void DisplayInfo(string information)
         {
-            /*
-            string[] info = information.Split(":");
-            Console.WriteLine(information);
-            */
-
-            /* This broke when I switched to IPv4 - Mark M.
-            string[] info = information.Split("]:");
-            info[0] = info[0].ToString().Replace("[", string.Empty);
-            string[] IpV6 = info[0].ToString().Split("%");
-            Console.WriteLine($"Server Information: \nServer IP: {IpV6[0]}. \nServer Socket: {info[1]}");
-            */
-
             // This works - Mark M.
             Console.WriteLine(information);
         }
