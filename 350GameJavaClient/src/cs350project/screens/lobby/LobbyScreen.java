@@ -94,7 +94,7 @@ public class LobbyScreen extends Screen implements
 
     @Override
     public void commandReceived(ServerCommand serverCommand, DataInputStream dataInputStream) {
-        //System.out.println("command received: " + serverCommand);
+        System.out.println("command received: " + serverCommand);
         switch(serverCommand) {
             case UPDATE_LOBBY:
                 try {
