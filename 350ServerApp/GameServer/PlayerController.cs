@@ -475,7 +475,6 @@ namespace GameServer
 
             foreach (KeyMapDTO mappingObject in keyMapList)
             {
-                //Console.WriteLine($"Sending {mappingObject.Command} {mappingObject.KeyString}");
                 byte[] array = new byte[mappingObject.KeyString.Length+1];
                 int i = 0;
                 foreach (char a in mappingObject.KeyString.ToCharArray())

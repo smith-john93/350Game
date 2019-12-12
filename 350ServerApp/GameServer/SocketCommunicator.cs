@@ -23,7 +23,6 @@ namespace GameServer
         private GameController gController;
         //private Multicast.Multicast multi;
         public bool RequestShutdown;
-        private const string MULTICAST_STRING = "o";
 
         ///<exception cref="SocketCommunicatorException">
         ///Thrown when the local host has no IPv4 address entries.
@@ -50,8 +49,6 @@ namespace GameServer
             }
 
             localEndPoint = new IPEndPoint(ipAddr, commandPort);
-
-            //multi = new Multicast.Multicast();
         }
 
         async public void Listen()

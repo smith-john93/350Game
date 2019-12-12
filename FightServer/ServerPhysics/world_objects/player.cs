@@ -184,7 +184,6 @@ namespace ServerPhysics.World_Objects
             try
             {
 
-                //Console.WriteLine("Sending update");
                 player_stream.WriteByte((byte)ServerCommands.UPDATE_MATCH);
 
                 //00 for player 1, 01 for player 2
@@ -219,8 +218,6 @@ namespace ServerPhysics.World_Objects
 
         public override void game_tick()
         {
-            //Console.WriteLine("Tick");
-            //Console.WriteLine(this.x);
 
             //control bits
             jumping = get_control_bit(Control.jump);
@@ -466,7 +463,8 @@ namespace ServerPhysics.World_Objects
 
         public void checkAttacks()
         {
-            for (int i = manager.attack_list.Count - 1; i >= 0; i--)///must be a for loop because it is changing the list inside of it
+            //must be a for loop because it is changing the list inside of it
+            for (int i = manager.attack_list.Count - 1; i >= 0; i--)
             {
                 Attack atk = (Attack)manager.attack_list[i];
                 if (isTouching(atk))
