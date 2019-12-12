@@ -11,6 +11,7 @@ import cs350project.screens.MessageDialog;
 import cs350project.screens.Screen;
 import cs350project.screens.mainmenu.MainMenuScreen;
 import cs350project.screens.selection.SelectionScreen;
+import cs350project.screens.title.TitleScreen;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.io.IOException;
@@ -128,9 +129,9 @@ public class GameFrame extends JFrame {
      */
     public static void main(String[] args) {
         Communication comm = Communication.getInstance();
-        //GameFrame.getInstance().showScreen(new TitleScreen());
+        GameFrame.getInstance().showScreen(new TitleScreen());
         
-        GameFrame.getInstance().showScreen(new MainMenuScreen());
+        //GameFrame.getInstance().showScreen(new MainMenuScreen());
 
         /*try {
             GameFrame.getInstance().showScreen(new SelectionScreen());
